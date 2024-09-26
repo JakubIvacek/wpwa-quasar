@@ -1,10 +1,10 @@
 <template>
-  <img src="~assets/bg-img.jpg" alt="bg-img" class="bg-img">
+  <img src="../assets/bg-img.jpg" alt="bg-img" class="bg-img">
   <div class="col-12 col-md-6 content-center flex custom-login">
     <q-card  class="custom-width">
       <q-card-section>
         <q-avatar size="100px" class="absolute-center bg-dark">
-          <img src="~assets/logo.png" alt="avatar">
+          <img src="../assets/logo.png" alt="avatar">
         </q-avatar>
       </q-card-section>
       <q-card-section>
