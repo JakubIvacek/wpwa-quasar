@@ -5,8 +5,8 @@
 <template>
   <q-card  class="custom-width q-mt-xl">
     <q-card-section>
-      <q-avatar size="120px" class="absolute-center ">
-        <img src="../assets/1.png" alt="avatar" class="bg-white ">
+      <q-avatar size="180px" class="absolute-center ">
+        <img src="../assets/logo-white.png" alt="avatar" class="bg-dark-my" >
       </q-avatar>
     </q-card-section>
     <q-card-section>
@@ -94,6 +94,14 @@ export default{
 @media (max-width: 767px) {
   .custom-width{
     width: 80%
+  }
+}
+</style>
+
+<style lang="scss">
+@media (max-width: 1117px) {
+  .bg-dark-my{
+    background: $dark;
   }
 }
 </style>

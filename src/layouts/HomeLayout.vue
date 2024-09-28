@@ -40,7 +40,7 @@ import NavHome from "components/NavHome.vue";
   }
 .bg-img {
   background-image: url('../assets/bg-img.jpg');
-  background-size: cover;  /* Ensures the image covers the entire div */
-  background-position: center;  /* Centers the image */
+  background-size: cover;
+  background-position: top;
 }
 </style>
