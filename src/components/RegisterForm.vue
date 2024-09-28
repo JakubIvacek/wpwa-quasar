@@ -18,17 +18,17 @@
     </q-card-section>
     <q-card-section>
       <q-form class="q-gutter-md" @submit.prevent="submitRegister">
-        <q-input rounded outlined label="User name" model-value="" v-model="login.username" color="cyan-10">
+        <q-input filled label="Username" model-value="" v-model="login.username" color="cyan-10">
         </q-input>
-        <q-input rounded outlined label="First name" model-value="" v-model="login.firstName" color="cyan-10">
+        <q-input  filled  label="First name" model-value="" v-model="login.firstName" color="cyan-10">
         </q-input>
-        <q-input rounded outlined label="Last name" model-value="" v-model="login.lastName" color="cyan-10">
+        <q-input filled  label="Last name" model-value="" v-model="login.lastName" color="cyan-10">
         </q-input>
-        <q-input rounded outlined label="Email" model-value="" v-model="login.email" color="cyan-10">
+        <q-input filled  label="Email" model-value="" v-model="login.email" color="cyan-10">
         </q-input>
-        <q-input  rounded outlined label="Password" model-value="" type="password" v-model="login.password" color="cyan-10">
+        <q-input  filled  label="Password" model-value="" type="password" v-model="login.password" color="cyan-10">
         </q-input>
-        <q-input  rounded outlined label="Password repeat" model-value="" type="password" v-model="login.passwordRepeat" color="cyan-10">
+        <q-input  filled  label="Password repeat" model-value="" type="password" v-model="login.passwordRepeat" color="cyan-10">
         </q-input>
         <div  class="flex flex-center">
           <q-btn style="width:80%" color="cyan-10" label="Register" rounded type="submit">

@@ -17,10 +17,10 @@
       </div>
     </q-card-section>
     <q-card-section>
-      <q-form class="q-gutter-md" @submit.prevent="submitLogin">
-        <q-input rounded outlined label="Email" model-value="" v-model="login.email" color="cyan-10">
+      <q-form  class="q-gutter-md" @submit.prevent="submitLogin">
+        <q-input filled label="Email" model-value="" v-model="login.email" color="cyan-10">
         </q-input>
-        <q-input  rounded outlined label="Password" model-value="" type="password" v-model="login.password" color="cyan-10">
+        <q-input  filled label="Password" model-value="" type="password" v-model="login.password" color="cyan-10">
         </q-input>
         <div  class="flex flex-center">
           <q-btn style="width:80%" color="cyan-10" label="Login" rounded type="submit">

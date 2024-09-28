@@ -1,6 +1,7 @@
 import LoginForm from '../components/LoginForm.vue';
 import RegisterForm from '../components/RegisterForm.vue';
-import LoginBG from "components/authBG.vue";
+import LoginBG from "layouts/AuthTemplate.vue";
+import HomeLayout from "layouts/HomeLayout.vue"
 
 const routes = [
   {
@@ -10,7 +11,10 @@ const routes = [
       { path: '', component: () => import('pages/IndexPage.vue') }
     ]
   },
-
+  {
+    path: '/home',
+    component:  HomeLayout
+  },
   // AUTH ROUTES /AUTH
   {
     path: '/auth',
