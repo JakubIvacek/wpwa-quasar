@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <q-card  class="custom-width q-mt-xl">
+  <q-card  class="custom-width q-mt-xxl">
     <q-card-section>
       <q-avatar size="180px" class="absolute-center ">
         <img src="../assets/logo-white.png" alt="avatar" class="bg-dark-my" >
@@ -80,6 +80,9 @@ export default{
 }
 .custom-font{
   font-family: 'Merriweather', serif;
+}
+.q-mt-xxl{
+  margin-top: 150px;
 }
 @media (max-width: 1200px){
   .custom-width{

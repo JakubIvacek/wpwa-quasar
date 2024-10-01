@@ -32,13 +32,13 @@ export default {
 }
 .custom-form {
   justify-content: flex-end;
-  padding-top: 130px;
+  padding-top: 60px;
   padding-right: 130px;
 }
 @media (max-width: 767px) {
   .custom-form {
     justify-content: center;
-    padding: 130px 0 0;
+    padding: 60px 0 0;
   }
   .bg-img {
     width: 80%;
