@@ -45,15 +45,11 @@
   </q-layout>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+<script lang="ts">
+import { defineComponent } from 'vue'
+import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue'
 
-defineOptions({
-  name: 'MainLayout'
-})
-
-const linksList = [
+const linksList: EssentialLinkProps[] = [
   {
     title: 'Docs',
     caption: 'quasar.dev',
@@ -98,9 +94,24 @@ const linksList = [
   }
 ]
 
-const leftDrawerOpen = ref(false)
+export default defineComponent({
+  name: 'MainLayout',
 
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+  components: {
+    EssentialLink
+  },
+
+  data () {
+    return {
+      linksList,
+      leftDrawerOpen: false
+    }
+  },
+
+  methods: {
+    toggleLeftDrawer () {
+      this.leftDrawerOpen = !this.leftDrawerOpen
+    }
+  }
+})
 </script>

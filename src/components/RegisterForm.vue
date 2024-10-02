@@ -43,9 +43,9 @@
 </template>
 
 <script>
-import {useQuasar} from 'quasar'
+import { useQuasar } from 'quasar'
 
-export default{
+export default {
   data () {
     return {
       login: {
@@ -54,7 +54,7 @@ export default{
         passwordRepeat: '',
         firstName: '',
         lastName: '',
-        email: '',
+        email: ''
       },
       $q: null
     }

@@ -26,7 +26,7 @@ export default {
   width: 66%;
   left: 0;
   bottom: 0;
-  z-index: -1;
+  z-index: 0;
   object-fit: cover;
   object-position: left;
 }
@@ -45,6 +45,3 @@ export default {
   }
 }
 </style>
-
-
-

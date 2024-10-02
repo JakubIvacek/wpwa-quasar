@@ -1,5 +1,5 @@
 <script>
-import { Screen } from 'quasar';
+import { Screen } from 'quasar'
 
 export default{
   data () {

@@ -1,4 +1,3 @@
-
 <script setup>
 
 import NavHome from "components/NavHome.vue";
