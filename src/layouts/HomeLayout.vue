@@ -1,6 +1,6 @@
 <script setup>
 
-import NavHome from "components/NavHome.vue";
+import NavHome from 'components/NavHome.vue'
 </script>
 
 <template>

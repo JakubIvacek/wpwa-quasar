@@ -207,9 +207,10 @@ export default defineComponent({
   data () {
     return {
       linksList,
-      leftDrawerOpen: false
+      leftDrawerOpen: false,
+      search: ''
     }
-  },
+  }
 })
 
 </script>

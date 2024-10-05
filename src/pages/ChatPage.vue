@@ -10,44 +10,42 @@
 </template>
 
 <script lang="ts">
-  import { ref } from 'vue'
-  import ExampleComponent from 'components/ExampleComponent.vue'
-  import {defineComponent} from "vue";
+import { ref } from 'vue'
+import ExampleComponent from 'components/ExampleComponent.vue'
 
-  export default defineComponent({
-    components: {ExampleComponent},
+export default ref({
+  components: { ExampleComponent },
 
-    data () {
-      const todos: Todo[] = [
-        {
-          id: 1,
-          content: 'ct1'
-        },
-        {
-          id: 2,
-          content: 'ct2'
-        },
-        {
-          id: 3,
-          content: 'ct3'
-        },
-        {
-          id: 4,
-          content: 'ct4'
-        },
-        {
-          id: 5,
-          content: 'ct5'
-        }
-      ]
-
-      const meta: Meta = {
-        totalCount: 1200
+  data () {
+    const todos: Todo[] = [
+      {
+        id: 1,
+        content: 'ct1'
+      },
+      {
+        id: 2,
+        content: 'ct2'
+      },
+      {
+        id: 3,
+        content: 'ct3'
+      },
+      {
+        id: 4,
+        content: 'ct4'
+      },
+      {
+        id: 5,
+        content: 'ct5'
       }
+    ]
 
-      return { todos, meta }
+    const meta: Meta = {
+      totalCount: 1200
     }
-  })
 
+    return { todos, meta }
+  }
+})
 
 </script>

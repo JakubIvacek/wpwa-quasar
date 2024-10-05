@@ -1,24 +1,24 @@
 <script>
 import { Screen } from 'quasar'
 
-export default{
+export default {
   data () {
     return {
-      search: ""
+      search: ''
     }
   },
   computed: {
     iconSize () {
       if (Screen.width <= Screen.sizes.sm) {
-        return '37px';
+        return '37px'
       } else if (Screen.width <= Screen.sizes.md) {
-        return '42px';
+        return '42px'
       } else if (Screen.width <= Screen.sizes.lg) {
-        return '48px';
+        return '48px'
       } else if (Screen.width <= Screen.sizes.xl) {
-        return '48px';
+        return '48px'
       } else {
-        return '55px';
+        return '55px'
       }
     }
   }
