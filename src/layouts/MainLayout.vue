@@ -2,10 +2,9 @@
   <q-layout view="hHh lpR lFf">
       <q-header
         class="bg-img"
-        elevated
       >
         <q-toolbar>
-          <q-avatar class="img-own">
+          <q-avatar class="img-own q-ma-sm">
             <img src="../assets/logo-white.png" alt="logo" class="bg-primary" >
           </q-avatar>
           <q-toolbar-title class="text-weight-bold text-h4">
@@ -44,13 +43,35 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-footer
+      class="bg-transparent"
+    >
+      <div class="row q-gutter-md q-mr-lg q-my-md">
+        <div class="col q-ml-xl">
+          <q-input
+            v-model="search"
+            bg-color="grey-9"
+            placeholder="Command Line"
+            outlined
+            dense
+          />
+        </div>
+        <div class="col col-auto">
+          <q-btn
+            color="primary"
+            icon="send"
+            type="submit"
+            round />
+        </div>
+      </div>
+    </q-footer>
   </q-layout>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
-import { Screen } from 'quasar'
 
 const linksList = [
   {
