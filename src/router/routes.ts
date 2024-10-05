@@ -1,19 +1,19 @@
 import { RouteRecordRaw } from 'vue-router'
 import LoginForm from '../components/LoginForm.vue'
 import RegisterForm from '../components/RegisterForm.vue'
-import LoginBG from "layouts/AuthTemplate.vue"
-import HomeLayout from "layouts/HomeLayout.vue"
+import LoginBG from 'layouts/AuthTemplate.vue'
+import HomeLayout from 'layouts/HomeLayout.vue'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }]
+    children: [{ path: '', component: () => import('pages/ChatPage.vue') }]
   },
   {
     path: '/home',
-    component:  HomeLayout
-  },// AUTH ROUTES /AUTH
+    component: HomeLayout
+  }, // AUTH ROUTES /AUTH
   {
     path: '/auth',
     component: LoginBG,

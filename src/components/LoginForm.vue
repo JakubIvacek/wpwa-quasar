@@ -49,25 +49,24 @@ export default {
   },
   methods: {
     submitLogin () {
-      if (!this.login.email || !this.login.password){
+      if (!this.login.email || !this.login.password) {
         this.$q.notify({
           type: 'negative',
-          message: "Empty fields! Fill out email and password"
+          message: 'Empty fields! Fill out email and password'
         })
-      }else if (this.login.password.length < 6){
+      } else if (this.login.password.length < 6) {
         this.$q.notify({
           type: 'negative',
-          message: "Password too short minimal length is 6"
+          message: 'Password too short minimal length is 6'
         })
-      }
-      else{
+      } else {
         console.log('login')
       }
     }
   },
-  mounted() {
-    this.$q = useQuasar();
-  },
+  mounted () {
+    this.$q = useQuasar()
+  }
 }
 </script>
 

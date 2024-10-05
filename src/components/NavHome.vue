@@ -21,7 +21,6 @@ export default{
         return '55px';
       }
     }
-
   }
 
 }
@@ -95,5 +94,3 @@ export default{
 }
 
 </style>
-
-

@@ -61,16 +61,15 @@ export default {
   },
   methods: {
     submitRegister () {
-      if(!this.login.username || !this.login.password){
+      if (!this.login.username || !this.login.password) {
         // VALIDACIU UROBIT
-      }
-      else{
+      } else {
         console.log('register')
       }
     }
   },
-  mounted() {
-    this.$q = useQuasar();
+  mounted () {
+    this.$q = useQuasar()
   }
 }
 </script>
