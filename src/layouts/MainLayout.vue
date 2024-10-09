@@ -1,27 +1,52 @@
+<script setup lang="ts">
+
+import {ref} from "vue";
+
+const leftDrawerOpen = ref(false)
+
+function toggleLeftDrawer () {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+
+}
+</script>
+
 <template>
   <q-layout view="hHh lpR lFf">
       <q-header
         class="bg-img"
       >
         <q-toolbar>
+          <q-btn
+            flat
+            dense
+            round
+            color="black"
+            icon="menu"
+            aria-label="Menu"
+            @click="toggleLeftDrawer"
+          />
           <q-avatar class="img-own q-ma-sm">
             <img src="../assets/logo-white.png" alt="logo" class="bg-primary" >
           </q-avatar>
-          <q-toolbar-title class="text-weight-bold text-h4">
+          <q-toolbar-title class="text-weight-bold text-h4 title">
             ChatterBox
           </q-toolbar-title>
-          <div class="row q-pa-sm q-ml-lg q-col-gutter-sm">
-            <div class="col">
-              <q-btn round color="primary" icon="settings" />
-            </div>
-            <div class="col">
-              <q-btn round color="negative" icon="logout"/>
+          <div class="width">
+            <div class="row q-pa-sm q-ml-lg q-col-gutter-sm right-buttons">
+              <div class="col right">
+                <q-btn round color="primary" icon="settings" />
+              </div>
+              <div class="col">
+                <q-btn round color="negative" icon="logout"/>
+              </div>
             </div>
           </div>
         </q-toolbar>
       </q-header>
     <q-drawer
       v-model="leftDrawerOpen"
+      :width="250"
+      :breakpoint="767"
       show-if-above
       bordered
     >
@@ -50,7 +75,7 @@
       <div class="row q-gutter-md q-mr-lg q-my-md">
         <div class="col q-ml-xl">
           <q-input
-            v-model="search"
+            v-model="input"
             bg-color="grey-9"
             placeholder="Command Line"
             outlined
@@ -70,8 +95,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { defineComponent, ref } from 'vue'
+import EssentialLink from 'components/Channel.vue'
 
 const linksList = [
   {
@@ -208,7 +233,7 @@ export default defineComponent({
     return {
       linksList,
       leftDrawerOpen: false,
-      search: ''
+      input: ''
     }
   }
 })
@@ -223,6 +248,30 @@ export default defineComponent({
     height: auto;
   }
 }
+@media (max-width: 500px) {
+  .title {
+    display: none;
+  }
+  .right-buttons {
+    width: 100%;
+    justify-content: end;
+    position: relative;
+    left: 50px;
+  }
+  .width {
+    justify-content: end;
+    width: 100%;
+  }
+  .right {
+    justify-content: end;
+    text-align: end;
+  }
+}
+@media (max-width: 400px) {
+  .right-buttons {
+    left: 20px;
+  }
+}
 .bg-img {
   background-image: url('../assets/bg-img.jpg');
   background-size: cover;
@@ -233,5 +282,4 @@ export default defineComponent({
   height: auto;
   object-fit: contain;
 }
-
 </style>
