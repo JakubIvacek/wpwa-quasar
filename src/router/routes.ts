@@ -6,14 +6,10 @@ import HomeLayout from 'layouts/HomeLayout.vue'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
+    path: '/home',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/ChatPage.vue') }]
   },
-  {
-    path: '/home',
-    component: HomeLayout
-  }, // AUTH ROUTES /AUTH
   {
     path: '/auth',
     component: LoginBG,

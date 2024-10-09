@@ -1,51 +1,54 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page>
+    <div class="q-pa-md">
+      <q-list>
+        <q-item v-for="chat in chatMessages" :key="chat.id" class="">
+          <q-item-section>
+            <ChatBubble :id="chat.id" :user="chat.user" :message="chat.message" />
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </div>
+    <q-footer
+      class="bg-transparent"
+    >
+      <div class="row q-gutter-md q-mr-lg q-my-md">
+        <div class="col q-ml-xl">
+          <q-input
+            v-model="input"
+            bg-color="grey-9"
+            placeholder="Command Line"
+            outlined
+            dense
+          />
+        </div>
+        <div class="col col-auto">
+          <q-btn
+            color="primary"
+            icon="send"
+            type="submit"
+            round />
+        </div>
+      </div>
+    </q-footer>
   </q-page>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+
 import { ref } from 'vue'
-import ExampleComponent from 'components/ExampleComponent.vue'
+import ChatBubble from "components/ChatBubble.vue";
 
-export default ref({
-  components: { ExampleComponent },
-
-  data () {
-    const todos: Todo[] = [
-      {
-        id: 1,
-        content: 'ct1'
-      },
-      {
-        id: 2,
-        content: 'ct2'
-      },
-      {
-        id: 3,
-        content: 'ct3'
-      },
-      {
-        id: 4,
-        content: 'ct4'
-      },
-      {
-        id: 5,
-        content: 'ct5'
-      }
-    ]
-
-    const meta: Meta = {
-      totalCount: 1200
-    }
-
-    return { todos, meta }
+const chatMessages = ref([
+  {
+    id: 1,
+    user: 'Pety',
+    message: "Ahoj"
+  },
+  {
+    id: 2,
+    user: 'Keno',
+    message: "Ahoj"
   }
-})
-
+])
 </script>

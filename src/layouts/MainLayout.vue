@@ -1,15 +1,3 @@
-<script setup lang="ts">
-
-import {ref} from "vue";
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-
-}
-</script>
-
 <template>
   <q-layout view="hHh lpR lFf">
       <q-header
@@ -57,8 +45,8 @@ function toggleLeftDrawer () {
           Channels
         </q-item-label>
 
-        <EssentialLink
-          v-for="link in linksList"
+        <ChannelLink
+          v-for="link in channelList"
           :key="link.title"
           v-bind="link"
         />
@@ -69,36 +57,15 @@ function toggleLeftDrawer () {
       <router-view />
     </q-page-container>
 
-    <q-footer
-      class="bg-transparent"
-    >
-      <div class="row q-gutter-md q-mr-lg q-my-md">
-        <div class="col q-ml-xl">
-          <q-input
-            v-model="input"
-            bg-color="grey-9"
-            placeholder="Command Line"
-            outlined
-            dense
-          />
-        </div>
-        <div class="col col-auto">
-          <q-btn
-            color="primary"
-            icon="send"
-            type="submit"
-            round />
-        </div>
-      </div>
-    </q-footer>
+
   </q-layout>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/Channel.vue'
+<script setup lang="ts">
+import { ref } from 'vue'
+import ChannelLink from 'components/ChannelLink.vue'
 
-const linksList = [
+const channelList = [
   {
     title: 'Channel 1',
     icon: 'school',
@@ -222,21 +189,11 @@ const linksList = [
   }
 ]
 
-export default defineComponent({
-  name: 'MainLayout',
+const leftDrawerOpen = ref(false)
 
-  components: {
-    EssentialLink
-  },
-
-  data () {
-    return {
-      linksList,
-      leftDrawerOpen: false,
-      input: ''
-    }
-  }
-})
+function toggleLeftDrawer () {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
 
 </script>
 
