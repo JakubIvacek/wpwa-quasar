@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-pa-md">
       <q-list>
-        <q-item v-for="chat in chatMessages" :key="chat.id" class="">
+        <q-item v-for="chat in chatMessages" :key="chat.id" class="hover-grey">
           <q-item-section>
             <ChatBubble :id="chat.id" :user="chat.user" :message="chat.message" />
           </q-item-section>
@@ -52,3 +52,11 @@ const chatMessages = ref([
   }
 ])
 </script>
+
+<style>
+.hover-grey:hover {
+  background-color: rgba(240, 240, 240, 0.26);
+
+  transition: background-color 0.3s ease;
+}
+</style>/
