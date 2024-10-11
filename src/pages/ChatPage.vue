@@ -9,27 +9,27 @@
         </q-item>
       </q-list>
     </div>
-    <q-footer
-      class="bg-transparent"
-    >
-      <div class="row q-gutter-md q-mr-lg q-my-md">
-        <div class="col q-ml-xl">
-          <q-input
-            v-model="input"
-            bg-color="grey-9"
-            placeholder="Command Line"
-            outlined
-            dense
-          />
+    <q-footer class="bg-transparent">
+      <q-form @submit="sendMessage">
+        <div class="row q-gutter-md q-mr-lg q-my-md">
+          <div class="col q-ml-xl">
+            <q-input
+              v-model="message"
+              bg-color="grey-9"
+              placeholder="Command Line"
+              outlined
+              dense
+            />
+          </div>
+          <div class="col col-auto">
+            <q-btn
+              color="primary"
+              icon="send"
+              type="submit"
+              round />
+          </div>
         </div>
-        <div class="col col-auto">
-          <q-btn
-            color="primary"
-            icon="send"
-            type="submit"
-            round />
-        </div>
-      </div>
+      </q-form>
     </q-footer>
   </q-page>
 </template>
@@ -37,6 +37,7 @@
 <script setup lang="ts">
 
 import { ref } from 'vue'
+import {uid} from "quasar";
 import ChatBubble from "components/ChatBubble.vue";
 
 const chatMessages = ref([
@@ -51,6 +52,19 @@ const chatMessages = ref([
     message: "Ahoj"
   }
 ])
+
+const message = ref<string>('');
+
+const commandLineReset = () => {
+  message.value = '';
+}
+
+const sendMessage = ():void => {
+  const newMessage = Object.assign({}, {user: 'Pety', id: uid(), message: message.value});
+  chatMessages.value.push(newMessage);
+  commandLineReset()
+}
+
 </script>
 
 <style>
