@@ -35,6 +35,7 @@
       v-model="leftDrawerOpen"
       :width="250"
       :breakpoint="767"
+      class="scroll"
       show-if-above
       bordered
     >

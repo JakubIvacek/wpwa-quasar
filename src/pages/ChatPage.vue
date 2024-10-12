@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="q-pa-md">
+    <q-scroll-area class="chat-list q-pa-md" style="height: 80vh;">
       <q-list>
         <q-item v-for="chat in chatMessages" :key="chat.id" class="hover-grey">
           <q-item-section>
@@ -8,7 +8,7 @@
           </q-item-section>
         </q-item>
       </q-list>
-    </div>
+    </q-scroll-area>
     <q-footer class="bg-transparent">
       <q-form @submit="sendMessage">
         <div class="row q-gutter-md q-mr-lg q-my-md">
@@ -26,6 +26,7 @@
               color="primary"
               icon="send"
               type="submit"
+              :disabled="isSendDisabled"
               round />
           </div>
         </div>
@@ -36,11 +37,81 @@
 
 <script setup lang="ts">
 
-import { ref } from 'vue'
+import {computed, ref} from 'vue'
 import {uid} from "quasar";
 import ChatBubble from "components/ChatBubble.vue";
 
 const chatMessages = ref([
+  {
+    id: 1,
+    user: 'Pety',
+    message: "Ahoj"
+  },
+  {
+    id: 2,
+    user: 'Keno',
+    message: "Ahoj"
+  },
+  {
+    id: 1,
+    user: 'Pety',
+    message: "Ahoj"
+  },
+  {
+    id: 2,
+    user: 'Keno',
+    message: "Ahoj"
+  },
+  {
+    id: 1,
+    user: 'Pety',
+    message: "Ahoj"
+  },
+  {
+    id: 2,
+    user: 'Keno',
+    message: "Ahoj"
+  },
+  {
+    id: 1,
+    user: 'Pety',
+    message: "Ahoj"
+  },
+  {
+    id: 2,
+    user: 'Keno',
+    message: "Ahoj"
+  },
+  {
+    id: 1,
+    user: 'Pety',
+    message: "Ahoj"
+  },
+  {
+    id: 2,
+    user: 'Keno',
+    message: "Ahoj"
+  },
+  {
+    id: 1,
+    user: 'Pety',
+    message: "Ahoj"
+  },
+  {
+    id: 2,
+    user: 'Keno',
+    message: "Ahoj"
+  },
+  {
+    id: 1,
+    user: 'Pety',
+    message: "Ahoj"
+  },
+  {
+    id: 2,
+    user: 'Keno',
+    message: "Ahoj"
+  },
   {
     id: 1,
     user: 'Pety',
@@ -65,9 +136,13 @@ const sendMessage = ():void => {
   commandLineReset()
 }
 
+const isSendDisabled = computed(() => {
+  return message.value.trim() === '';
+});
+
 </script>
 
-<style>
+<style scoped>
 .hover-grey:hover {
   background-color: rgba(240, 240, 240, 0.26);
 
