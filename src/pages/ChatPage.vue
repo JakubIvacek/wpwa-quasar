@@ -37,92 +37,19 @@
 
 <script setup lang="ts">
 
-import {computed, ref} from 'vue'
-import {uid} from "quasar";
+import { computed, ref } from 'vue'
+import { uid } from "quasar";
 import ChatBubble from "components/ChatBubble.vue";
+import { channelList } from "src/channels";
+import { useRoute } from "vue-router";
 
-const chatMessages = ref([
-  {
-    id: 1,
-    user: 'Pety',
-    message: "Ahoj"
-  },
-  {
-    id: 2,
-    user: 'Keno',
-    message: "Ahoj"
-  },
-  {
-    id: 1,
-    user: 'Pety',
-    message: "Ahoj"
-  },
-  {
-    id: 2,
-    user: 'Keno',
-    message: "Ahoj"
-  },
-  {
-    id: 1,
-    user: 'Pety',
-    message: "Ahoj"
-  },
-  {
-    id: 2,
-    user: 'Keno',
-    message: "Ahoj"
-  },
-  {
-    id: 1,
-    user: 'Pety',
-    message: "Ahoj"
-  },
-  {
-    id: 2,
-    user: 'Keno',
-    message: "Ahoj"
-  },
-  {
-    id: 1,
-    user: 'Pety',
-    message: "Ahoj"
-  },
-  {
-    id: 2,
-    user: 'Keno',
-    message: "Ahoj"
-  },
-  {
-    id: 1,
-    user: 'Pety',
-    message: "Ahoj"
-  },
-  {
-    id: 2,
-    user: 'Keno',
-    message: "Ahoj"
-  },
-  {
-    id: 1,
-    user: 'Pety',
-    message: "Ahoj"
-  },
-  {
-    id: 2,
-    user: 'Keno',
-    message: "Ahoj"
-  },
-  {
-    id: 1,
-    user: 'Pety',
-    message: "Ahoj"
-  },
-  {
-    id: 2,
-    user: 'Keno',
-    message: "Ahoj"
-  }
-])
+const route = useRoute()
+const channelId = computed(() => Number(route.params.channelId))
+
+const chatMessages = computed(() => {
+  const channel = channelList.find(c => c.channelId === channelId.value)
+  return channel ? channel.messages : []
+})
 
 const message = ref<string>('');
 
@@ -132,7 +59,10 @@ const commandLineReset = () => {
 
 const sendMessage = ():void => {
   const newMessage = Object.assign({}, {user: 'Pety', id: uid(), message: message.value});
-  chatMessages.value.push(newMessage);
+  const channel = channelList.find(c => c.channelId === channelId.value);
+  if (channel) {
+    channel.messages.push(newMessage);
+  }
   commandLineReset()
 }
 

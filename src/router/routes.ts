@@ -9,8 +9,9 @@ const routes: RouteRecordRaw[] = [
     redirect: '/auth',
   },
   {
-    path: '/home',
+    path: '/home/:channelId',
     component: () => import('layouts/MainLayout.vue'),
+    props: true,
     children: [{ path: '', component: () => import('pages/ChatPage.vue') }]
   },
   {

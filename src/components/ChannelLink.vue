@@ -2,8 +2,8 @@
   <q-item
     clickable
     tag="a"
-    target="_blank"
-    :href="link"
+    :to="`/home/${channelId}`"
+    class="text-white"
   >
     <q-item-section
       v-if="icon"
@@ -25,20 +25,23 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'ChannelLink',
   props: {
+    channelId: {
+      type: Number,
+      required: true
+    },
     title: {
       type: String,
       required: true
     },
-
-    link: {
-      type: String,
-      default: '#'
-    },
-
     icon: {
       type: String,
       default: ''
+    },
+    messages: {
+      type: Array as () => Array<{ id: number, user: string, message: string }>,
+      default: () => []
     }
   }
 })
+
 </script>
