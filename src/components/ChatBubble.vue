@@ -17,11 +17,11 @@
 </template>
 
 <script setup lang="ts">
-  defineProps({
-    id: Number,
-    user: String,
-    message: String,
-  })
+defineProps({
+  id: String,
+  user: String,
+  message: String
+})
 </script>
 
 <style scoped>
@@ -37,6 +37,3 @@
 }
 
 </style>
-
-
-

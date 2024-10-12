@@ -58,16 +58,13 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-
-
   </q-layout>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import ChannelLink from 'components/ChannelLink.vue'
-import { channelList } from "src/channels";
-
+import { channelList } from 'src/channels'
 
 const leftDrawerOpen = ref(false)
 

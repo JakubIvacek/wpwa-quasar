@@ -38,38 +38,36 @@
 <script setup lang="ts">
 
 import { computed, ref } from 'vue'
-import { uid } from "quasar";
-import ChatBubble from "components/ChatBubble.vue";
-import { channelList } from "src/channels";
-import { useRoute } from "vue-router";
+import { uid } from 'quasar'
+import ChatBubble from 'components/ChatBubble.vue'
+import { channelList } from 'src/channels'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const channelId = computed(() => Number(route.params.channelId))
+const channelId = computed(() => route.params.channelId)
 
 const chatMessages = computed(() => {
   const channel = channelList.find(c => c.channelId === channelId.value)
   return channel ? channel.messages : []
 })
 
-const message = ref<string>('');
+const message = ref<string>('')
 
 const commandLineReset = () => {
-  message.value = '';
+  message.value = ''
 }
 
 const sendMessage = ():void => {
-  const newMessage = Object.assign({}, {user: 'Pety', id: uid(), message: message.value});
-  const channel = channelList.find(c => c.channelId === channelId.value);
+  const newMessage = Object.assign({}, { user: 'Pety', id: uid(), message: message.value })
+  const channel = channelList.find(c => c.channelId === channelId.value)
   if (channel) {
-    channel.messages.push(newMessage);
+    channel.messages.push(newMessage)
   }
   commandLineReset()
 }
-
 const isSendDisabled = computed(() => {
-  return message.value.trim() === '';
-});
-
+  return message.value.trim() === ''
+})
 </script>
 
 <style scoped>

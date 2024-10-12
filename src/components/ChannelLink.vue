@@ -14,7 +14,6 @@
 
     <q-item-section>
       <q-item-label>{{ title }}</q-item-label>
-      <q-item-label caption> {{ caption }} </q-item-label>
     </q-item-section>
   </q-item>
 </template>
@@ -26,7 +25,7 @@ export default defineComponent({
   name: 'ChannelLink',
   props: {
     channelId: {
-      type: Number,
+      type: String,
       required: true
     },
     title: {
@@ -38,7 +37,7 @@ export default defineComponent({
       default: ''
     },
     messages: {
-      type: Array as () => Array<{ id: number, user: string, message: string }>,
+      type: Array as () => Array<{ id: string, user: string, message: string }>,
       default: () => []
     }
   }

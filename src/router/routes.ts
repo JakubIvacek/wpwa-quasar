@@ -6,7 +6,7 @@ import LoginBG from 'layouts/AuthTemplate.vue'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/auth',
+    redirect: '/auth'
   },
   {
     path: '/home/:channelId',

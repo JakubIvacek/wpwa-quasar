@@ -1,30 +1,30 @@
-import {reactive} from "vue";
+import { reactive } from 'vue'
 
 export const channelList = reactive([
   {
-    channelId: 1,
+    channelId: '1',
     title: 'Channel 1',
     icon: 'school',
     messages: [
       {
-        id: 1,
+        id: '1',
         user: 'Pety',
-        message: "Ahoj"
+        message: 'Ahoj'
       },
       {
-        id: 2,
+        id: '2',
         user: 'Keno',
-        message: "Ahoj"
+        message: 'Ahoj'
       },
       {
-        id: 1,
+        id: '1',
         user: 'Pety',
-        message: "Ahoj"
+        message: 'Ahoj'
       }
     ]
   },
   {
-    channelId: 2,
+    channelId: '2',
     title: 'Channel 2',
     icon: 'chat',
     messages: []
