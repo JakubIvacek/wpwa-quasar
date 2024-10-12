@@ -45,7 +45,6 @@
         >
           Channels
         </q-item-label>
-
         <ChannelLink
           v-for="channel in channelList"
           :key="channel.title"

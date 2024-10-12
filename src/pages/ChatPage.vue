@@ -10,7 +10,7 @@
       </q-list>
     </q-scroll-area>
     <q-footer class="bg-transparent">
-      <q-form @submit="sendMessage">
+      <q-form @submit="validateCommandInput">
         <div class="row q-gutter-md q-mr-lg q-my-md">
           <div class="col q-ml-xl">
             <q-input
@@ -57,17 +57,43 @@ const commandLineReset = () => {
   message.value = ''
 }
 
+const isSendDisabled = computed(() => {
+  return message.value.trim() === ''
+})
+
 const sendMessage = ():void => {
   const newMessage = Object.assign({}, { user: 'Pety', id: uid(), message: message.value })
   const channel = channelList.find(c => c.channelId === channelId.value)
   if (channel) {
     channel.messages.push(newMessage)
   }
+}
+
+function startsWithSlash(): boolean {
+  return message.value.startsWith('/');
+}
+
+function addChannel(): void {
+  const parts = message.value.split(' ')
+  const newChannel = Object.assign({}, {channelId: uid(), title: parts.slice(1).join(' '), icon: 'school', messages: []})
+  channelList.push(newChannel)
+}
+
+const validateCommandInput = (): void => {
+    if (startsWithSlash()){
+      switch (message.value.split(' ')[0]) {
+        case '/join':
+          addChannel()
+          break
+        default:
+          sendMessage()
+      }
+    } else {
+      sendMessage()
+    }
   commandLineReset()
 }
-const isSendDisabled = computed(() => {
-  return message.value.trim() === ''
-})
+
 </script>
 
 <style scoped>

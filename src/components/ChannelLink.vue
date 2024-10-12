@@ -3,7 +3,6 @@
     clickable
     tag="a"
     :to="`/home/${channelId}`"
-    class="text-white"
   >
     <q-item-section
       v-if="icon"
