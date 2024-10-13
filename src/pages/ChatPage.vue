@@ -1,24 +1,27 @@
 <template>
   <q-page class="q-pa-sm flex-column full-height">
     <q-scroll-area style="height: 77vh" >
-      <div class="q-pa-md">
-        <q-infinite-scroll @load="onLoad" reverse class="own-padding"  :disable="!hasMoreMessages">
-          <template v-slot:loading>
-            <div class="row justify-center q-my-md">
-              <q-spinner color="primary" name="dots" size="40px" />
+      <div class="box">
+        <div class="row filler"></div>
+        <div class="row message-container q-pa-md">
+          <q-infinite-scroll @load="onLoad" reverse class="own-padding"  :disable="!hasMoreMessages">
+            <template v-slot:loading>
+              <div class="row justify-center q-my-md">
+                <q-spinner color="primary" name="dots" size="40px" />
+              </div>
+            </template>
+            <div class="chat-container2">
+              <div v-for="(item, index) in items" :key="index" class="caption">
+                <ChatBubble
+                  class="hover-grey chat"
+                  :id="item.id"
+                  :user="item.user"
+                  :message="item.message"
+                />
+              </div>
             </div>
-          </template>
-          <div class="chat-container2">
-            <div v-for="(item, index) in items" :key="index" class="caption">
-              <ChatBubble
-                class="hover-grey chat"
-                :id="item.id"
-                :user="item.user"
-                :message="item.message"
-              />
-            </div>
-          </div>
-        </q-infinite-scroll>
+          </q-infinite-scroll>
+        </div>
       </div>
     </q-scroll-area>
     <q-footer class="bg-dark">
@@ -130,7 +133,7 @@ const onLoad = (index: number, done: () => void) => {
     // Load new messages if available
     for (const message of chatMessages.value.slice(currentLength)) {
       if (counter < 25 && currentLength + counter < chatMessages.value.length) {
-        items.value.push(message)
+        items.value.unshift(message)
         counter += 1
       } else {
         break
@@ -149,9 +152,18 @@ watch(channelId, () => {
 </script>
 
 <style scoped>
-.chat-container {
-  padding: 5px; /* Padding okolo kontajnera */
-  overflow-y: auto;
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 77vh;
+}
+
+.box .row.filler {
+  flex: 1 1 auto;
+}
+
+.box .row.message-container {
+  flex: 0 1 auto;
 }
 .full-height {
   height: 100%
