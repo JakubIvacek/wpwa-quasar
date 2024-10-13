@@ -95,6 +95,96 @@ export const channelList = reactive([
         id: '1',
         user: 'Pety',
         message: 'Posledna'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Ahoj'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Ahoj'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Ahoj'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '10'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Ahoj'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Ahoj'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: 'Ahoj'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Posledna'
       }
     ]
   },

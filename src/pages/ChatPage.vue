@@ -1,8 +1,25 @@
 <template>
   <q-page class="q-pa-sm" style="height: 77vh">
-    <q-scroll-area style="height: 100%">
+    <q-scroll-area style="height: 100%" >
       <div class="chat-container">
-        <ChatBubble class="hover-grey chat" v-for="chat in chatMessages" :id="chat.id" :user="chat.user" :message="chat.message" />
+        <div class="q-pa-md">
+          <q-infinite-scroll @load="onLoad" reverse class="own-padding">
+            <template v-slot:loading>
+              <div class="row justify-center q-my-md">
+                <q-spinner color="primary" name="dots" size="40px" />
+              </div>
+            </template>
+
+            <div v-for="(item, index) in items" :key="index" class="caption">
+              <ChatBubble
+                class="hover-grey chat"
+                :id="item.id"
+                :user="item.user"
+                :message="item.message"
+              />
+            </div>
+          </q-infinite-scroll>
+        </div>
       </div>
     </q-scroll-area>
     <q-footer class="bg-dark">
@@ -32,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, ref} from 'vue'
+import { computed, ref } from 'vue'
 import { uid } from 'quasar'
 import ChatBubble from 'components/ChatBubble.vue'
 import { channelList } from 'src/channels'
@@ -48,14 +65,6 @@ const chatMessages = computed(() => {
 
 const message = ref<string>('')
 
-const scrollToBottom = () => {
-  nextTick(() => {
-    if (scrollArea.value) {
-      scrollArea.value.setScrollPosition('end')
-    }
-  })
-}
-
 const commandLineReset = () => {
   message.value = ''
 }
@@ -69,33 +78,58 @@ const sendMessage = ():void => {
   const channel = channelList.find(c => c.channelId === channelId.value)
   if (channel) {
     channel.messages.push(newMessage)
-    scrollToBottom()
+    // scrollToBottom()
   }
 }
 
-function startsWithSlash(): boolean {
-  return message.value.startsWith('/');
+function startsWithSlash (): boolean {
+  return message.value.startsWith('/')
 }
 
-function addChannel(): void {
+function addChannel (): void {
   const parts = message.value.split(' ')
-  const newChannel = Object.assign({}, {channelId: uid(), title: parts.slice(1).join(' '), icon: 'tag', messages: []})
+  const newChannel = Object.assign({}, { channelId: uid(), title: parts.slice(1).join(' '), icon: 'tag', messages: [] })
   channelList.push(newChannel)
 }
 
 const validateCommandInput = (): void => {
-    if (startsWithSlash()){
-      switch (message.value.split(' ')[0]) {
-        case '/join':
-          addChannel()
+  if (startsWithSlash()) {
+    switch (message.value.split(' ')[0]) {
+      case '/join':
+        addChannel()
+        break
+      default:
+        sendMessage()
+    }
+  } else {
+    sendMessage()
+  }
+  commandLineReset()
+}
+interface ChatItem {
+  id: string;
+  user: string;
+  message: string;
+}
+const items = ref<ChatItem[]>([])
+const onLoad = (index: number, done: () => void) => {
+  setTimeout(() => {
+    if (chatMessages.value.length > 0) {
+      const currentLength = items.value.length
+      let counter = 0
+      for (const message of chatMessages.value) {
+        if (counter < 20 && currentLength + counter < chatMessages.value.length) {
+          items.value.push(message) // Add the message to items
+          counter += 1
+        } else {
           break
-        default:
-          sendMessage()
+        }
       }
     } else {
-      sendMessage()
+      console.warn('No messages to load.')
     }
-  commandLineReset()
+    done()
+  }, 800)
 }
 </script>
 
@@ -116,4 +150,5 @@ const validateCommandInput = (): void => {
 .chat {
   padding: 10px; /* Padding okolo chat bubliny */
 }
+
 </style>

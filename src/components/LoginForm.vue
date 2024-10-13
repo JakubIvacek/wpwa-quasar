@@ -18,9 +18,9 @@
     </q-card-section>
     <q-card-section>
       <q-form  class="q-gutter-md" @submit.prevent="submitLogin">
-        <q-input filled label="Email" model-value="" v-model="login.email" color="cyan-10">
+        <q-input filled label="Email"  v-model="login.email" color="cyan-10">
         </q-input>
-        <q-input  filled label="Password" model-value="" type="password" v-model="login.password" color="cyan-10">
+        <q-input  filled label="Password" type="password" v-model="login.password" color="cyan-10">
         </q-input>
         <div  class="flex flex-center">
           <q-btn style="width:80%" color="cyan-10" label="Login" rounded type="submit">
@@ -34,21 +34,19 @@
   </q-card>
 </template>
 
-<script>
-import { useQuasar } from 'quasar'
-
+<script lang="ts">
 export default {
   data () {
     return {
       login: {
         email: '',
         password: ''
-      },
-      $q: null
+      }
     }
   },
   methods: {
     submitLogin () {
+      // Using this.$q to access Quasar's $q instance
       if (!this.login.email || !this.login.password) {
         this.$q.notify({
           type: 'negative',
@@ -57,15 +55,12 @@ export default {
       } else if (this.login.password.length < 6) {
         this.$q.notify({
           type: 'negative',
-          message: 'Password too short minimal length is 6'
+          message: 'Password too short, minimum length is 6'
         })
       } else {
-        console.log('login')
+        console.log('Logging in with:', this.login)
       }
     }
-  },
-  mounted () {
-    this.$q = useQuasar()
   }
 }
 </script>
