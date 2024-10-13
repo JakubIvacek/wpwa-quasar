@@ -39,6 +39,7 @@
       show-if-above
       bordered
     >
+      <q-scroll-area class="fit">
       <q-list>
         <q-item-label
           header
@@ -53,6 +54,7 @@
           :icon="channel.icon"
         />
       </q-list>
+      </q-scroll-area>
     </q-drawer>
     <q-page-container>
       <router-view />

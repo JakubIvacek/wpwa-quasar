@@ -2,7 +2,7 @@
   <q-page class="q-pa-sm flex-column full-height">
     <q-scroll-area style="height: 77vh" >
       <div class="q-pa-md">
-        <q-infinite-scroll @load="onLoad" reverse class="own-padding">
+        <q-infinite-scroll @load="onLoad" reverse class="own-padding"  :disable="!hasMoreMessages">
           <template v-slot:loading>
             <div class="row justify-center q-my-md">
               <q-spinner color="primary" name="dots" size="40px" />
@@ -58,7 +58,6 @@ const route = useRoute()
 const channelId = computed(() => route.params.channelId)
 
 const message = ref<string>('')
-
 const commandLineReset = () => {
   message.value = ''
 }
@@ -73,7 +72,7 @@ const sendMessage = ():void => {
   if (channel) {
     items.value = []
     channel.messages.unshift(newMessage)
-    // scrollToBottom()
+    onLoad(0, () => {})
   }
 }
 function startsWithSlash (): boolean {
@@ -105,7 +104,8 @@ interface ChatItem {
   user: string;
   message: string;
 }
-const chatMessages = ref([])
+const chatMessages = ref<ChatItem[]>([])
+const hasMoreMessages = ref(true)
 
 function setChatMessages () {
   const channel = channelList.find(c => c.channelId === channelId.value)
@@ -116,26 +116,35 @@ const items = ref<ChatItem[]>([])
 const onLoad = (index: number, done: () => void) => {
   setTimeout(() => {
     setChatMessages()
-    if (chatMessages.value.length > 0) {
-      const currentLength = items.value.length
-      let counter = 0
-      for (const message of chatMessages.value) {
-        if (counter < 25 && currentLength + counter < chatMessages.value.length) {
-          items.value.push(message) // Add the message to items
-          counter += 1
-        } else {
-          break
-        }
-      }
-    } else {
+
+    const currentLength = items.value.length
+    if (chatMessages.value.length === 0) {
       console.warn('No messages to load.')
+      hasMoreMessages.value = false // Disable loading if no messages
+      done()
+      return
     }
+
+    let counter = 0
+
+    // Load new messages if available
+    for (const message of chatMessages.value.slice(currentLength)) {
+      if (counter < 25 && currentLength + counter < chatMessages.value.length) {
+        items.value.push(message)
+        counter += 1
+      } else {
+        break
+      }
+    }
+
+    // Check if all messages are loaded
+    hasMoreMessages.value = items.value.length < chatMessages.value.length
     done()
   }, 800)
 }
 watch(channelId, () => {
   items.value = []
-  onLoad()
+  onLoad(0, () => {})
 })
 </script>
 
