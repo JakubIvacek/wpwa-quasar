@@ -1,15 +1,11 @@
 <template>
-  <q-page>
-    <q-scroll-area class="chat-list q-pa-md" style="height: 80vh;">
-      <q-list>
-        <q-item v-for="chat in chatMessages" :key="chat.id" class="hover-grey">
-          <q-item-section>
-            <ChatBubble :id="chat.id" :user="chat.user" :message="chat.message" />
-          </q-item-section>
-        </q-item>
-      </q-list>
+  <q-page class="q-pa-sm" style="height: 77vh">
+    <q-scroll-area style="height: 100%">
+      <div class="chat-container">
+        <ChatBubble class="hover-grey chat" v-for="chat in chatMessages" :id="chat.id" :user="chat.user" :message="chat.message" />
+      </div>
     </q-scroll-area>
-    <q-footer class="bg-transparent">
+    <q-footer class="bg-dark">
       <q-form @submit="validateCommandInput">
         <div class="row q-gutter-md q-mr-lg q-my-md">
           <div class="col q-ml-xl">
@@ -36,8 +32,7 @@
 </template>
 
 <script setup lang="ts">
-
-import { computed, ref } from 'vue'
+import {computed, nextTick, ref} from 'vue'
 import { uid } from 'quasar'
 import ChatBubble from 'components/ChatBubble.vue'
 import { channelList } from 'src/channels'
@@ -53,6 +48,14 @@ const chatMessages = computed(() => {
 
 const message = ref<string>('')
 
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (scrollArea.value) {
+      scrollArea.value.setScrollPosition('end')
+    }
+  })
+}
+
 const commandLineReset = () => {
   message.value = ''
 }
@@ -66,6 +69,7 @@ const sendMessage = ():void => {
   const channel = channelList.find(c => c.channelId === channelId.value)
   if (channel) {
     channel.messages.push(newMessage)
+    scrollToBottom()
   }
 }
 
@@ -75,7 +79,7 @@ function startsWithSlash(): boolean {
 
 function addChannel(): void {
   const parts = message.value.split(' ')
-  const newChannel = Object.assign({}, {channelId: uid(), title: parts.slice(1).join(' '), icon: 'school', messages: []})
+  const newChannel = Object.assign({}, {channelId: uid(), title: parts.slice(1).join(' '), icon: 'tag', messages: []})
   channelList.push(newChannel)
 }
 
@@ -93,13 +97,23 @@ const validateCommandInput = (): void => {
     }
   commandLineReset()
 }
-
 </script>
 
 <style scoped>
+.chat-container {
+  padding: 5px; /* Padding okolo kontajnera */
+  overflow-y: auto;
+}
+
+.hover-grey {
+  transition: background-color 0.3s ease; /* Prechod pre hover efekt */
+}
+
 .hover-grey:hover {
   background-color: rgba(240, 240, 240, 0.26);
-
-  transition: background-color 0.3s ease;
 }
-</style>/
+
+.chat {
+  padding: 10px; /* Padding okolo chat bubliny */
+}
+</style>
