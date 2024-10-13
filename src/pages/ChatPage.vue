@@ -1,15 +1,14 @@
 <template>
   <q-page class="q-pa-sm" style="height: 77vh">
     <q-scroll-area style="height: 100%" >
-      <div class="chat-container">
-        <div class="q-pa-md">
-          <q-infinite-scroll @load="onLoad" reverse class="own-padding">
-            <template v-slot:loading>
-              <div class="row justify-center q-my-md">
-                <q-spinner color="primary" name="dots" size="40px" />
-              </div>
-            </template>
-
+      <div class="q-pa-md">
+        <q-infinite-scroll @load="onLoad" reverse class="own-padding">
+          <template v-slot:loading>
+            <div class="row justify-center q-my-md">
+              <q-spinner color="primary" name="dots" size="40px" />
+            </div>
+          </template>
+          <div class="chat-container2">
             <div v-for="(item, index) in items" :key="index" class="caption">
               <ChatBubble
                 class="hover-grey chat"
@@ -18,8 +17,8 @@
                 :message="item.message"
               />
             </div>
-          </q-infinite-scroll>
-        </div>
+          </div>
+        </q-infinite-scroll>
       </div>
     </q-scroll-area>
     <q-footer class="bg-dark">
@@ -77,7 +76,7 @@ const sendMessage = ():void => {
   const newMessage = Object.assign({}, { user: 'Pety', id: uid(), message: message.value })
   const channel = channelList.find(c => c.channelId === channelId.value)
   if (channel) {
-    channel.messages.push(newMessage)
+    channel.messages.unshift(newMessage)
     // scrollToBottom()
   }
 }
@@ -138,7 +137,6 @@ const onLoad = (index: number, done: () => void) => {
   padding: 5px; /* Padding okolo kontajnera */
   overflow-y: auto;
 }
-
 .hover-grey {
   transition: background-color 0.3s ease; /* Prechod pre hover efekt */
 }
@@ -150,5 +148,21 @@ const onLoad = (index: number, done: () => void) => {
 .chat {
   padding: 10px; /* Padding okolo chat bubliny */
 }
-
+.chat-container2 {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  min-height: 70vh;
+  overflow-y: auto;
+}
+@media (max-width: 500px) {
+  .chat-container2 {
+    min-height: 67vh;
+  }
+}
+@media (max-width: 400px) {
+  .chat-container2 {
+    min-height: 57vh;
+  }
+}
 </style>
