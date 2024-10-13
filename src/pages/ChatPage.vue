@@ -1,6 +1,6 @@
 <template>
-  <q-page class="q-pa-sm" style="height: 77vh">
-    <q-scroll-area style="height: 100%" >
+  <q-page class="q-pa-sm flex-column full-height">
+    <q-scroll-area style="height: 77vh" >
       <div class="q-pa-md">
         <q-infinite-scroll @load="onLoad" reverse class="own-padding">
           <template v-slot:loading>
@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { uid } from 'quasar'
 import ChatBubble from 'components/ChatBubble.vue'
 import { channelList } from 'src/channels'
@@ -56,11 +56,6 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const channelId = computed(() => route.params.channelId)
-
-const chatMessages = computed(() => {
-  const channel = channelList.find(c => c.channelId === channelId.value)
-  return channel ? channel.messages : []
-})
 
 const message = ref<string>('')
 
@@ -76,11 +71,11 @@ const sendMessage = ():void => {
   const newMessage = Object.assign({}, { user: 'Pety', id: uid(), message: message.value })
   const channel = channelList.find(c => c.channelId === channelId.value)
   if (channel) {
+    items.value = []
     channel.messages.unshift(newMessage)
     // scrollToBottom()
   }
 }
-
 function startsWithSlash (): boolean {
   return message.value.startsWith('/')
 }
@@ -110,14 +105,22 @@ interface ChatItem {
   user: string;
   message: string;
 }
+const chatMessages = ref([])
+
+function setChatMessages () {
+  const channel = channelList.find(c => c.channelId === channelId.value)
+  chatMessages.value = channel ? channel.messages : []
+}
+
 const items = ref<ChatItem[]>([])
 const onLoad = (index: number, done: () => void) => {
   setTimeout(() => {
+    setChatMessages()
     if (chatMessages.value.length > 0) {
       const currentLength = items.value.length
       let counter = 0
       for (const message of chatMessages.value) {
-        if (counter < 20 && currentLength + counter < chatMessages.value.length) {
+        if (counter < 25 && currentLength + counter < chatMessages.value.length) {
           items.value.push(message) // Add the message to items
           counter += 1
         } else {
@@ -130,12 +133,24 @@ const onLoad = (index: number, done: () => void) => {
     done()
   }, 800)
 }
+watch(channelId, () => {
+  items.value = []
+  onLoad()
+})
 </script>
 
 <style scoped>
 .chat-container {
   padding: 5px; /* Padding okolo kontajnera */
   overflow-y: auto;
+}
+.full-height {
+  height: 100%
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
 .hover-grey {
   transition: background-color 0.3s ease; /* Prechod pre hover efekt */
@@ -152,7 +167,7 @@ const onLoad = (index: number, done: () => void) => {
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-start;
-  min-height: 70vh;
+  height: 100%;
   overflow-y: auto;
 }
 @media (max-width: 500px) {
