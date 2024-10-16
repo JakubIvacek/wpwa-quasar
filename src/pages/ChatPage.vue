@@ -1,28 +1,21 @@
 <template>
   <q-page class="q-pa-sm flex-column full-height">
-    <q-scroll-area ref="chatArea"  style="height: 77vh">
-      <div class="box">
-        <div class="row filler"></div>
-        <div class="row message-container q-pa-md">
-          <q-infinite-scroll @load="onLoad" reverse :offset="0" class="own-padding" style="width: 100%" :disable="!hasMoreMessages">
-            <template v-slot:loading>
-              <div class="row justify-center q-my-md">
-                <q-spinner color="primary" name="dots" size="40px" />
-              </div>
-            </template>
-            <div class="chat-container2">
-              <div v-for="(item, index) in items" :key="index" class="caption">
-                <ChatBubble
-                  class="hover-grey chat"
-                  :id="item.id"
-                  :user="item.user"
-                  :message="item.message"
-                />
-              </div>
-            </div>
-          </q-infinite-scroll>
+    <q-scroll-area ref="chatArea"  class="box">
+      <q-infinite-scroll @load="onLoad" reverse :offset="0" class="own-padding"  :disable="!hasMoreMessages">
+        <template v-slot:loading>
+          <div class="row justify-center q-my-md">
+            <q-spinner color="primary" name="dots" size="40px" />
+          </div>
+        </template>
+        <div v-for="(item, index) in items" :key="index" class="chat-container2">
+          <ChatBubble
+            class="hover-grey chat"
+            :id="item.id"
+            :user="item.user"
+            :message="item.message"
+          />
         </div>
-      </div>
+      </q-infinite-scroll>
     </q-scroll-area>
     <q-footer class="bg-dark">
       <q-form @submit="validateCommandInput">
@@ -61,15 +54,15 @@ const route = useRoute()
 const channelId = computed(() => route.params.channelId)
 
 const message = ref<string>('')
-const chatArea = ref<null | QScrollArea>();
 const commandLineReset = () => {
   message.value = ''
 }
+const chatArea = ref<QScrollArea | null>(null);
 
 const scrollToBottom = () => {
   nextTick(() => {
     if (chatArea.value) {
-      chatArea.value.setScrollPercentage('vertical', 0);
+      chatArea.value.setScrollPercentage('vertical', 100); // Set to 100 to scroll to the bottom
     }
   });
 };
@@ -128,7 +121,10 @@ const items = ref<ChatItem[]>([])
 const onLoad = (index: number, done: () => void) => {
   setTimeout(() => {
     setChatMessages()
-
+    let first: boolean = false
+    if (items.value.length === 0) {
+      first = true
+    }
     const currentLength = items.value.length
     if (chatMessages.value.length === 0) {
       console.warn('No messages to load.')
@@ -136,10 +132,7 @@ const onLoad = (index: number, done: () => void) => {
       done()
       return
     }
-
     let counter = 0
-
-    // Load new messages if available
     for (const message of chatMessages.value.slice(currentLength)) {
       if (counter < 25 && currentLength + counter < chatMessages.value.length) {
         items.value.unshift(message)
@@ -148,8 +141,9 @@ const onLoad = (index: number, done: () => void) => {
         break
       }
     }
-
-    // Check if all messages are loaded
+    if (first) {
+      scrollToBottom()
+    }
     hasMoreMessages.value = items.value.length < chatMessages.value.length
     done()
   }, 800)
@@ -162,9 +156,8 @@ watch(channelId, () => {
 
 <style scoped>
 .box {
-  display: flex;
-  flex-flow: column;
-  height: 77vh;
+  height: 78vh;
+  align-content: end;
 }
 
 .box .row.filler {
@@ -193,22 +186,14 @@ watch(channelId, () => {
 .chat {
   padding: 10px; /* Padding okolo chat bubliny */
 }
+.filler{
+  height: 300px;
+}
 .chat-container2 {
-  display: flex;
-  flex-direction: column-reverse;
-  justify-content: flex-start;
   height: 100%;
   width: 100%;
   overflow-y: auto;
-}
-@media (max-width: 500px) {
-  .chat-container2 {
-    min-height: 67vh;
-  }
-}
-@media (max-width: 400px) {
-  .chat-container2 {
-    min-height: 57vh;
-  }
+  justify-content: end;
+  align-content: end;
 }
 </style>
