@@ -22,7 +22,7 @@
           <div class="width">
             <div class="row q-pa-sm q-ml-lg q-col-gutter-sm right-buttons">
               <div class="col right">
-                <q-btn round color="primary" icon="settings" />
+                <q-btn round color="primary" icon="settings"  @click="settings = true"/>
               </div>
               <div class="col">
                 <q-btn round color="negative" icon="logout"/>
@@ -30,6 +30,7 @@
             </div>
           </div>
         </q-toolbar>
+        <settings-modal v-model="settings"></settings-modal>
       </q-header>
     <q-drawer
       v-model="leftDrawerOpen"
@@ -66,8 +67,10 @@
 import { ref } from 'vue'
 import ChannelLink from 'components/ChannelLink.vue'
 import { channelList } from 'src/channels'
+import settingsModal from "components/SettingsModal.vue";
 
 const leftDrawerOpen = ref(false)
+const settings = ref(false)
 
 function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value

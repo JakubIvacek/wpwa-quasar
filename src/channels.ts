@@ -5,51 +5,211 @@ export const channelList = reactive([
     channelId: '1',
     title: 'Channel 1',
     icon: 'lock',
+    users: [
+      {
+        id: '1',
+        username: 'Pety'
+      },
+      {
+        id: '2',
+
+      }
+    ],
     messages: [
       {
         id: '1',
         user: 'Pety',
-        message: 'Ahoj'
+        message: '1'
       },
       {
         id: '2',
         user: 'Keno',
-        message: 'Ahoj'
+        message: '2'
       },
       {
         id: '1',
         user: 'Pety',
-        message: 'Ahoj'
+        message: '3'
       },
       {
         id: '1',
         user: 'Pety',
-        message: 'Ahoj'
+        message: '4'
       },
       {
         id: '2',
         user: 'Keno',
-        message: 'Ahoj'
+        message: '5'
       },
       {
         id: '1',
         user: 'Pety',
-        message: 'Ahoj'
+        message: '6'
       },
       {
         id: '1',
         user: 'Pety',
-        message: 'Ahoj'
+        message: '7'
       },
       {
         id: '2',
         user: 'Keno',
-        message: 'Ahoj'
+        message: '8'
       },
       {
         id: '1',
         user: 'Pety',
-        message: 'Ahoj'
+        message: '9'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '10'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: '11'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '12'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '13'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: '14'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '15'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '16'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: '17'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '18'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '19'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: '20'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '21'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '22'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: '23'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '24'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '25'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: '26'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '27'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '28'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: '29'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '30'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '31'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: '32'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '33'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '34'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: '35'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '36'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: '37'
+      },
+      {
+        id: '2',
+        user: 'Keno',
+        message: '38'
+      },
+      {
+        id: '1',
+        user: 'Pety',
+        message: 'Posledna'
       },
       {
         id: '1',
@@ -129,21 +289,6 @@ export const channelList = reactive([
       {
         id: '1',
         user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
         message: '10'
       },
       {
@@ -184,157 +329,7 @@ export const channelList = reactive([
       {
         id: '1',
         user: 'Pety',
-        message: 'Posledna'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: '10'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Posledna'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: '10'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Posledna'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
-      },
-      {
-        id: '2',
-        user: 'Keno',
-        message: 'Ahoj'
-      },
-      {
-        id: '1',
-        user: 'Pety',
-        message: 'Ahoj'
+        message: 'Posledna Posledna'
       }
     ]
   },

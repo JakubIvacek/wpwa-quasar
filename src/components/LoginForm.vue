@@ -35,33 +35,39 @@
 </template>
 
 <script lang="ts">
-export default {
+import {useQuasar} from 'quasar'
+
+export default{
   data () {
     return {
       login: {
         email: '',
         password: ''
-      }
+      },
+      $q: null
     }
   },
   methods: {
     submitLogin () {
-      // Using this.$q to access Quasar's $q instance
-      if (!this.login.email || !this.login.password) {
+      if(!this.login.email || !this.login.password){
         this.$q.notify({
           type: 'negative',
-          message: 'Empty fields! Fill out email and password'
+          message: "Empty fields! Fill out email and password"
         })
-      } else if (this.login.password.length < 6) {
+      }else if(this.login.password.length < 6){
         this.$q.notify({
           type: 'negative',
-          message: 'Password too short, minimum length is 6'
+          message: "Password too short minimal length is 6"
         })
-      } else {
-        console.log('Logging in with:', this.login)
+      }
+      else{
+        console.log('login')
       }
     }
-  }
+  },
+  mounted() {
+    this.$q = useQuasar();
+  },
 }
 </script>
 

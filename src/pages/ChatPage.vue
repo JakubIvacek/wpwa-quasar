@@ -1,10 +1,10 @@
 <template>
   <q-page class="q-pa-sm flex-column full-height">
-    <q-scroll-area style="height: 77vh" >
+    <q-scroll-area ref="chatArea"  style="height: 77vh">
       <div class="box">
         <div class="row filler"></div>
         <div class="row message-container q-pa-md">
-          <q-infinite-scroll @load="onLoad" reverse class="own-padding"  :disable="!hasMoreMessages">
+          <q-infinite-scroll @load="onLoad" reverse :offset="0" class="own-padding" style="width: 100%" :disable="!hasMoreMessages">
             <template v-slot:loading>
               <div class="row justify-center q-my-md">
                 <q-spinner color="primary" name="dots" size="40px" />
@@ -51,8 +51,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue'
-import { uid } from 'quasar'
+import {computed, watch, ref, nextTick} from 'vue'
+import {QScrollArea, uid} from 'quasar'
 import ChatBubble from 'components/ChatBubble.vue'
 import { channelList } from 'src/channels'
 import { useRoute } from 'vue-router'
@@ -61,9 +61,18 @@ const route = useRoute()
 const channelId = computed(() => route.params.channelId)
 
 const message = ref<string>('')
+const chatArea = ref<null | QScrollArea>();
 const commandLineReset = () => {
   message.value = ''
 }
+
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (chatArea.value) {
+      chatArea.value.setScrollPercentage('vertical', 0);
+    }
+  });
+};
 
 const isSendDisabled = computed(() => {
   return message.value.trim() === ''
@@ -73,9 +82,9 @@ const sendMessage = ():void => {
   const newMessage = Object.assign({}, { user: 'Pety', id: uid(), message: message.value })
   const channel = channelList.find(c => c.channelId === channelId.value)
   if (channel) {
-    items.value = []
+    items.value.push(newMessage)
     channel.messages.unshift(newMessage)
-    onLoad(0, () => {})
+    scrollToBottom()
   }
 }
 function startsWithSlash (): boolean {
@@ -189,6 +198,7 @@ watch(channelId, () => {
   flex-direction: column-reverse;
   justify-content: flex-start;
   height: 100%;
+  width: 100%;
   overflow-y: auto;
 }
 @media (max-width: 500px) {
