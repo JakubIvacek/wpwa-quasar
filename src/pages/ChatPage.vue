@@ -19,7 +19,6 @@
           @load="onLoad"
           reverse
           :offset="0"
-          class="own-padding"
           :disable="!hasMoreMessages"
           ref="scrollContainer">
           <template v-slot:loading>
@@ -27,7 +26,15 @@
               <q-spinner color="primary" name="dots" size="40px" />
             </div>
           </template>
-          <div v-for="(item, index) in items" :key="index" class="chat-container2">
+          <div v-if="items.length > 30" class="custom-icon-back">
+            <q-btn
+              color="primary"
+              icon="arrow_downward"
+              round
+              @click="scrollToBottom"
+            />
+          </div>
+          <div v-for="(item, index) in items" :key="index" class="chat-container2 row">
             <ChatBubble
               class="hover-grey chat"
               :id="item.id"
@@ -67,8 +74,12 @@ const items = ref<ChatItem[]>([])
 
 const scrollToBottom = () => {
   nextTick(() => {
-    if (chatArea.value) {
-      chatArea.value.setScrollPercentage('vertical', 100) // Set to 100 to scroll to the bottom
+    const chatAreaElement = chatArea.value && chatArea.value.$el.querySelector('.q-scrollarea__container')
+    if (chatAreaElement) {
+      chatAreaElement.scrollTo({
+        top: chatAreaElement.scrollHeight,
+        behavior: 'smooth'
+      })
     }
   })
 }
@@ -120,10 +131,6 @@ watch(channelId, () => {
 </script>
 
 <style scoped>
-.box {
-  height: 78vh;
-  align-content: end;
-}
 .full-height {
   height: 100%
 }
@@ -143,14 +150,20 @@ watch(channelId, () => {
 .chat {
   padding: 10px; /* Padding okolo chat bubliny */
 }
-.position-bottom {
-  position: absolute;
-  bottom: 0;
-  top: 0; /* Fill height to allow scrolling */
-  width: 100%;
+
+.box {
+  height: 78vh;
+  align-content: end;
 }
 .chat-container2 {
   height: 100%;
   width: 100%;
+}
+.custom-icon-back{
+  width: 100%;
+  position: sticky;
+  top: 10px;
+  text-align: center;
+  z-index: 9;
 }
 </style>
