@@ -1,69 +1,69 @@
 <template>
-  <q-page class="q-pa-sm flex-column full-height">
-    <q-scroll-area ref="chatArea"  class="box">
-      <q-infinite-scroll
-        @load="onLoad"
-        reverse
-        :offset="0"
-        class="own-padding"
-        :disable="!hasMoreMessages"
-        ref="scrollContainer">
-        <template v-slot:loading>
-          <div class="row justify-center q-my-md " style="width: 100%">
-            <q-spinner color="primary" name="dots" size="40px" />
-          </div>
-        </template>
-        <div v-for="(item, index) in items" :key="index" class="chat-container2">
-          <ChatBubble
-            class="hover-grey chat"
-            :id="item.id"
-            :user="item.user"
-            :message="item.message"
-          />
-        </div>
-      </q-infinite-scroll>
-    </q-scroll-area>
-    <q-footer class="bg-dark">
-      <q-form @submit="validateCommandInput">
-        <div class="row q-gutter-md q-mr-lg q-my-md">
-          <div class="col q-ml-xl">
-            <q-input
-              v-model="message"
-              bg-color="grey-9"
-              placeholder="Command Line"
-              outlined
-              dense
+  <q-page class="q-pa-sm flex-column full-height justify-center">
+    <!-- NO CHANNEL SELECTED MESSAGE -->
+    <div v-if="!channelId" class="flex full-height justify-center items-center">
+      <q-card class="q-pa-md ">
+        <q-card-section class="text-center">
+          <q-icon name="chat" size="80px" color="grey-7" />
+          <div class="text-h5 q-mt-md q-mb-md text-weight-bold">NO CHANNEL OPENED</div>
+          <div class="text-h6 q-mt-md">Open one of your channels or create new one</div>
+          <div class="text-h6 q-mt-md">by typing /join 'name' and opening it</div>
+        </q-card-section>
+      </q-card>
+    </div>
+
+    <!-- DISPLAY CHAT -->
+    <div v-else>
+      <q-scroll-area ref="chatArea" class="box">
+        <q-infinite-scroll
+          @load="onLoad"
+          reverse
+          :offset="0"
+          class="own-padding"
+          :disable="!hasMoreMessages"
+          ref="scrollContainer">
+          <template v-slot:loading>
+            <div class="row justify-center q-my-md" style="width: 100%">
+              <q-spinner color="primary" name="dots" size="40px" />
+            </div>
+          </template>
+          <div v-for="(item, index) in items" :key="index" class="chat-container2">
+            <ChatBubble
+              class="hover-grey chat"
+              :id="item.id"
+              :user="item.user"
+              :message="item.message"
+              :timestamp="('2024-11-14 14:45:34')"
             />
           </div>
-          <div class="col col-auto">
-            <q-btn
-              color="primary"
-              icon="send"
-              type="submit"
-              :disabled="isSendDisabled"
-              round />
-          </div>
-        </div>
-      </q-form>
+        </q-infinite-scroll>
+      </q-scroll-area>
+    </div>
+    <q-footer class="bg-dark">
+      <CommandLine @sendMessage="handleSendMessage" />
     </q-footer>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { computed, watch, ref, nextTick } from 'vue'
-import { QScrollArea, uid } from 'quasar'
+import { QScrollArea } from 'quasar'
 import ChatBubble from 'components/ChatBubble.vue'
 import { channelList } from 'src/channels'
 import { useRoute } from 'vue-router'
+import CommandLine from 'components/CommandLine.vue'
 
 const route = useRoute()
 const channelId = computed(() => route.params.channelId)
-
-const message = ref<string>('')
-const commandLineReset = () => {
-  message.value = ''
-}
 const chatArea = ref<QScrollArea | null>(null)
+interface ChatItem {
+  id: string;
+  user: string;
+  message: string;
+}
+const chatMessages = ref<ChatItem[]>([])
+const hasMoreMessages = ref(true)
+const items = ref<ChatItem[]>([])
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -73,59 +73,21 @@ const scrollToBottom = () => {
   })
 }
 
-const isSendDisabled = computed(() => {
-  return message.value.trim() === ''
-})
-function startsWithSlash (): boolean {
-  return message.value.startsWith('/')
-}
-
-function addChannel (): void {
-  const parts = message.value.split(' ')
-  const newChannel = Object.assign({}, { channelId: uid(), title: parts.slice(1).join(' '), icon: 'tag', messages: [] })
-  channelList.push(newChannel)
-}
-
-const validateCommandInput = (): void => {
-  if (startsWithSlash()) {
-    switch (message.value.split(' ')[0]) {
-      case '/join':
-        addChannel()
-        break
-      default:
-        sendMessage()
-    }
-  } else {
-    sendMessage()
-  }
-  commandLineReset()
-}
-interface ChatItem {
-  id: string;
-  user: string;
-  message: string;
-}
-const sendMessage = ():void => {
-  const newMessage: ChatItem = {
-    user: 'Pety',
-    id: uid(),
-    message: message.value
-  }
+// Handle the message received from CommandLine.vue
+const handleSendMessage = (message: ChatItem) => {
   const channel = channelList.find(c => c.channelId === channelId.value)
   if (channel) {
-    items.value.push(newMessage)
-    channel.messages.unshift(newMessage)
+    items.value.push(message)
+    channel.messages.unshift(message)
     scrollToBottom()
   }
 }
 
-const chatMessages = ref<ChatItem[]>([])
-const hasMoreMessages = ref(true)
 function setChatMessages () {
   const channel = channelList.find(c => c.channelId === channelId.value)
   chatMessages.value = channel ? channel.messages : []
 }
-const items = ref<ChatItem[]>([])
+
 const onLoad = (index: number, done: () => void) => {
   setTimeout(() => {
     setChatMessages()
@@ -138,7 +100,7 @@ const onLoad = (index: number, done: () => void) => {
     }
     let counter = 0
     for (const message of chatMessages.value.slice(currentLength)) {
-      if (counter < 25 && currentLength + counter < chatMessages.value.length) {
+      if (counter < 15 && currentLength + counter < chatMessages.value.length) {
         items.value.unshift(message)
         counter += 1
       } else {
@@ -149,9 +111,11 @@ const onLoad = (index: number, done: () => void) => {
     done()
   }, 800)
 }
+
 watch(channelId, () => {
   items.value = []
   onLoad(0, () => {})
+  scrollToBottom()
 })
 </script>
 
@@ -182,12 +146,11 @@ watch(channelId, () => {
 .position-bottom {
   position: absolute;
   bottom: 0;
+  top: 0; /* Fill height to allow scrolling */
+  width: 100%;
 }
 .chat-container2 {
   height: 100%;
   width: 100%;
-  overflow-y: auto;
-  justify-content: end;
-  align-content: end;
 }
 </style>

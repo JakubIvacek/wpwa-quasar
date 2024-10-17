@@ -2,7 +2,6 @@ import { RouteRecordRaw } from 'vue-router'
 import LoginForm from '../components/LoginForm.vue'
 import RegisterForm from '../components/RegisterForm.vue'
 import LoginBG from 'layouts/AuthTemplate.vue'
-
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -13,6 +12,10 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     props: true,
     children: [
+      {
+        path: '',
+        component: () => import('pages/ChatPage.vue')
+      },
       {
         path: ':channelId',
         component: () => import('pages/ChatPage.vue')

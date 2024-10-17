@@ -12,7 +12,7 @@
             {{ message }}
           </div>
           <div class="row">
-            <p class="timestamp">14.11.2024 14:45:34</p>
+            <p class="timestamp">{{ timestamp }}</p>
           </div>
         </div>
       </div>
@@ -23,7 +23,8 @@
 defineProps({
   id: String,
   user: String,
-  message: String
+  message: String,
+  timestamp: String
 })
 </script>
 
