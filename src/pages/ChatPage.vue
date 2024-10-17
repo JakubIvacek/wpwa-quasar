@@ -7,7 +7,7 @@
           <q-icon name="chat" size="80px" color="grey-7" />
           <div class="text-h5 q-mt-md q-mb-md text-weight-bold">NO CHANNEL OPENED</div>
           <div class="text-h6 q-mt-md">Open one of your channels or create new one</div>
-          <div class="text-h6 q-mt-md">by typing /join 'name' and opening it</div>
+          <div class="text-h6 q-mt-md">by typing /join 'name'</div>
         </q-card-section>
       </q-card>
     </div>
@@ -26,7 +26,7 @@
               <q-spinner color="primary" name="dots" size="40px" />
             </div>
           </template>
-          <div v-if="items.length > 30" class="custom-icon-back">
+          <div v-if="items.length > 10" class="custom-icon-back">
             <q-btn
               color="primary"
               icon="arrow_downward"
@@ -34,7 +34,7 @@
               @click="scrollToBottom"
             />
           </div>
-          <div v-for="(item, index) in items" :key="index" class="chat-container2 row">
+          <div v-for="(item, index) in items" :key="index" class="chat-container row">
             <ChatBubble
               class="hover-grey chat"
               :id="item.id"
@@ -148,14 +148,14 @@ watch(channelId, () => {
 }
 
 .chat {
-  padding: 10px; /* Padding okolo chat bubliny */
+  padding: 1px 10px; /* Padding okolo chat bubliny */
 }
 
 .box {
   height: 78vh;
   align-content: end;
 }
-.chat-container2 {
+.chat-container {
   height: 100%;
   width: 100%;
 }

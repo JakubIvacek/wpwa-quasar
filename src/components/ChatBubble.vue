@@ -1,18 +1,18 @@
 <template>
   <div class="chat">
       <div class="row items-center">
-        <div class="col-auto flex flex-center">
+        <div class="col-auto">
           <img src="../assets/user-img.png" alt="User Image" class="user-image" />
         </div>
-        <div class="col">
-          <div class="row padding">
+        <div class="col q-py-sm">
+          <div class="row">
             <strong>{{ user }}</strong>
           </div>
           <div class="row">
             {{ message }}
           </div>
-          <div class="row">
-            <p class="timestamp">{{ timestamp }}</p>
+          <div class="row-auto timestamp float-right">
+             {{ timestamp }}
           </div>
         </div>
       </div>
@@ -29,9 +29,6 @@ defineProps({
 </script>
 
 <style scoped>
-.padding{
-  padding-bottom: 2Px;
-}
 .user-image {
   width: 50px; /* Nastav veľkosť obrázka */
   height: 50px; /* Nastav veľkosť obrázka */
@@ -43,7 +40,7 @@ defineProps({
   width: 100%;
 }
 
-.chat .row {
+.chat {
   word-wrap: break-word;
   word-break: break-word;
   white-space: normal;
@@ -52,7 +49,7 @@ defineProps({
 }
 .timestamp{
   color: darkgray;
-  padding-top: 5px;
   font-size: 12px;
+  ;
 }
 </style>

@@ -28,6 +28,7 @@
 import { ref, computed } from 'vue'
 import { uid } from 'quasar'
 import { channelList } from 'src/channels'
+import { useRouter } from "vue-router";
 
 // Emit function to send data to parent
 const emit = defineEmits(['sendMessage'])
@@ -42,6 +43,8 @@ function startsWithSlash (): boolean {
   return message.value.startsWith('/')
 }
 
+const router = useRouter()
+
 function addChannel (): void {
   const parts = message.value.split(' ')
   const newChannel = Object.assign({}, {
@@ -51,6 +54,8 @@ function addChannel (): void {
     messages: []
   })
   channelList.push(newChannel)
+
+  router.push({path: `home/${newChannel.channelId}`})
 }
 
 const validateCommandInput = (): void => {
