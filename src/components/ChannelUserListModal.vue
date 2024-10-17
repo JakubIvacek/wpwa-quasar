@@ -7,7 +7,7 @@
         <q-list>
           <q-item
             v-for="user in props.users"
-            class="text-weight-bold"
+            class="text-weight-bold items-center hover-grey"
           >
             {{ user.username }}
           </q-item>
@@ -30,5 +30,10 @@ const isVisible = ref(false);
 </script>
 
 <style scoped>
-
+.hover-grey {
+  transition: background-color 0.3s ease; /* Prechod pre hover efekt */
+}
+.hover-grey:hover {
+  background-color: rgba(240, 240, 240, 0.26);
+}
 </style>
