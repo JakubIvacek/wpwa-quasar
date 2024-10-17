@@ -67,7 +67,7 @@
 import { ref } from 'vue'
 import ChannelLink from 'components/ChannelLink.vue'
 import { channelList } from 'src/channels'
-import settingsModal from "components/SettingsModal.vue";
+import settingsModal from 'components/SettingsModal.vue'
 
 const leftDrawerOpen = ref(false)
 const settings = ref(false)

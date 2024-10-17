@@ -1,9 +1,15 @@
 <template>
   <q-page class="q-pa-sm flex-column full-height">
     <q-scroll-area ref="chatArea"  class="box">
-      <q-infinite-scroll @load="onLoad" reverse :offset="0" class="own-padding"  :disable="!hasMoreMessages">
+      <q-infinite-scroll
+        @load="onLoad"
+        reverse
+        :offset="0"
+        class="own-padding"
+        :disable="!hasMoreMessages"
+        ref="scrollContainer">
         <template v-slot:loading>
-          <div class="row justify-center q-my-md">
+          <div class="row justify-center q-my-md " style="width: 100%">
             <q-spinner color="primary" name="dots" size="40px" />
           </div>
         </template>
@@ -44,8 +50,8 @@
 </template>
 
 <script setup lang="ts">
-import {computed, watch, ref, nextTick} from 'vue'
-import {QScrollArea, uid} from 'quasar'
+import { computed, watch, ref, nextTick } from 'vue'
+import { QScrollArea, uid } from 'quasar'
 import ChatBubble from 'components/ChatBubble.vue'
 import { channelList } from 'src/channels'
 import { useRoute } from 'vue-router'
@@ -57,29 +63,19 @@ const message = ref<string>('')
 const commandLineReset = () => {
   message.value = ''
 }
-const chatArea = ref<QScrollArea | null>(null);
+const chatArea = ref<QScrollArea | null>(null)
 
 const scrollToBottom = () => {
   nextTick(() => {
     if (chatArea.value) {
-      chatArea.value.setScrollPercentage('vertical', 100); // Set to 100 to scroll to the bottom
+      chatArea.value.setScrollPercentage('vertical', 100) // Set to 100 to scroll to the bottom
     }
-  });
-};
+  })
+}
 
 const isSendDisabled = computed(() => {
   return message.value.trim() === ''
 })
-
-const sendMessage = ():void => {
-  const newMessage = Object.assign({}, { user: 'Pety', id: uid(), message: message.value })
-  const channel = channelList.find(c => c.channelId === channelId.value)
-  if (channel) {
-    items.value.push(newMessage)
-    channel.messages.unshift(newMessage)
-    scrollToBottom()
-  }
-}
 function startsWithSlash (): boolean {
   return message.value.startsWith('/')
 }
@@ -109,22 +105,30 @@ interface ChatItem {
   user: string;
   message: string;
 }
+const sendMessage = ():void => {
+  const newMessage: ChatItem = {
+    user: 'Pety',
+    id: uid(),
+    message: message.value
+  }
+  const channel = channelList.find(c => c.channelId === channelId.value)
+  if (channel) {
+    items.value.push(newMessage)
+    channel.messages.unshift(newMessage)
+    scrollToBottom()
+  }
+}
+
 const chatMessages = ref<ChatItem[]>([])
 const hasMoreMessages = ref(true)
-
 function setChatMessages () {
   const channel = channelList.find(c => c.channelId === channelId.value)
   chatMessages.value = channel ? channel.messages : []
 }
-
 const items = ref<ChatItem[]>([])
 const onLoad = (index: number, done: () => void) => {
   setTimeout(() => {
     setChatMessages()
-    let first: boolean = false
-    if (items.value.length === 0) {
-      first = true
-    }
     const currentLength = items.value.length
     if (chatMessages.value.length === 0) {
       console.warn('No messages to load.')
@@ -141,9 +145,6 @@ const onLoad = (index: number, done: () => void) => {
         break
       }
     }
-    if (first) {
-      scrollToBottom()
-    }
     hasMoreMessages.value = items.value.length < chatMessages.value.length
     done()
   }, 800)
@@ -158,14 +159,6 @@ watch(channelId, () => {
 .box {
   height: 78vh;
   align-content: end;
-}
-
-.box .row.filler {
-  flex: 1 1 auto;
-}
-
-.box .row.message-container {
-  flex: 0 1 auto;
 }
 .full-height {
   height: 100%
@@ -186,8 +179,9 @@ watch(channelId, () => {
 .chat {
   padding: 10px; /* Padding okolo chat bubliny */
 }
-.filler{
-  height: 300px;
+.position-bottom {
+  position: absolute;
+  bottom: 0;
 }
 .chat-container2 {
   height: 100%;

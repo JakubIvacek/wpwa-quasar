@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineProps, defineEmits, ref} from "vue";
+import { computed, defineProps, defineEmits, ref } from 'vue'
 
 const props = defineProps({
   modelValue: Boolean
