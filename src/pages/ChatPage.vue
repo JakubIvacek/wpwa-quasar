@@ -7,14 +7,14 @@
           <q-icon name="chat" size="80px" color="grey-7" />
           <div class="text-h5 q-mt-md q-mb-md text-weight-bold">NO CHANNEL OPENED</div>
           <div class="text-h6 q-mt-md">Open one of your channels or create new one</div>
-          <div class="text-h6 q-mt-md">by typing /join 'name'</div>
+          <div class="text-h6 q-mt-md">by typing /join 'name' and opening it</div>
         </q-card-section>
       </q-card>
     </div>
 
     <!-- DISPLAY CHAT -->
     <div v-else>
-      <q-scroll-area ref="chatArea" class="box">
+      <q-scroll-area ref="chatArea" class="box" @scroll="handleScroll">
         <q-infinite-scroll
           @load="onLoad"
           reverse
@@ -26,7 +26,9 @@
               <q-spinner color="primary" name="dots" size="40px" />
             </div>
           </template>
-          <div v-if="items.length > 10" class="custom-icon-back">
+
+          <!-- Show button only if items > 20 and hasScrolled is true -->
+          <div v-if="items.length > 20 && hasScrolled" class="custom-icon-back">
             <q-btn
               color="primary"
               icon="arrow_downward"
@@ -34,7 +36,8 @@
               @click="scrollToBottom"
             />
           </div>
-          <div v-for="(item, index) in items" :key="index" class="chat-container row">
+
+          <div v-for="(item, index) in items" :key="index" class="chat-container2 row">
             <ChatBubble
               class="hover-grey chat"
               :id="item.id"
@@ -46,6 +49,7 @@
         </q-infinite-scroll>
       </q-scroll-area>
     </div>
+
     <q-footer class="bg-dark">
       <CommandLine @sendMessage="handleSendMessage" />
     </q-footer>
@@ -63,6 +67,7 @@ import CommandLine from 'components/CommandLine.vue'
 const route = useRoute()
 const channelId = computed(() => route.params.channelId)
 const chatArea = ref<QScrollArea | null>(null)
+const hasScrolled = ref(false)
 interface ChatItem {
   id: string;
   user: string;
@@ -83,7 +88,6 @@ const scrollToBottom = () => {
     }
   })
 }
-
 // Handle the message received from CommandLine.vue
 const handleSendMessage = (message: ChatItem) => {
   const channel = channelList.find(c => c.channelId === channelId.value)
@@ -122,7 +126,14 @@ const onLoad = (index: number, done: () => void) => {
     done()
   }, 800)
 }
-
+const handleScroll = () => {
+  const chatAreaElement = chatArea.value?.$el.querySelector('.q-scrollarea__container')
+  if (chatAreaElement) {
+    // Check if scrolled away from the bottom by 300 pixels
+    const isNearBottom = (chatAreaElement.scrollHeight - chatAreaElement.scrollTop - chatAreaElement.clientHeight) <= 300
+    hasScrolled.value = !isNearBottom
+  }
+}
 watch(channelId, () => {
   items.value = []
   onLoad(0, () => {})
@@ -148,14 +159,14 @@ watch(channelId, () => {
 }
 
 .chat {
-  padding: 1px 10px; /* Padding okolo chat bubliny */
+  padding: 10px; /* Padding okolo chat bubliny */
 }
 
 .box {
   height: 78vh;
   align-content: end;
 }
-.chat-container {
+.chat-container2 {
   height: 100%;
   width: 100%;
 }
