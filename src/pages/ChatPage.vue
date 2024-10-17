@@ -7,13 +7,16 @@
           <q-icon name="chat" size="80px" color="grey-7" />
           <div class="text-h5 q-mt-md q-mb-md text-weight-bold">NO CHANNEL OPENED</div>
           <div class="text-h6 q-mt-md">Open one of your channels or create new one</div>
-          <div class="text-h6 q-mt-md">by typing /join 'name' and opening it</div>
+          <div class="text-h6 q-mt-md">by typing /join 'name'</div>
         </q-card-section>
       </q-card>
     </div>
 
     <!-- DISPLAY CHAT -->
     <div v-else>
+      <div class="row absolute-top channelName">
+        {{ channelName }}
+      </div>
       <q-scroll-area ref="chatArea" class="box" @scroll="handleScroll">
         <q-infinite-scroll
           @load="onLoad"
@@ -37,7 +40,7 @@
             />
           </div>
 
-          <div v-for="(item, index) in items" :key="index" class="chat-container2 row">
+          <div v-for="(item, index) in items" :key="index" class="chat-container row">
             <ChatBubble
               class="hover-grey chat"
               :id="item.id"
@@ -48,6 +51,14 @@
           </div>
         </q-infinite-scroll>
       </q-scroll-area>
+      <div class="row absolute-bottom q-pl-md text-weight-bold items-center" style="margin-bottom: 3px">
+        <div class="col-auto q-pr-sm">
+          <q-spinner-dots color="white" size="20px"/>
+        </div>
+        <div class="col">
+          User Typing
+        </div>
+      </div>
     </div>
 
     <q-footer class="bg-dark">
@@ -76,6 +87,7 @@ interface ChatItem {
 const chatMessages = ref<ChatItem[]>([])
 const hasMoreMessages = ref(true)
 const items = ref<ChatItem[]>([])
+const channelName = ref<string>('')
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -101,6 +113,7 @@ const handleSendMessage = (message: ChatItem) => {
 function setChatMessages () {
   const channel = channelList.find(c => c.channelId === channelId.value)
   chatMessages.value = channel ? channel.messages : []
+  channelName.value = channel?.title
 }
 
 const onLoad = (index: number, done: () => void) => {
@@ -142,6 +155,11 @@ watch(channelId, () => {
 </script>
 
 <style scoped>
+.channelName {
+  font-size: 32px;
+  font-weight: bold;
+  padding: 20px;
+}
 .full-height {
   height: 100%
 }
@@ -159,14 +177,22 @@ watch(channelId, () => {
 }
 
 .chat {
-  padding: 10px; /* Padding okolo chat bubliny */
+  padding: 1px; /* Padding okolo chat bubliny */
 }
 
 .box {
-  height: 78vh;
-  align-content: end;
+  padding-top: 40px;
+  height: 70vh;
+  margin: 15px 10px 10px 10px;
 }
-.chat-container2 {
+@media (min-height: 1000px) {
+  .box {
+    padding-top: 50px;
+    height: 81vh;
+    margin: 15px 10px 10px 10px;
+  }
+}
+.chat-container {
   height: 100%;
   width: 100%;
 }

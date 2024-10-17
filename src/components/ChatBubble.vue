@@ -1,6 +1,6 @@
 <template>
   <div class="chat">
-      <div class="row items-center">
+      <div class="row items-center q-pl-sm">
         <div class="col-auto">
           <img src="../assets/user-img.png" alt="User Image" class="user-image" />
         </div>
@@ -50,6 +50,5 @@ defineProps({
 .timestamp{
   color: darkgray;
   font-size: 12px;
-  ;
 }
 </style>

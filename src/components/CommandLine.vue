@@ -55,7 +55,7 @@ function addChannel (): void {
   })
   channelList.push(newChannel)
 
-  router.push({path: `home/${newChannel.channelId}`})
+  router.push({path: `/home/${newChannel.channelId}`})
 }
 
 const validateCommandInput = (): void => {
