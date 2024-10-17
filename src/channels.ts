@@ -11,7 +11,16 @@ export const channelList = reactive([
         username: 'Pety'
       },
       {
-        id: '2'
+        id: '2',
+        username: 'Keno'
+      },
+      {
+        id: '3',
+        username: 'Jojo'
+      },
+      {
+        id: '4',
+        username: 'John'
       }
     ],
     messages: [

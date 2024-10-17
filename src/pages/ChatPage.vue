@@ -60,9 +60,8 @@
         </div>
       </div>
     </div>
-
     <q-footer class="bg-dark">
-      <CommandLine @sendMessage="handleSendMessage" />
+      <CommandLine :users="channelUsers" @sendMessage="handleSendMessage" />
     </q-footer>
   </q-page>
 </template>
@@ -74,6 +73,7 @@ import ChatBubble from 'components/ChatBubble.vue'
 import { channelList } from 'src/channels'
 import { useRoute } from 'vue-router'
 import CommandLine from 'components/CommandLine.vue'
+
 
 const route = useRoute()
 const channelId = computed(() => route.params.channelId)
@@ -88,6 +88,7 @@ const chatMessages = ref<ChatItem[]>([])
 const hasMoreMessages = ref(true)
 const items = ref<ChatItem[]>([])
 const channelName = ref<string>('')
+const channelUsers = ref<string[]>([])
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -114,6 +115,7 @@ function setChatMessages () {
   const channel = channelList.find(c => c.channelId === channelId.value)
   chatMessages.value = channel ? channel.messages : []
   channelName.value = channel?.title
+  channelUsers.value = channel?.users
 }
 
 const onLoad = (index: number, done: () => void) => {

@@ -1,4 +1,5 @@
 <template>
+  <ChannelUserListModal v-model="showUserListModal" :users="props.users"></ChannelUserListModal>
   <q-footer class="bg-dark">
     <q-form @submit="validateCommandInput">
       <div class="row q-gutter-md q-mr-lg q-my-md">
@@ -25,13 +26,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import {ref, computed, defineProps} from 'vue'
 import { uid } from 'quasar'
 import { channelList } from 'src/channels'
 import { useRouter } from "vue-router";
+import ChannelUserListModal from "components/ChannelUserListModal.vue";
 
 // Emit function to send data to parent
 const emit = defineEmits(['sendMessage'])
+const showUserListModal = ref<boolean>(false)
+
+const props = defineProps<{
+  users: string[];
+}>();
 
 const message = ref<string>('')
 
@@ -58,11 +65,18 @@ function addChannel (): void {
   router.push({path: `/home/${newChannel.channelId}`})
 }
 
+function showUserList (): void {
+  showUserListModal.value = true;
+}
+
 const validateCommandInput = (): void => {
   if (startsWithSlash()) {
     switch (message.value.split(' ')[0]) {
       case '/join':
         addChannel()
+        break
+      case '/list':
+        showUserList()
         break
       default:
         sendMessage()
