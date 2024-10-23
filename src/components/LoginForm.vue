@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { useQuasar } from 'quasar'
+import { Notify } from 'quasar'
 import { defineComponent } from 'vue'
 export default defineComponent({
   data () {
@@ -48,15 +48,14 @@ export default defineComponent({
   },
   methods: {
     submitLogin () {
-      const $q = useQuasar()
 
       if (!this.login.email || !this.login.password) {
-        $q.notify({
+        Notify.create({
           type: 'negative',
           message: 'Empty fields! Fill out email and password'
         })
       } else if (this.login.password.length < 6) {
-        $q.notify({
+        Notify.create({
           type: 'negative',
           message: 'Password too short, minimal length is 6'
         })
