@@ -1,5 +1,7 @@
 import { RouteRecordRaw } from 'vue-router'
-
+import LoginForm from '../components/LoginForm.vue'
+import RegisterForm from '../components/RegisterForm.vue'
+import LoginBG from 'layouts/AuthTemplate.vue'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -8,10 +10,22 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/auth',
-    component: () => import('layouts/MainLayout.vue'),
+    component: LoginBG,
     children: [
-      { path: 'register', name: 'register', meta: { guestOnly: true }, component: () => import('pages/RegisterPage.vue') },
-      { path: 'login', name: 'login', meta: { guestOnly: true }, component: () => import('pages/LoginPage.vue') }
+      {
+        path: '',
+        name: 'Login',
+        component: LoginForm,
+        meta: { guestOnly: true },
+        props: { paddingTopValue: 300 }
+      },
+      {
+        path: 'register',
+        name: 'Register',
+        component: RegisterForm,
+        meta: { guestOnly: true },
+        props: { paddingTopValue: 150 }
+      }
     ]
   },
   {

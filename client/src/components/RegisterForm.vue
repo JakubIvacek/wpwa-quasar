@@ -1,14 +1,20 @@
+
 <template>
-<q-page class="row items-center justify-evenly">
-  <q-card square style="width: 400px; padding:50px">
+  <q-card  class="custom-width">
     <q-card-section>
-      <div class="text-h6">
-        Register
+      <q-avatar size="180px" class="absolute-center ">
+        <img src="../assets/logo-white.png" alt="avatar" class="bg-dark-my" >
+      </q-avatar>
+    </q-card-section>
+    <q-card-section>
+      <div class="q-pt-xl">
+        <div class="col text-h6 ellipsis flex justify-center">
+          <h2 class="q-my-none q-pb-lg custom-font">ChatterBox</h2>
+        </div>
       </div>
     </q-card-section>
-
-    <q-form ref="form" class="q-gutter-md">
-      <q-card-section>
+    <q-card-section>
+      <q-form class="q-gutter-md" @submit.prevent="onSubmit">
         <q-input
           name="email"
           id="email"
@@ -49,20 +55,20 @@
             />
           </template>
         </q-input>
-      </q-card-section>
-
-      <q-card-actions align="between">
-        <q-btn label="Login" size="sm" flat :to="{ name: 'login' }"></q-btn>
-        <q-btn
-          label="Register"
-          color="primary"
-          :loading="loading"
-          @click="onSubmit"
-        />
-      </q-card-actions>
-    </q-form>
+        <q-card-actions align="center">
+          <q-btn
+            label="Register"
+            color="primary"
+            :loading="loading"
+            @click="onSubmit"
+          />
+        </q-card-actions>
+        <div class="text-center">
+          <router-link class="text-white" to="/auth">Wanna go back to login ? Click here</router-link>
+        </div>
+      </q-form>
+    </q-card-section>
   </q-card>
-</q-page>
 </template>
 
 <script lang="ts">
@@ -70,7 +76,7 @@ import { defineComponent } from 'vue'
 import { RouteLocationRaw } from 'vue-router'
 
 export default defineComponent({
-  name: 'RegisterPage',
+  name: 'RegisterForm',
   data () {
     return {
       form: { email: '', password: '', passwordConfirmation: '' },
@@ -79,7 +85,7 @@ export default defineComponent({
   },
   computed: {
     redirectTo (): RouteLocationRaw {
-      return { name: 'login' }
+      return { name: 'Login' }
     },
     loading (): boolean {
       return this.$store.state.auth.status === 'pending'
@@ -87,8 +93,40 @@ export default defineComponent({
   },
   methods: {
     onSubmit () {
-      this.$store.dispatch('auth/register', this.form).then(() => this.$router.push(this.redirectTo))
+      this.$store.dispatch('auth/register', this.form)
+        .then(() => this.$router.push(this.redirectTo))
+        .catch(error => {
+          console.error(error) // Log the error
+          // Optionally, show an alert or a message to the user
+        })
     }
   }
 })
 </script>
+
+<style scoped>
+*{
+  font-family: 'Roboto', sans-serif;
+}
+.custom-width{
+  width: 35%
+}
+.custom-font{
+  font-family: 'Merriweather', serif;
+}
+@media (max-width: 1200px){
+  .custom-width{
+    width: 45%
+  }
+}
+@media (max-width: 1000px){
+  .custom-width{
+    width: 65%
+  }
+}
+@media (max-width: 767px) {
+  .custom-width{
+    width: 80%
+  }
+}
+</style>
