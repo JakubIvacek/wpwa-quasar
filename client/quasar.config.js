@@ -109,7 +109,10 @@ module.exports = configure(function (ctx) {
       //
       // components: [],
       // directives: [],
-
+      iconSet: 'material-icons', // Add this line
+      extras: [
+        'material-icons'
+      ],
       // Quasar plugins
       plugins: []
     },

@@ -16,7 +16,22 @@
       <q-form class="q-gutter-md" @submit.prevent="onSubmit">
         <q-input filled label="Email"  v-model="credentials.email" color="cyan-10">
         </q-input>
-        <q-input  filled label="Password" type="password" v-model="credentials.password" color="cyan-10">
+        <q-input
+          id="password"
+          name="password"
+          v-model="credentials.password"
+          label="Confirm Password"
+          :type="showPassword ? 'text' : 'password'"
+          filled
+          color="cyan-10"
+        >
+          <template v-slot:append>
+            <q-icon
+              :name="showPassword ? 'visibility' : 'visibility_off'"
+              class="cursor-pointer"
+              @click="showPassword = !showPassword"
+            />
+          </template>
         </q-input>
         <div  class="flex flex-center">
           <q-btn style="width:80%" color="cyan-10" label="Login" rounded type="submit">

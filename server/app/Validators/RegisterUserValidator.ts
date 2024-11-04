@@ -19,6 +19,7 @@ export default class RegisterUserValidator {
    *    ```
    *     schema.string([
    *       rules.email(),
+   *
    *       rules.unique({ table: 'users', column: 'email' }),
    *     ])
    *    ```

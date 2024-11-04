@@ -22,6 +22,8 @@
           type="email"
           label="Email"
           autofocus
+          color="cyan-10"
+          filled
         />
         <q-input
           id="password"
@@ -29,7 +31,8 @@
           v-model="form.password"
           label="Password"
           :type="showPassword ? 'text' : 'password'"
-          bottom-slots
+          filled
+          color="cyan-10"
         >
           <template v-slot:append>
             <q-icon
@@ -45,7 +48,8 @@
           v-model="form.passwordConfirmation"
           label="Confirm Password"
           :type="showPassword ? 'text' : 'password'"
-          bottom-slots
+          filled
+          color="cyan-10"
         >
           <template v-slot:append>
             <q-icon
@@ -58,9 +62,11 @@
         <q-card-actions align="center">
           <q-btn
             label="Register"
-            color="primary"
+            rounded
+            color="cyan-10"
             :loading="loading"
             @click="onSubmit"
+            style="width:80%"
           />
         </q-card-actions>
         <div class="text-center">
