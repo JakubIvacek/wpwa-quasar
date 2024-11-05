@@ -1,4 +1,5 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import {MemberStatus} from "App/Enums/MemberStatus";
 
 export default class extends BaseSchema {
   protected tableName = 'channel_users'
@@ -6,6 +7,7 @@ export default class extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
+      table.enum('status', Object.values(MemberStatus)).notNullable().defaultTo('public')
       table
         .integer("user_id")
         .unsigned()

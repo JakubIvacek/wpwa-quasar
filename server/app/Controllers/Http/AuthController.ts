@@ -1,18 +1,29 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Channel from 'App/Models/Channel'
+// import Channel from 'App/Models/Channel'
 import User from 'App/Models/User'
 import RegisterUserValidator from 'App/Validators/RegisterUserValidator'
+import {UserStatus} from "App/Enums/UserStatus";
+import Channel from "App/Models/Channel";
 
 export default class AuthController {
   async register({ request }: HttpContextContract) {
-    // if invalid, exception
-    const data = await request.validate(RegisterUserValidator)
-    const user = await User.create(data)
-    // join user to general channel
-    const general = await Channel.findByOrFail('name', 'general')
-    await user.related('channels').attach([general.id])
+    // Validate incoming request data
+    const data = await request.validate(RegisterUserValidator);
 
-    return user
+    // Set default status to 'online'
+    const userData = {
+      ...data,
+      status: UserStatus.OFFLINE, // Default status set to online
+    };
+
+    // Create user in the database
+    const user = await User.create(userData);
+
+    // Join user to general channel
+    // const general = await Channel.findByOrFail('name', 'General');
+    // await user.related('channels').attach([general.id]);
+
+    return user; // Return created user
   }
 
   async login({ auth, request }: HttpContextContract) {

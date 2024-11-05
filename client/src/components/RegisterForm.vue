@@ -26,6 +26,36 @@
           filled
         />
         <q-input
+          name="first_name"
+          id="first_name"
+          v-model.trim="form.first_name"
+          type="text"
+          label="First name"
+          autofocus
+          color="cyan-10"
+          filled
+        />
+        <q-input
+          name="last_name"
+          id="last_name"
+          v-model.trim="form.last_name"
+          type="text"
+          label="Last name"
+          autofocus
+          color="cyan-10"
+          filled
+        />
+        <q-input
+          name="nickname"
+          id="nickname"
+          v-model.trim="form.nickname"
+          type="text"
+          label="Nickname"
+          autofocus
+          color="cyan-10"
+          filled
+        />
+        <q-input
           id="password"
           name="password"
           v-model="form.password"
@@ -85,7 +115,7 @@ export default defineComponent({
   name: 'RegisterForm',
   data () {
     return {
-      form: { email: '', password: '', passwordConfirmation: '' },
+      form: { email: '', password: '', passwordConfirmation: '', first_name: '', last_name: '', nickname: '' },
       showPassword: false
     }
   },

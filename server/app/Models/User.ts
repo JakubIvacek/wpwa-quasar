@@ -11,10 +11,20 @@ import {
 } from "@ioc:Adonis/Lucid/Orm";
 import Channel from "App/Models/Channel";
 import Message from "App/Models/Message";
+import {UserStatus} from "App/Enums/UserStatus";
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
+
+  @column()
+  public first_name: string
+
+  @column()
+  public last_name: string
+
+  @column()
+  public nickname: string
 
   @column()
   public email: string
@@ -24,6 +34,9 @@ export default class User extends BaseModel {
 
   @column()
   public rememberMeToken: string | null
+
+  @column()
+  public status: UserStatus
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -37,6 +50,11 @@ export default class User extends BaseModel {
       user.password = await Hash.make(user.password)
     }
   }
+  @hasMany(() => Channel, {
+    foreignKey: 'creator_id',
+  })
+  public createdChannels: HasMany<typeof Channel>
+
   @hasMany(() => Message, {
     foreignKey: 'createdBy',
   })
