@@ -2,6 +2,7 @@ import { RouteRecordRaw } from 'vue-router'
 import LoginForm from '../components/LoginForm.vue'
 import RegisterForm from '../components/RegisterForm.vue'
 import LoginBG from 'layouts/AuthTemplate.vue'
+import MainLayout from 'layouts/MainLayout.vue'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -31,9 +32,9 @@ const routes: RouteRecordRaw[] = [
     path: '/channels',
     // channels requires auth
     meta: { requiresAuth: true },
-    component: () => import('layouts/ChatLayout.vue'),
+    component: () => MainLayout,
     children: [
-      { path: '', name: 'home', component: () => import('src/pages/ChannelPage.vue') }
+      { path: '', name: 'home', component: () => import('pages/ChatPage.vue') }
     ]
   },
 
