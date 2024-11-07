@@ -121,7 +121,7 @@ export default defineComponent({
   },
   computed: {
     redirectTo (): RouteLocationRaw {
-      return { name: 'Login' }
+      return { name: 'login' }
     },
     loading (): boolean {
       return this.$store.state.auth.status === 'pending'

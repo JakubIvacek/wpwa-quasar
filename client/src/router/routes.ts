@@ -5,8 +5,7 @@ import LoginBG from 'layouts/AuthTemplate.vue'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    // try redirect to home route
-    redirect: () => ({ name: 'home' })
+    redirect: { name: 'home' }
   },
   {
     path: '/auth',
@@ -14,14 +13,14 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        name: 'Login',
+        name: 'login',
         component: LoginForm,
         meta: { guestOnly: true },
         props: { paddingTopValue: 300 }
       },
       {
         path: 'register',
-        name: 'Register',
+        name: 'register',
         component: RegisterForm,
         meta: { guestOnly: true },
         props: { paddingTopValue: 150 }
@@ -32,7 +31,7 @@ const routes: RouteRecordRaw[] = [
     path: '/channels',
     // channels requires auth
     meta: { requiresAuth: true },
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/ChatLayout.vue'),
     children: [
       { path: '', name: 'home', component: () => import('src/pages/ChannelPage.vue') }
     ]

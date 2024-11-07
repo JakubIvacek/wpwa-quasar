@@ -22,7 +22,7 @@ export default class ChannelSeeder extends BaseSeeder {
     // Now create channels with the `creator_id` referencing this user
     await Channel.createMany([
       {
-        name: 'General',
+        name: 'general',
         type: ChannelType.PUBLIC,
         creator_id: user.id,  // Reference the user ID here
       },
