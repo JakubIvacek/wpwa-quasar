@@ -1,96 +1,127 @@
+<template class="bg-dark">
+  <div class="position-relative bg-dark" :style="{ height: $q.screen.height + 'px' }">
+    <q-layout view="hHh LpR lFf">
+      <q-header class="bg-img">
+        <q-toolbar class="text-white">
+          <q-btn
+            round
+            flat
+            color="black"
+            :icon="leftDrawerOpen ? 'keyboard_arrow_left' : 'keyboard_arrow_right'"
+            class="WAL__drawer-open q-mr-sm"
+            @click="leftDrawerOpen = !leftDrawerOpen"
+          />
 
-<template>
-  <q-layout view="hHh lpR lFf">
-    <q-header
-      class="bg-img"
-    >
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          color="black"
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-        <q-avatar class="img-own q-ma-sm">
-          <img src="../assets/logo-white.png" alt="logo" class="bg-primary" >
-        </q-avatar>
-        <q-toolbar-title class="text-weight-bold text-h4 title">
-          ChatterBox
-        </q-toolbar-title>
-        <div class="width">
-          <div class="row q-pa-sm q-ml-lg q-col-gutter-sm right-buttons">
-            <div class="col right">
-              <q-btn round color="primary" icon="settings"  @click="settings = true"/>
-            </div>
-            <div class="col">
-              <q-btn round color="negative" icon="logout" @click="onLogout"/>
-            </div>
+          <q-avatar class="img-own q-ma-sm">
+            <img src="../assets/logo-white.png" alt="logo" class="bg-primary" >
+          </q-avatar>
+
+          <q-toolbar-title class="text-weight-bold text-h4 title">
+            ChatterBox
+          </q-toolbar-title>
+          <span class="q-subtitle-1 q-pl-md text-weight-bold">
+            {{ activeUser }}
+          </span>
+          <div class="q-mx-sm">
+            <q-btn round color="primary" icon="settings"  @click="settings = true"/>
           </div>
-        </div>
-      </q-toolbar>
-      <settings-modal v-model="settings"></settings-modal>
-    </q-header>
-    <q-drawer
-      v-model="leftDrawerOpen"
-      :width="250"
-      :breakpoint="767"
-      class="scroll"
-      show-if-above
-      bordered
-    >
-      <q-scroll-area style="height: 90%">
-        <q-list>
-          <q-item
-            v-for="(channel, index) in channels"
-            :key="index"
-            clickable
-            v-ripple
-            @click="setActiveChannel(channel)"
-          >
-            <q-item-section>
-              <q-item-label lines="1"> {{ channel }} </q-item-label>
-              <q-item-label class="conversation__summary" caption>
-                {{ lastMessageOf(channel)?.content || '' }}
-              </q-item-label>
-            </q-item-section>
+          <div class="q-mx-sm">
+            <q-btn round color="negative" icon="logout" @click="logout"/>
+          </div>
+        </q-toolbar>
+      </q-header>
 
-            <q-item-section side>
-              <q-icon name="keyboard_arrow_down" />
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-scroll-area>
-    </q-drawer>
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+      <q-drawer
+        v-model="leftDrawerOpen"
+        show-if-above
+        bordered
+        :breakpoint="690"
+      >
+        <q-toolbar class="bg-dark text-white text-weight-bold" style="font-size: 20px">
+          Channels
+          <q-space />
+        </q-toolbar>
+        <q-scroll-area class="bg-dark" style="height: calc(100% - 50px)">
+          <q-list>
+            <q-item
+              v-for="(channel, index) in channels"
+              :key="index"
+              clickable
+              v-ripple
+              class="text-white"
+              @click="setActiveChannel(channel)"
+            >
+              <q-item-section>
+                <q-item-section>
+
+                </q-item-section>
+                <q-item-label lines="1">
+                  {{ channel }}
+                </q-item-label>
+                <q-item-label class="conversation__summary">
+                  {{ lastMessageOf(channel)?.content || '' }}
+                </q-item-label>
+              </q-item-section>
+
+              <!--              <q-item-section side>-->
+              <!--                &lt;!&ndash;q-item-label caption>-->
+              <!--                  {{ channel }}-->
+              <!--                </q-item-label&ndash;&gt;-->
+              <!--              </q-item-section>-->
+            </q-item>
+          </q-list>
+        </q-scroll-area>
+      </q-drawer>
+
+      <q-page-container class="bg-dark">
+        <router-view />
+      </q-page-container>
+
+      <q-footer class="q-ml-sm">
+        <q-toolbar class="bg-dark row">
+          <q-input
+            v-model="message"
+            :disable="loading"
+            @keydown.enter.prevent="send"
+            rounded
+            outlined
+            dense
+            class="WAL__field col-grow q-mr-sm"
+            input-class="text-black"
+            bg-color="white"
+            placeholder="Type a message"
+            />
+          <q-btn :disable="loading" @click="send" round flat color="white" icon="send" />
+        </q-toolbar>
+      </q-footer>
+    </q-layout>
+  </div>
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import { defineComponent } from "vue"
-import SettingsModal from "components/SettingsModal.vue"
 
 export default defineComponent({
-  name: 'ChatLayout',
-  components: { SettingsModal },
+  name: 'MainLayout',
   data () {
     return {
       leftDrawerOpen: false,
       message: '',
-      loading: false,
-      settings: false
+      loading: false
     }
   },
   computed: {
     ...mapGetters('channels', {
       channels: 'joinedChannels',
       lastMessageOf: 'lastMessageOf'
-    })
+    }),
+    activeChannel () {
+      return this.$store.state.channels.active
+    },
+    activeUser () {
+      return this.$store.state.auth.user?.email
+    }
   },
   methods: {
     async send () {
@@ -98,14 +129,6 @@ export default defineComponent({
       await this.addMessage({ channel: this.activeChannel, message: this.message })
       this.message = ''
       this.loading = false
-    },
-    onLogout () {
-      this.$store.dispatch('auth/logout').then(() => {
-        this.$router.push('/auth/')
-      })
-    },
-    toggleLeftDrawer () {
-      this.leftDrawerOpen = !this.leftDrawerOpen
     },
     ...mapMutations('channels', {
       setActiveChannel: 'SET_ACTIVE'
@@ -116,46 +139,37 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-@media (max-width: 767px) {
-  .img-own {
-    padding-left: 10px;
-    width:100px;
-    height: auto;
-  }
-}
-@media (max-width: 500px) {
-  .title {
-    display: none;
-  }
-  .right-buttons {
-    width: 100%;
-    justify-content: end;
-    position: relative;
-    left: 50px;
-  }
-  .width {
-    justify-content: end;
-    width: 100%;
-  }
-  .right {
-    justify-content: end;
-    text-align: end;
-  }
-}
-@media (max-width: 400px) {
-  .right-buttons {
-    left: 20px;
-  }
-}
-.bg-img {
-  background-image: url('../assets/bg-img.jpg');
-  background-size: cover;
-  background-position: top;
-}
-.img-own {
-  width: 80px;
-  height: auto;
-  object-fit: contain;
-}
+<style lang="sass">
+.bg-img
+  background-image: url('../assets/bg-img.jpg')
+  background-size: cover
+  background-position: top
+.WAL
+  width: 100%
+  height: 100%
+  padding-top: 20px
+  padding-bottom: 20px
+  &:before
+    content: ''
+    height: 127px
+    position: fixed
+    top: 0
+    width: 100%
+    background-color: #009688
+  &__layout
+    margin: 0 auto
+    z-index: 4000
+  &__field.q-field--outlined .q-field__control:before
+    border: none
+@media (max-width: 850px)
+  .WAL
+    padding: 0
+    &__layout
+      width: 100%
+      border-radius: 0
+.conversation__summary
+  margin-top: 4px
+.conversation__more
+  margin-top: 0!important
+  font-size: 1.4rem
 </style>

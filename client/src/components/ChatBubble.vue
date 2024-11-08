@@ -12,7 +12,7 @@
           {{ message.content }}
         </div>
         <div class="row-auto timestamp float-right">
-          {{ message.createdAt }}
+          {{ message.created_at }}
         </div>
       </div>
     </div>
@@ -45,7 +45,6 @@ export default defineComponent({
   margin-right: 10px;
   background-color: white;
 }
-
 .chat {
   width: 100%;
   word-wrap: break-word;
@@ -54,17 +53,14 @@ export default defineComponent({
   padding-right: 8px;
   padding-left: 3px;
 }
-
 .mine {
   background-color: transparent;
   text-align: right;
 }
-
 .others {
   background-color: #1D1D1D;
   text-align: left;
 }
-
 .timestamp {
   color: darkgray;
   font-size: 12px;

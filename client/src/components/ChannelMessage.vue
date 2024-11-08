@@ -1,5 +1,5 @@
 <template>
-  <q-scroll-area ref="area" style="width: 100%; height: calc(100vh - 250px)">
+  <q-scroll-area ref="area" style="width: 100%; height: calc(100vh - 151px)">
     <div style="width: 100%; max-width: 95%; margin: 0 auto;">
       <ChatBubble
         v-for="message in messages"
@@ -42,7 +42,7 @@ export default defineComponent({
   methods: {
     scrollMessages () {
       const area = this.$refs.area as QScrollArea
-      area && area.setScrollPercentage("vertical", 1.1)
+      area && area.setScrollPercentage('vertical', 1.5)
     },
     isMine (message: SerializedMessage): boolean {
       return message.author.id === this.currentUser
