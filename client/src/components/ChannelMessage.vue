@@ -1,13 +1,11 @@
 <template>
-  <q-scroll-area ref="area" style="width: 100%; height: calc(100vh - 150px)">
-    <div style="width: 100%; max-width: 400px; margin: 0 auto;">
-      <q-chat-message
+  <q-scroll-area ref="area" style="width: 100%; height: calc(100vh - 250px)">
+    <div style="width: 100%; max-width: 95%; margin: 0 auto;">
+      <ChatBubble
         v-for="message in messages"
         :key="message.id"
-        :name="message.author.email"
-        :text="[message.content]"
-        :stamp="message.createdAt"
-        :sent="isMine(message)"
+        :message="message"
+        :isMine="isMine(message)"
       />
     </div>
   </q-scroll-area>
@@ -17,9 +15,11 @@
 import { QScrollArea } from "quasar"
 import { SerializedMessage } from "src/contracts"
 import { defineComponent, PropType } from "vue"
+import ChatBubble from "components/ChatBubble.vue"
 
 export default defineComponent({
   name: "ChannelMessagesComponent",
+  components: { ChatBubble },
   props: {
     messages: {
       type: Array as PropType<SerializedMessage[]>,

@@ -41,7 +41,7 @@
       show-if-above
       bordered
     >
-      <q-scroll-area style="height: calc(100% - 100px)">
+      <q-scroll-area style="height: 90%">
         <q-list>
           <q-item
             v-for="(channel, index) in channels"

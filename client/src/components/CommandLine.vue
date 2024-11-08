@@ -1,8 +1,8 @@
 <template>
-  <q-footer class="bg-dark">
-    <q-form @submit="send">
-      <div class="row q-gutter-md q-mr-lg q-my-md">
-        <div class="col q-ml-xl">
+  <q-footer class="bg-dark justify-end">
+    <q-form @submit="send " class="width">
+      <div class="row q-my-md q-ml-sm">
+        <div class="col q-ml-xl q-mr-md">
           <q-input
             v-model="message"
             bg-color="grey-9"
@@ -63,5 +63,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+  .width{
+    width: 95%;
+  }
 </style>

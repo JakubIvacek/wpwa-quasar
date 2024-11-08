@@ -17,6 +17,7 @@ import ChannelMessagesComponent from 'src/components/ChannelMessage.vue'
 import { SerializedMessage } from 'src/contracts'
 import { defineComponent } from 'vue'
 import CommandLine from "components/CommandLine.vue"
+import ChatBubble from "components/ChatBubble.vue"
 
 export default defineComponent({
   components: { CommandLine, ChannelMessagesComponent },
