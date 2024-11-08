@@ -33,7 +33,7 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   },
   async addChannel ({ commit }, channel: string) {
     commit("ADD_CHANNEL", channel)
-  },
+  }
 
 }
 

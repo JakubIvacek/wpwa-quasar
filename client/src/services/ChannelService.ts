@@ -1,24 +1,24 @@
-import { RawMessage, SerializedMessage } from "src/contracts"
-import { BootParams, SocketManager } from "./SocketManager"
+import { RawMessage, SerializedMessage } from 'src/contracts'
+import { BootParams, SocketManager } from './SocketManager'
 
 // creating instance of this class automatically connects to given socket.io namespace
 // subscribe is called with boot params, so you can use it to dispatch actions for socket events
 // you have access to socket.io socket using this.socket
 class ChannelSocketManager extends SocketManager {
   public subscribe ({ store }: BootParams): void {
-    const channel = this.namespace.split("/").pop() as string
+    const channel = this.namespace.split('/').pop() as string
 
-    this.socket.on("message", (message: SerializedMessage) => {
-      store.commit("channels/NEW_MESSAGE", { channel, message })
+    this.socket.on('message', (message: SerializedMessage) => {
+      store.commit('channels/NEW_MESSAGE', { channel, message })
     })
   }
 
   public addMessage (message: RawMessage): Promise<SerializedMessage> {
-    return this.emitAsync("addMessage", message)
+    return this.emitAsync('addMessage', message)
   }
 
   public loadMessages (): Promise<SerializedMessage[]> {
-    return this.emitAsync("loadMessages")
+    return this.emitAsync('loadMessages')
   }
 }
 

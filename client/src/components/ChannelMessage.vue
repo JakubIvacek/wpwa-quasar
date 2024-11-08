@@ -1,8 +1,8 @@
 <template>
-  <div class="q-ml-lg text-weight-bold" style="width: 100%; font-size: 1.2rem;">
+  <div class="q-ml-xl text-weight-bold q-mt-lg" style="width: 100%; font-size: 2rem;">
     {{activeChannel}}
   </div>
-  <q-scroll-area ref="area" style="width: 100%; height: calc(100vh - 151px)">
+  <q-scroll-area ref="area" style="width: 100%; height: calc(100vh - 191px)">
     <div style="width: 100%; max-width: 95%; margin: 0 auto;">
       <ChatBubble
         v-for="message in messages"
