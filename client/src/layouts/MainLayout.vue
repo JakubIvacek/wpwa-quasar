@@ -16,10 +16,10 @@
             <img src="../assets/logo-white.png" alt="logo" class="bg-primary" >
           </q-avatar>
 
-          <q-toolbar-title class="text-weight-bold text-h4 title">
+          <q-toolbar-title class="text-weight-bold text-h4 title ">
             ChatterBox
           </q-toolbar-title>
-          <span class="q-subtitle-1 q-pl-md text-weight-bold">
+          <span class="q-subtitle-1 q-pl-md text-weight-bold custom-show">
             {{ activeUser }}
           </span>
           <div class="q-mx-sm">
@@ -29,6 +29,7 @@
             <q-btn round color="negative" icon="logout" @click="logout"/>
           </div>
         </q-toolbar>
+        <settings-modal v-model="settings" />
       </q-header>
       <q-drawer
         v-model="leftDrawerOpen"
@@ -36,12 +37,12 @@
         bordered
         :breakpoint="690"
       >
-        <q-toolbar class="bg-dark text-white text-weight-bold" style="font-size: 20px">
+        <q-toolbar class="bg-dark text-white text-weight-bold q-pt-sm q-pl-lg" style="font-size: 25px">
           Channels
           <q-space />
         </q-toolbar>
         <q-scroll-area class="bg-dark" style="height: calc(100% - 50px)">
-          <q-list>
+          <q-list  bordered dark class="q-mt-sm">
             <q-item
               v-for="(channel, index) in channels"
               :key="index"
@@ -55,7 +56,7 @@
                   {{ channel }}
                 </q-item-label>
                 <q-item-label class="conversation__summary">
-                  {{ lastMessageOf(channel)?.content || '' }}
+                  {{ getShortMessage(lastMessageOf(channel)?.content) }}
                 </q-item-label>
               </q-item-section>
 
@@ -97,14 +98,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import SettingsModal from 'components/SettingsModal.vue'
 
 export default defineComponent({
   name: 'MainLayout',
+  components: { SettingsModal },
   data () {
     return {
       leftDrawerOpen: false,
       message: '',
-      loading: false
+      loading: false,
+      settings: false
     }
   },
   computed: {
@@ -126,6 +130,12 @@ export default defineComponent({
       this.message = ''
       this.loading = false
     },
+    getShortMessage (content) {
+      if (content) {
+        return content.slice(0, 25) + "..." // Zobrazí len prvých 25 znakov
+      }
+      return ''
+    },
     ...mapMutations('channels', {
       setActiveChannel: 'SET_ACTIVE'
     }),
@@ -134,7 +144,16 @@ export default defineComponent({
   }
 })
 </script>
-
+<style>
+.item-channel{
+  border:white
+}
+@media(max-width: 650px){
+  .custom-show{
+    display: none;
+  }
+}
+</style>
 <style lang="sass">
 .channel-label
   font-size: 1.1rem

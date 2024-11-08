@@ -1,15 +1,30 @@
 <template>
-  <div class="q-ml-lg text-weight-bold" style="width: 100%; font-size: 1.2rem;">
-    {{activeChannel}}
+  <div class="q-ml-xl text-weight-bold q-mt-lg q-mb-sm" style="width: 100%; font-size: 2rem;">
+    {{ activeChannel}}
   </div>
-  <q-scroll-area ref="area" style="width: 100%; height: calc(100vh - 151px)">
+
+  <q-scroll-area ref="area" style="width: 100%; height: calc(100vh - 191px)">
     <div style="width: 100%; max-width: 95%; margin: 0 auto;">
-      <ChatBubble
-        v-for="message in messages"
-        :key="message.id"
-        :message="message"
-        :isMine="isMine(message)"
-      />
+      <!-- Display messages only if there is an active channel -->
+      <template v-if="activeChannel">
+        <ChatBubble
+          v-for="message in messages"
+          :key="message.id"
+          :message="message"
+          :isMine="isMine(message)"
+        />
+      </template>
+      <!-- If no active channel, you can also add a placeholder for chat content -->
+      <template v-else>
+        <q-card class="q-pa-md q-pt-xl" flat>
+          <q-card-section class="text-center">
+            <q-icon name="chat" size="110px" color="grey-7" />
+            <div class="text-h4 q-mt-md q-mb-md text-weight-bold">NO CHANNEL OPENED</div>
+            <div class="text-h5 q-mt-md">Open one of your channels or create new one</div>
+            <div class="text-h5 q-mt-md">by typing /join 'name'</div>
+          </q-card-section>
+        </q-card>
+      </template>
     </div>
   </q-scroll-area>
 </template>

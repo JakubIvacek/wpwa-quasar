@@ -7,9 +7,10 @@
         <q-list>
           <q-item
             v-for="user in props.users"
-            class="text-weight-bold items-center hover-grey"
+            :key="user.id"
+          class="text-weight-bold items-center hover-grey"
           >
-            {{ user.username }}
+          {{ user.username }}
           </q-item>
         </q-list>
       <q-card-actions align="right">
@@ -20,13 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref, defineProps } from 'vue'
 
 const props = defineProps<{
   users: string[];
-}>();
+}>()
 
-const isVisible = ref(false);
+const isVisible = ref(false)
 </script>
 
 <style scoped>
