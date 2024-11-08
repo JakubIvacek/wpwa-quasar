@@ -100,6 +100,9 @@ export default defineComponent({
   .custom-width{
     width: 80%
   }
+  .custom-font{
+    font-size:50Px
+  }
 }
 </style>
 
