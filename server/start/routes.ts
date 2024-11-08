@@ -26,3 +26,9 @@ Route.group(() => {
   Route.post('logout', 'AuthController.logout').middleware('auth')
   Route.get('me', 'AuthController.me').middleware('auth')
 }).prefix('auth')
+
+Route.group(() => {
+  Route.get('/', 'ChannelController.getAll')
+  Route.post('/', 'ChannelController.join')
+  Route.delete('/:id', 'ChannelController.delete')
+}).prefix('channels').middleware('auth')

@@ -28,3 +28,24 @@ declare module "@ioc:Repositories/MessageRepository" {
   const MessageRepository: MessageRepositoryContract;
   export default MessageRepository;
 }
+
+declare module "@ioc:Repositories/ChannelRepository" {
+  export interface SerializedChannel {
+    createdBy: number;
+    content: string;
+    channelId: number;
+    createdAt: string;
+    updatedAt: string;
+    id: number;
+  }
+
+  export interface ChannelRepositoryContract {
+    getAll(channelName: string): Promise<SerializedChannel[]>;
+
+    create(
+      channelName: string,
+      userId: number,
+      content: string
+    ): Promise<SerializedChannel>;
+  }
+}

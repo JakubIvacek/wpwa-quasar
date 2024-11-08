@@ -3,17 +3,16 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
 import RegisterUserValidator from 'App/Validators/RegisterUserValidator'
 import {UserStatus} from "App/Enums/UserStatus";
-import Channel from "App/Models/Channel";
 
 export default class AuthController {
   async register({ request }: HttpContextContract) {
     // Validate incoming request data
     const data = await request.validate(RegisterUserValidator);
 
-    // Set default status to 'online'
+    // Set default status to 'offline'
     const userData = {
       ...data,
-      status: UserStatus.OFFLINE, // Default status set to online
+      status: UserStatus.OFFLINE, // Default status set to offline
     };
 
     // Create user in the database

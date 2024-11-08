@@ -30,7 +30,11 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   ) {
     const newMessage = await channelService.in(channel)?.addMessage(message)
     commit("NEW_MESSAGE", { channel, message: newMessage })
-  }
+  },
+  async addChannel ({ commit }, channel: string) {
+    commit("ADD_CHANNEL", channel)
+  },
+
 }
 
 export default actions
