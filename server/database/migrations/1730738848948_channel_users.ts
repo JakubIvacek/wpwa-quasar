@@ -1,37 +1,38 @@
-import BaseSchema from '@ioc:Adonis/Lucid/Schema'
-import {MemberStatus} from "App/Enums/MemberStatus";
+import BaseSchema from '@ioc:Adonis/Lucid/Schema';
+import { MemberStatus } from 'App/Enums/MemberStatus';
 
 export default class extends BaseSchema {
-  protected tableName = 'channel_users'
+  protected tableName = 'channel_users';
 
-  public async up () {
+  public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-      table.enum('status', Object.values(MemberStatus)).notNullable().defaultTo('public')
+      table.increments('id');
+      table.enum('status', Object.values(MemberStatus)).notNullable().defaultTo('active');
+      table.integer('kick_count').unsigned().notNullable().defaultTo(0);
       table
-        .integer("user_id")
+        .integer('user_id')
         .unsigned()
         .notNullable()
-        .references("id")
-        .inTable("users")
-        .onDelete("CASCADE");
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE');
       table
-        .integer("channel_id")
+        .integer('channel_id')
         .unsigned()
         .notNullable()
-        .references("id")
-        .inTable("channels")
-        .onDelete("CASCADE");
-      table.unique(["user_id", "channel_id"]);
+        .references('id')
+        .inTable('channels')
+        .onDelete('CASCADE');
+      table.unique(['user_id', 'channel_id']);
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
-      table.timestamp('created_at', { useTz: true })
-      table.timestamp('updated_at', { useTz: true })
-    })
+      table.timestamp('created_at', { useTz: true });
+      table.timestamp('updated_at', { useTz: true });
+    });
   }
 
-  public async down () {
-    this.schema.dropTable(this.tableName)
+  public async down() {
+    this.schema.dropTable(this.tableName);
   }
 }
