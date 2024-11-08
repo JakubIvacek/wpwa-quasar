@@ -24,6 +24,7 @@ import { defineComponent, PropType } from 'vue'
 import { SerializedMessage } from 'src/contracts'
 
 export default defineComponent({
+  name: 'ChatBubble',
   props: {
     message: {
       type: Object as PropType<SerializedMessage>,

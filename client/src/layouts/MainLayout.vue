@@ -30,7 +30,6 @@
           </div>
         </q-toolbar>
       </q-header>
-
       <q-drawer
         v-model="leftDrawerOpen"
         show-if-above
@@ -52,10 +51,7 @@
               @click="setActiveChannel(channel)"
             >
               <q-item-section>
-                <q-item-section>
-
-                </q-item-section>
-                <q-item-label lines="1">
+                <q-item-label lines="1" class="channel-label">
                   {{ channel }}
                 </q-item-label>
                 <q-item-label class="conversation__summary">
@@ -140,6 +136,10 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
+.channel-label
+  font-size: 1.1rem
+  font-weight: bold
+
 .bg-img
   background-image: url('../assets/bg-img.jpg')
   background-size: cover
