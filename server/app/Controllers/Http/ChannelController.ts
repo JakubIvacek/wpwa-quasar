@@ -1,12 +1,17 @@
 import Channel from 'App/Models/Channel'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import User from "App/Models/User";
+import {ChannelRepositoryContract} from "@ioc:Repositories/ChannelRepository";
+import {inject} from "@adonisjs/core/build/standalone";
+import {ChannelType} from "App/Enums/ChannelType";
 
+@inject(["Repositories/ChannelRepository"])
 export default class ChannelController {
+  constructor(private channelRepository: ChannelRepositoryContract) {}
+
   async create({ request, response }: HttpContextContract) {
     const { name, user_id } = request.only(['name', 'user_id']);
-    let type = request.input('type', 'public'); // Ak nie je uvedený `type`, nastaví sa na "public"
-
+    const typeInput = request.input('type');
+    const type: ChannelType = typeInput === 'private' ? ChannelType.PRIVATE : ChannelType.PUBLIC;
 
     if (!name || name.trim() === '') {
       return response.status(400).json({ error: 'Channel name is required' });
@@ -17,18 +22,13 @@ export default class ChannelController {
     }
 
     try {
-
       const existingChannel = await Channel.findBy('name', name);
       if (existingChannel) {
         return response.status(400).json({ error: 'Channel with this name already exists' });
       }
 
       // Vytvorenie a uloženie nového kanála do databázy
-      const channel = new Channel();
-      channel.name = name;
-      channel.type = type;
-      channel.creator_id = user_id;
-      await channel.save();
+      const channel = await this.channelRepository.create(name, type, user_id);
 
       // Odpoveď s vytvoreným kanálom
       return response.status(201).json(channel);
@@ -41,6 +41,9 @@ export default class ChannelController {
   async join({ request, response }: HttpContextContract) {
     const { name, user_id } = request.only(['name', 'user_id']);
 
+    const typeInput = request.input('type');
+    const type: ChannelType = typeInput === 'private' ? ChannelType.PRIVATE : ChannelType.PUBLIC;
+
     if (!name || name.trim() === '') {
       return response.status(400).json({ error: 'Channel name is required' });
     }
@@ -50,30 +53,32 @@ export default class ChannelController {
     }
 
    const channel = await Channel.findBy('name', name);
-    // Zavolame create
     if (!channel) {
-      return response.status(404).json({ error: 'Channel not found' });
-    }
+      try {
+        const newChannel = await this.channelRepository.create(name, type, user_id);
+        return response.status(201).json(newChannel);
+      }catch (error) {
+        return response.status(500).json({ error: 'Unable to create channel' });
+      }
+    }else{
+      if (channel.type === 'private') {
+        return response.status(403).json({ error: 'You cannot join private channel' });
+      }
 
-    if (channel.type === 'private') {
-      return response.status(403).json({ error: 'You cannot join private channel' });
-    }
-
-    try {
-      const user = await User.findOrFail(user_id);
-      console.log(user)
-      await user.related('channels').attach([channel.id])
-
-      return response.status(200).json({ message: 'User successfully joined the channel', channel });
-    } catch (error) {
-      return response.status(500).json({ error: 'Unable to join channel' });
+      try {
+        const serializedChannel = await this.channelRepository.join(user_id, channel.id);
+        return response.status(200).json({ channel: serializedChannel });
+      } catch (error) {
+        if (error.code === '23505') {
+          return response.status(400).json({ error: 'User is already a member of this channel' });
+        }
+        return response.status(500).json({ error: 'Unable to join channel' })
+      }
     }
   }
 
-
   async getAll({ response }: HttpContextContract) {
-    const channels = await Channel.all();
-
-    return response.status(200).json({ data: channels });
+    const channels = await this.channelRepository.getAll();
+    return response.status(200).json(channels);
   }
 }

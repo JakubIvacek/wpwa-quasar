@@ -30,22 +30,30 @@ declare module "@ioc:Repositories/MessageRepository" {
 }
 
 declare module "@ioc:Repositories/ChannelRepository" {
+  import {ChannelType} from "App/Enums/ChannelType";
+
   export interface SerializedChannel {
-    createdBy: number;
-    content: string;
-    channelId: number;
-    createdAt: string;
-    updatedAt: string;
     id: number;
+    name: string;
+    type: string;
+    creator_id: number;
   }
 
   export interface ChannelRepositoryContract {
-    getAll(channelName: string): Promise<SerializedChannel[]>;
+    getAll(): Promise<SerializedChannel[]>;
 
     create(
-      channelName: string,
-      userId: number,
-      content: string
+      name: string,
+      type: ChannelType,
+      user_id: number
+    ): Promise<SerializedChannel>;
+
+    join(
+      user_id: number,
+      channel_id: number
     ): Promise<SerializedChannel>;
   }
+
+  const ChannelRepository: ChannelRepositoryContract;
+  export default ChannelRepository;
 }
