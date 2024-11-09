@@ -133,7 +133,7 @@ export default defineComponent({
         var parts = this.message.split(' ')
         console.log(parts)
         switch (parts[0]) {
-          case '/join':
+          case '/create':
             var newChannel: CreateChannel = {
               name: parts[1],
               type: parts[2],
