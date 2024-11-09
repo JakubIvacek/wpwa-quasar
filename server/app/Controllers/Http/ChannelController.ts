@@ -64,10 +64,8 @@ export default class ChannelController {
 
   // The join method is used to add a user to a channel
   async join({ request, response }: HttpContextContract) {
-    const { name, user_id } = request.only(['name', 'user_id']);
-
-    const typeInput = request.input('type');
-    const type: ChannelType = typeInput === 'private' ? ChannelType.PRIVATE : ChannelType.PUBLIC;
+    const { name, user_id} = request.only(['name', 'user_id']);
+    console.log(name, user_id)
 
     if (!name || name.trim() === '') {
       return response.status(400).json({ error: 'Channel name is required' });
@@ -78,14 +76,13 @@ export default class ChannelController {
     }
 
    let channel :  Channel | SerializedChannel | null = await Channel.findBy('name', name);
-
     if (channel) {
       if (channel.type === 'private') {
         return response.status(403).json({ error: 'You cannot join private channel' });
       }
     }else {
       try {
-        channel = await this.channelRepository.create(name, type, user_id);
+        channel = await this.channelRepository.create(name, ChannelType.PUBLIC, user_id);
       }catch (error) {
         return response.status(500).json({ error: 'Unable to create channel' });
       }

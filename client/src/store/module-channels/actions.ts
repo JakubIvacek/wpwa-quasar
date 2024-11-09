@@ -3,7 +3,7 @@ import { StateInterface } from "../index"
 import { ChannelsStateInterface } from "./state"
 import { channelService } from "src/services"
 import { RawMessage } from "src/contracts"
-import {CreateChannel, SerializedChannel} from "src/contracts/Channel"
+import {CreateChannel, JoinChannel, SerializedChannel} from "src/contracts/Channel"
 
 const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   async join ({ commit }, channel: string) {
@@ -44,6 +44,14 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   async getChannels ({ commit }, id: number): Promise<SerializedChannel[]> {
     try {
       return await channelService.getUserChannels(id)
+    } catch (error) {
+      console.error("Failed get User channels:", error)
+      throw error
+    }
+  },
+  async joinChannel ({ commit }, data: JoinChannel) {
+    try {
+      return await channelService.joinChannel(data)
     } catch (error) {
       console.error("Failed get User channels:", error)
       throw error

@@ -13,3 +13,7 @@ export interface CreateChannel {
   type: string;
   creator_id: number;
 }
+export interface JoinChannel{
+  name: string;
+  user_id: number;
+}

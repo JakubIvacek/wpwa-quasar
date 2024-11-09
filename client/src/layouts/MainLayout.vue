@@ -96,7 +96,7 @@
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import SettingsModal from 'components/SettingsModal.vue'
-import { CreateChannel, SerializedChannel } from "src/contracts/Channel"
+import { CreateChannel, JoinChannel, SerializedChannel } from "src/contracts/Channel"
 
 export default defineComponent({
   name: 'MainLayout',
@@ -143,6 +143,16 @@ export default defineComponent({
             await this.addChannel(newChannel)
             await this.fetchUserChannels()
             break
+          case '/join':
+            var joinChannel: JoinChannel = {
+              name: parts[1],
+              user_id: this.activeUserId
+
+            }
+            console.log(joinChannel)
+            await this.joinChannel(joinChannel)
+            await this.fetchUserChannels()
+            break
           case '/list':
             // showUserList()
             break
@@ -177,7 +187,7 @@ export default defineComponent({
       setActiveChannel: 'SET_ACTIVE'
     }),
     ...mapActions('auth', ['logout']),
-    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave']),
+    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel']),
     setActive (channel: string) {
       this.leave(this.lastJoinedName)
       this.setActiveChannel(channel)

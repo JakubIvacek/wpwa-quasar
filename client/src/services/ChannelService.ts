@@ -1,7 +1,7 @@
 import { RawMessage, SerializedMessage } from 'src/contracts'
 import { BootParams, SocketManager } from './SocketManager'
 import { api } from "boot/axios"
-import { CreateChannel, SerializedChannel } from "src/contracts/Channel"
+import {CreateChannel, JoinChannel, SerializedChannel} from "src/contracts/Channel"
 
 // creating instance of this class automatically connects to given socket.io namespace
 // subscribe is called with boot params, so you can use it to dispatch actions for socket events
@@ -65,6 +65,18 @@ class ChannelService {
       console.log('Channel created:', response.data)
     } catch (error) {
       console.error('Error creating channel:', error.response?.data || error.message);
+    }
+  }
+
+  async joinChannel (data: JoinChannel) {
+    try {
+      await api.post('channels/', data, {
+        headers: {
+          'Content-Type': 'application/json'// Ensure the correct content type
+        }
+      })
+    } catch (error) {
+      console.error('Error joining channel:', error.response?.data || error.message);
     }
   }
 
