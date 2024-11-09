@@ -40,6 +40,14 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       console.error("Failed to create channel:", error)
       throw error
     }
+  },
+  async getChannels ({ commit }, id: number): Promise<SerializedChannel[]> {
+    try {
+      return await channelService.getUserChannels(id)
+    } catch (error) {
+      console.error("Failed get User channels:", error)
+      throw error
+    }
   }
 }
 

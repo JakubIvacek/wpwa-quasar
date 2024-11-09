@@ -67,6 +67,24 @@ class ChannelService {
       console.error('Error creating channel:', error.response?.data || error.message);
     }
   }
+
+  async getUserChannels (id: number): SerializedChannel[] {
+    try {
+      const response = await api.get<SerializedChannel[]>(
+        `channels/${id}`,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      console.log(response.data)
+      return response.data
+    } catch (error) {
+      console.error('Error fetching channels:', error.response?.data || error.message)
+      throw error
+    }
+  }
 }
 
 export default new ChannelService()

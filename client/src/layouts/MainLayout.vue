@@ -44,19 +44,16 @@
         <q-scroll-area class="bg-dark" style="height: calc(100% - 50px)">
           <q-list  bordered dark class="q-mt-sm">
             <q-item
-              v-for="(channel, index) in channels"
+              v-for="(channel, index) in this.userChannels"
               :key="index"
               clickable
               v-ripple
               class="text-white"
-              @click="setActiveChannel(channel)"
+              @click="setActive(channel.name)"
             >
               <q-item-section>
                 <q-item-label lines="1" class="channel-label">
-                  {{ channel }}
-                </q-item-label>
-                <q-item-label class="conversation__summary">
-                  {{ getShortMessage(lastMessageOf(channel)?.content) }}
+                  {{ channel.name }}
                 </q-item-label>
               </q-item-section>
 
@@ -99,7 +96,7 @@
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import SettingsModal from 'components/SettingsModal.vue'
-import {CreateChannel} from "src/contracts/Channel";
+import { CreateChannel, SerializedChannel } from "src/contracts/Channel"
 
 export default defineComponent({
   name: 'MainLayout',
@@ -109,7 +106,9 @@ export default defineComponent({
       leftDrawerOpen: false,
       message: '',
       loading: false,
-      settings: false
+      settings: false,
+      userChannels: [] as SerializedChannel[],
+      lastJoinedName: String
     }
   },
   computed: {
@@ -118,6 +117,7 @@ export default defineComponent({
       lastMessageOf: 'lastMessageOf'
     }),
     activeChannel (): string | null {
+      console.log(this.$store.state.channels.active)
       return this.$store.state.channels.active
     },
     activeUser (): string | undefined {
@@ -141,6 +141,7 @@ export default defineComponent({
 
             }
             await this.addChannel(newChannel)
+            await this.fetchUserChannels()
             break
           case '/list':
             // showUserList()
@@ -149,8 +150,18 @@ export default defineComponent({
       } else {
         this.loading = true
         await this.addMessage({ channel: this.activeChannel, message: this.message })
-        this.message = ''
         this.loading = false
+      }
+      this.message = ''
+    },
+    async fetchUserChannels () {
+      try {
+        if (this.activeUserId) {
+          const response = await this.getChannels(this.activeUserId)
+          this.userChannels = response.channels // Assign only the `channels` array
+        }
+      } catch (error) {
+        console.error("Failed to fetch user channels:", error)
       }
     },
     startsWithSlash (): boolean {
@@ -166,7 +177,17 @@ export default defineComponent({
       setActiveChannel: 'SET_ACTIVE'
     }),
     ...mapActions('auth', ['logout']),
-    ...mapActions('channels', ['addMessage', 'addChannel'])
+    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave']),
+    setActive (channel: string) {
+      this.leave(this.lastJoinedName)
+      this.setActiveChannel(channel)
+      this.join(channel)
+      this.lastJoinedName = channel
+    }
+  },
+  async created () {
+    await this.fetchUserChannels() // Fetch channels when component is created
+    console.log('UserChannels:', this.userChannels[0])
   }
 })
 </script>

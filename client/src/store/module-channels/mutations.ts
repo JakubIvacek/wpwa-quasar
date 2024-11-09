@@ -25,10 +25,13 @@ const mutation: MutationTree<ChannelsStateInterface> = {
   SET_ACTIVE (state, channel: string) {
     state.active = channel
   },
-  NEW_MESSAGE (
-    state,
-    { channel, message }: { channel: string; message: SerializedMessage }
-  ) {
+  NEW_MESSAGE (state, { channel, message }: { channel: string; message: SerializedMessage }) {
+    // Check if the channel exists in messages; if not, initialize it as an empty array
+    if (!state.messages[channel]) {
+      state.messages[channel] = []
+    }
+
+    // Now you can safely push the new message
     state.messages[channel].push(message)
   }
 }
