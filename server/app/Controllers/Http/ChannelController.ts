@@ -65,7 +65,7 @@ export default class ChannelController {
   // The join method is used to add a user to a channel
   async join({ request, response }: HttpContextContract) {
     const { name, user_id} = request.only(['name', 'user_id']);
-    console.log(name, user_id)
+    //console.log(name, user_id)
 
     if (!name || name.trim() === '') {
       return response.status(400).json({ error: 'Channel name is required' });
@@ -98,7 +98,25 @@ export default class ChannelController {
       return response.status(500).json({ error: 'Unable to join channel' })
     }
   }
+  async leave ({ request, response }: HttpContextContract) {
+    const { name, user_id} = request.only(['name', 'user_id']);
+    //console.log("2: " + name, user_id)
+    if (!name || name.trim() === '') {
+      return response.status(400).json({ error: 'Channel name is required' });
+    }
 
+    if (!user_id) {
+      return response.status(400).json({ error: 'User ID is required' });
+    }
+
+    let channel :  Channel | SerializedChannel | null = await Channel.findBy('name', name);
+    if (channel) {
+      this.channelRepository.leave(user_id, channel.id)
+      return response.status(200).json({ error: "Channel left successfully " });
+    } else {
+      return response.status(400).json({ error: 'Channel with this name not found' });
+    }
+  }
   async getUserChannels({ params, response }: HttpContextContract) {
     const { id } = params;
     if (!id) {

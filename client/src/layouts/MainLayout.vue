@@ -117,7 +117,7 @@ export default defineComponent({
       lastMessageOf: 'lastMessageOf'
     }),
     activeChannel (): string | null {
-      console.log(this.$store.state.channels.active)
+      // console.log(this.$store.state.channels.active)
       return this.$store.state.channels.active
     },
     activeUser (): string | undefined {
@@ -153,6 +153,18 @@ export default defineComponent({
             await this.joinChannel(joinChannel)
             await this.fetchUserChannels()
             break
+          case '/leave':
+            var leaveChannel: JoinChannel = {
+              name: parts[1],
+              user_id: this.activeUserId
+            }
+            console.log(leaveChannel)
+            await this.leaveChannel(leaveChannel)
+            await this.fetchUserChannels()
+            if (leaveChannel.name === this.activeChannel){
+              this.leaveChann(leaveChannel.name)
+            }
+            break
           case '/list':
             // showUserList()
             break
@@ -187,12 +199,16 @@ export default defineComponent({
       setActiveChannel: 'SET_ACTIVE'
     }),
     ...mapActions('auth', ['logout']),
-    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel']),
+    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel', 'leaveChannel']),
     setActive (channel: string) {
       this.leave(this.lastJoinedName)
       this.setActiveChannel(channel)
       this.join(channel)
       this.lastJoinedName = channel
+    },
+    leaveChann (channel: string) {
+      this.leave(channel)
+      this.setActiveChannel('')
     }
   },
   async created () {
