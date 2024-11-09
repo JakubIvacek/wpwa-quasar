@@ -99,6 +99,7 @@
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import SettingsModal from 'components/SettingsModal.vue'
+import {CreateChannel} from "src/contracts/Channel";
 
 export default defineComponent({
   name: 'MainLayout',
@@ -119,16 +120,41 @@ export default defineComponent({
     activeChannel (): string | null {
       return this.$store.state.channels.active
     },
-    activeUser (): string | undefined{
+    activeUser (): string | undefined {
       return this.$store.state.auth.user?.email
+    },
+    activeUserId () {
+      return this.$store.state.auth.user?.id
     }
   },
   methods: {
     async send () {
-      this.loading = true
-      await this.addMessage({ channel: this.activeChannel, message: this.message })
-      this.message = ''
-      this.loading = false
+      if (this.startsWithSlash()) {
+        var parts = this.message.split(' ')
+        console.log(parts)
+        switch (parts[0]) {
+          case '/join':
+            var newChannel: CreateChannel = {
+              name: parts[1],
+              type: parts[2],
+              creator_id: this.activeUserId
+
+            }
+            await this.addChannel(newChannel)
+            break
+          case '/list':
+            // showUserList()
+            break
+        }
+      } else {
+        this.loading = true
+        await this.addMessage({ channel: this.activeChannel, message: this.message })
+        this.message = ''
+        this.loading = false
+      }
+    },
+    startsWithSlash (): boolean {
+      return this.message[0] === '/'
     },
     getShortMessage (content:string):string {
       if (content) {
@@ -140,7 +166,7 @@ export default defineComponent({
       setActiveChannel: 'SET_ACTIVE'
     }),
     ...mapActions('auth', ['logout']),
-    ...mapActions('channels', ['addMessage'])
+    ...mapActions('channels', ['addMessage', 'addChannel'])
   }
 })
 </script>

@@ -44,8 +44,8 @@ declare module "@ioc:Repositories/ChannelRepository" {
 
     create(
       name: string,
-      type: ChannelType,
-      user_id: number
+      channelType: ChannelType,
+      creatorId: number
     ): Promise<SerializedChannel>;
 
     join(

@@ -3,6 +3,7 @@ import { StateInterface } from "../index"
 import { ChannelsStateInterface } from "./state"
 import { channelService } from "src/services"
 import { RawMessage } from "src/contracts"
+import {CreateChannel, SerializedChannel} from "src/contracts/Channel"
 
 const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   async join ({ commit }, channel: string) {
@@ -31,10 +32,15 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     const newMessage = await channelService.in(channel)?.addMessage(message)
     commit("NEW_MESSAGE", { channel, message: newMessage })
   },
-  async addChannel ({ commit }, channel: string) {
-    commit("ADD_CHANNEL", channel)
+  async addChannel ({ commit }, newChannel: CreateChannel) {
+    try {
+      // Send the data as a flatter structure
+      await channelService.createChannel(newChannel)
+    } catch (error) {
+      console.error("Failed to create channel:", error)
+      throw error
+    }
   }
-
 }
 
 export default actions

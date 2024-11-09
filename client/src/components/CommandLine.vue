@@ -27,6 +27,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import {SerializedChannel} from "src/contracts/Channel";
 
 export default defineComponent({
   name: 'ChatLayout',
@@ -44,20 +45,38 @@ export default defineComponent({
     }),
     activeChannel () {
       return this.$store.state.channels.active
+    },
+    currentUser () {
+      return this.$store.state.auth.user?.id
     }
   },
   methods: {
     async send () {
-      this.loading = true
-      await this.addMessage({ channel: this.activeChannel, message: this.message })
-      this.message = ''
-      this.loading = false
+      if (this.startsWithSlash()) {
+        switch (this.message.value.split(' ')[0]) {
+          case '/join':
+            var parts: string[] = this.message.split(' ')
+            await this.addChannel({ channelName: parts[1], typeChat: parts[2], creatorId: this.currentUser })
+            break
+          case '/list':
+            // showUserList()
+            break
+        }
+      } else {
+        this.loading = true
+        await this.addMessage({ channel: this.activeChannel, message: this.message })
+        this.message = ''
+        this.loading = false
+      }
+    },
+    startsWithSlash (): boolean {
+      return true // this.message.value.startsWith('/')
     },
     ...mapMutations('channels', {
       setActiveChannel: 'SET_ACTIVE'
     }),
     ...mapActions('auth', ['logout']),
-    ...mapActions('channels', ['addMessage'])
+    ...mapActions('channels', ['addMessage', 'addChannel'])
   }
 })
 </script>
