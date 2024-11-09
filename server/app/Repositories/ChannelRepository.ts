@@ -2,6 +2,7 @@ import Channel from "App/Models/Channel";
 import {ChannelRepositoryContract, SerializedChannel} from "@ioc:Repositories/ChannelRepository";
 import {ChannelType} from "App/Enums/ChannelType";
 import User from "App/Models/User";
+import {Error} from "memfs/lib/internal/errors";
 
 
 export default class ChannelRepository implements ChannelRepositoryContract {
@@ -30,12 +31,41 @@ export default class ChannelRepository implements ChannelRepositoryContract {
   }
 
   public async join(user_id: number, channel_id: number): Promise<SerializedChannel> {
-    const user = await User.findOrFail(user_id);
-    const channel = await Channel.findOrFail(channel_id);
-    const isConnected = await user.related('channels').query().where('channel_id', channel_id).first()
-    if (!isConnected) {
+      const user = await User.findOrFail(user_id);
+      const channel = await Channel.findOrFail(channel_id);
+
+      // When user is already in the channel error is thrown
       await user.related('channels').attach([channel_id])
+
+    return {
+      id: channel.id,
+      name: channel.name,
+      type: channel.type,
+      creator_id: channel.creator_id
+    } as SerializedChannel;
+  }
+
+  public async getUserChannels(userId: number): Promise<SerializedChannel[]> {
+
+    // Check if the user exists
+    await User.findOrFail(userId);
+
+    try {
+      const channels = await Channel.query()
+        .join('channel_users', 'channels.id', 'channel_users.channel_id')
+        .where('channel_users.user_id', userId)
+        .select('channels.*');
+
+      return channels.map((channel) => ({
+        id: channel.id,
+        name: channel.name,
+        type: channel.type,
+        creator_id: channel.creator_id,
+      } as SerializedChannel))
+    }catch (error) {
+      console.error('Error getting user channels:', error);
+      throw new Error('Unable to get user channels');
     }
-    return channel.serialize() as SerializedChannel
+
   }
 }

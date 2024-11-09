@@ -28,8 +28,9 @@ Route.group(() => {
 }).prefix('auth')
 
 Route.group(() => {
-  Route.get('/', 'ChannelController.getAll')
+  Route.get('/', 'ChannelController.getAll') //TODO this endpoint will be deleted dont use it
+  Route.get('/:id', 'ChannelController.getUserChannels')
   Route.post('/', 'ChannelController.join')
-  Route.post('/create', 'ChannelController.create')
+  Route.post('/create', 'ChannelController.create') // TODO we do not need this endpoint only for testing
   Route.delete('/:id', 'ChannelController.delete')
-}).prefix('channels')
+}).prefix('channels')// TODO add auth middleware here after implementing all endpoints

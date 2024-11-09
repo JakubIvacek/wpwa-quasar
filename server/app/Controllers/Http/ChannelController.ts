@@ -62,7 +62,7 @@ export default class ChannelController {
   }
 
 
-
+  // The join method is used to add a user to a channel
   async join({ request, response }: HttpContextContract) {
     const { name, user_id } = request.only(['name', 'user_id']);
 
@@ -100,11 +100,28 @@ export default class ChannelController {
       }
       return response.status(500).json({ error: 'Unable to join channel' })
     }
+  }
 
+  async getUserChannels({ params, response }: HttpContextContract) {
+    const { id } = params;
+    if (!id) {
+      return response.status(400).json({ error: 'User ID is required' });
+    }
+
+    try {
+      const channels = await this.channelRepository.getUserChannels(id);
+      return response.status(200).json({channels: channels});
+    } catch (error) {
+      if (error.code === 'E_ROW_NOT_FOUND') {
+        return response.status(404).json({ error: 'User not found' });
+      }
+      console.error('Error fetching channels for user:', error);
+      return response.status(500).json({ error: 'Unable to fetch channels for the user' });
+    }
   }
 
   async getAll({ response }: HttpContextContract) {
     const channels = await this.channelRepository.getAll();
-    return response.status(200).json(channels);
+    return response.status(200).json({channels: channels});
   }
 }
