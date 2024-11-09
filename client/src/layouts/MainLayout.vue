@@ -116,10 +116,10 @@ export default defineComponent({
       channels: 'joinedChannels',
       lastMessageOf: 'lastMessageOf'
     }),
-    activeChannel () {
+    activeChannel (): string | null {
       return this.$store.state.channels.active
     },
-    activeUser () {
+    activeUser (): string | undefined{
       return this.$store.state.auth.user?.email
     }
   },
@@ -130,7 +130,7 @@ export default defineComponent({
       this.message = ''
       this.loading = false
     },
-    getShortMessage (content) {
+    getShortMessage (content:string):string {
       if (content) {
         return content.slice(0, 25) + "..." // Zobrazí len prvých 25 znakov
       }

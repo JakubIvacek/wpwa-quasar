@@ -1,6 +1,6 @@
 import Channel from 'App/Models/Channel'
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
-import {ChannelRepositoryContract} from "@ioc:Repositories/ChannelRepository";
+import {ChannelRepositoryContract, SerializedChannel} from "@ioc:Repositories/ChannelRepository";
 import {inject} from "@adonisjs/core/build/standalone";
 import {ChannelType} from "App/Enums/ChannelType";
 
@@ -52,29 +52,30 @@ export default class ChannelController {
       return response.status(400).json({ error: 'User ID is required' });
     }
 
-   const channel = await Channel.findBy('name', name);
-    if (!channel) {
-      try {
-        const newChannel = await this.channelRepository.create(name, type, user_id);
-        return response.status(201).json(newChannel);
-      }catch (error) {
-        return response.status(500).json({ error: 'Unable to create channel' });
-      }
-    }else{
+   let channel :  Channel | SerializedChannel | null = await Channel.findBy('name', name);
+
+    if (channel) {
       if (channel.type === 'private') {
         return response.status(403).json({ error: 'You cannot join private channel' });
       }
-
+    }else {
       try {
-        const serializedChannel = await this.channelRepository.join(user_id, channel.id);
-        return response.status(200).json({ channel: serializedChannel });
-      } catch (error) {
-        if (error.code === '23505') {
-          return response.status(400).json({ error: 'User is already a member of this channel' });
-        }
-        return response.status(500).json({ error: 'Unable to join channel' })
+        channel = await this.channelRepository.create(name, type, user_id);
+      }catch (error) {
+        return response.status(500).json({ error: 'Unable to create channel' });
       }
     }
+
+    try {
+      const serializedChannel = await this.channelRepository.join(user_id, channel.id);
+      return response.status(200).json({ channel: serializedChannel });
+    } catch (error) {
+      if (error.code === '23505') {
+        return response.status(400).json({ error: 'User is already a member of this channel' });
+      }
+      return response.status(500).json({ error: 'Unable to join channel' })
+    }
+
   }
 
   async getAll({ response }: HttpContextContract) {

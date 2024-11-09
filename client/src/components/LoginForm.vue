@@ -20,7 +20,7 @@
           id="password"
           name="password"
           v-model="credentials.password"
-          label="Confirm Password"
+          label="Password"
           :type="showPassword ? 'text' : 'password'"
           filled
           color="cyan-10"
