@@ -176,6 +176,35 @@ export default class ChannelController {
     }
   }
 
+  async kick ({ request, response }: HttpContextContract) {
+    const { user_name, channel_name, active_user_id} = request.only(['user_name', 'channel_name', 'active_user_id']);
+
+    if (!user_name || user_name.trim() === '') {
+      return response.status(400).json({ error: 'User name is required' });
+    }
+    if (!channel_name || channel_name.trim() === '') {
+      return response.status(400).json({ error: 'Channel name is required' });
+    }
+    if (!active_user_id) {
+      return response.status(400).json({ error: 'Active User ID is required' });
+    }
+
+    let channel :  Channel | SerializedChannel | null = await Channel.findBy('name', channel_name);
+    let active_user : User | null = await User.findBy('id', active_user_id);
+    let revoked_user : User | null = await User.findBy('nickname', user_name);
+    if (!channel) {
+      return response.status(400).json({ error: 'Channel not found' });
+    }
+    if (!active_user) {
+      return response.status(400).json({ error: 'Active user not found' });
+    }
+    if (!revoked_user) {
+      return response.status(400).json({ error: 'Revoked user not found' });
+    }
+
+    this.channelRepository.kick(user_name, channel_name, active_user_id)
+    return response.status(200).json({ message: "User revoked successfully" });
+  }
   async getUserChannels({ params, response }: HttpContextContract) {
     const { id } = params;
     if (!id) {

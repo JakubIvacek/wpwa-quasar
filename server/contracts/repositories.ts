@@ -46,6 +46,7 @@ declare module "@ioc:Repositories/ChannelRepository" {
     leave (user_id: number, channel_id: number): void
     quit (user_id: number, channel_id: number): void
     revoke (user_name: string, channel_name: string): void
+    kick (user_name: string, channel_name: string, active_user_id: number): void
     create(
       name: string,
       channelType: ChannelType,

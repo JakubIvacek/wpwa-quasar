@@ -217,6 +217,13 @@ export default defineComponent({
               active_user_id: this.activeUserId
             })
             break
+          case '/kick':
+            await this.kickUser({
+              user_name: parts[1],
+              channel_name: this.activeChannel,
+              active_user_id: this.activeUserId
+            })
+            break
           case '/invite':
             await this.sendInvite({ senderId: this.activeUserId, receiverName: parts[1], channelName: this.activeChannel })
             break
@@ -254,7 +261,8 @@ export default defineComponent({
       setActiveChannel: 'SET_ACTIVE'
     }),
     ...mapActions('auth', ['logout']),
-    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel', 'leaveChannel', 'quitChannel', 'revokeUser']),
+    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel',
+      'leaveChannel', 'quitChannel', 'revokeUser', 'kickUser']),
     ...mapActions('invites', ['sendInvite']),
     setActive (channel: string) {
       this.leave(this.lastJoinedName)

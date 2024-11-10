@@ -77,6 +77,15 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       throw error
     }
   },
+  async kickUser ({ commit }, data: RevokeUser) {
+    try {
+      // console.log(data)
+      return await channelService.kickUser(data)
+    } catch (error) {
+      console.error("Failed to kick user :", error)
+      throw error
+    }
+  },
   async quitChannel ({ commit }, data: JoinChannel) {
     try {
       // console.log(data)

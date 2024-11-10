@@ -104,6 +104,18 @@ class ChannelService {
     }
   }
 
+  async kickUser (data: RevokeUser) {
+    try {
+      await api.post('channels/kick', data, {
+        headers: {
+          'Content-Type': 'application/json'// Ensure the correct content type
+        }
+      })
+    } catch (error) {
+      console.error('Error kicking user :', error.response?.data || error.message)
+    }
+  }
+
   async quitChannel (data: JoinChannel) {
     try {
       await api.post('channels/quit', data, {
