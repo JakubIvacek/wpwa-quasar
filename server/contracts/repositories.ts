@@ -60,3 +60,15 @@ declare module "@ioc:Repositories/ChannelRepository" {
   const ChannelRepository: ChannelRepositoryContract;
   export default ChannelRepository;
 }
+
+declare module "@ioc:Repositories/InvitesRepository" {
+  import {SerializedChannel} from "@ioc:Repositories/ChannelRepository";
+
+  export interface InvitesRepositoryContract {
+   loadInvites(userName: string): Promise<SerializedChannel[]>
+
+  }
+
+  const InvitesRepository: InvitesRepositoryContract;
+  export default InvitesRepository;
+}
