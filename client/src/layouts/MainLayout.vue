@@ -154,15 +154,14 @@ export default defineComponent({
             await this.joinChannel(joinChannel)
             await this.fetchUserChannels()
             break
-          case '/leave':
+          case '/cancel':
             var leaveChannel: JoinChannel = {
               name: parts[1],
               user_id: this.activeUserId
             }
             console.log(leaveChannel)
             await this.leaveChannel(leaveChannel)
-            await this.fetchUserChannels()
-            if (leaveChannel.name === this.activeChannel){
+            if (leaveChannel.name === this.activeChannel) {
               this.leaveChann(leaveChannel.name)
             }
             break
@@ -210,6 +209,7 @@ export default defineComponent({
     leaveChann (channel: string) {
       this.leave(channel)
       this.setActiveChannel('')
+      await this.fetchUserChannels()
     }
   },
   async created () {

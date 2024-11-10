@@ -39,7 +39,15 @@ export default class ChannelRepository implements ChannelRepositoryContract {
       throw new Error('User is not in the specified channel');
     }
 
-    // Detach user from the channel
+    // Check if the user is the channel creator
+    if (isInChannel.creator_id === user_id) {
+      user.related('channels').detach([channel_id]);
+      const channel = await Channel.findOrFail(channel_id);
+      await channel.delete();
+      return;
+    }
+
+    // Detach user from the channel if not the creator
     await user.related('channels').detach([channel_id]);
   }
   public async join(user_id: number, channel_id: number): Promise<SerializedChannel> {
