@@ -38,5 +38,5 @@ Route.group(() => {
 }).prefix('channels').middleware('auth')
 
 Route.group(() => {
-  Route.post('/', 'InvitesController.addInvite')
+  Route.post('/', 'HTTPInvitesController.addInvite')
 }).prefix('invite')

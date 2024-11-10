@@ -1,17 +1,12 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import { WsContextContract } from "@ioc:Ruby184/Socket.IO/WsContext";
 import { inject } from "@adonisjs/core/build/standalone";
 import { InvitesRepositoryContract } from "@ioc:Repositories/InvitesRepository";
 import Ws from "@ioc:Ruby184/Socket.IO/Ws";
 
 
 @inject(["Repositories/InvitesRepository"])
-export default class InvitesController {
+export default class HTTPInvitesController {
   constructor(private invitesRepository: InvitesRepositoryContract) {}
-
-  public async loadInvites({ params }: WsContextContract) {
-    return this.invitesRepository.loadInvites(params.name);
-  }
 
   public async addInvite({ request, response }: HttpContextContract) {
     const { senderId, receiverName, channelId } = request.only(['senderId', 'receiverName', 'channelId']);
@@ -26,10 +21,10 @@ export default class InvitesController {
       // Posleme invite do namespace receivera
       const namespace = Ws.io.of(`/invites/${receiverName}`);
       namespace.emit('invite', {
-          senderId: invite.senderId,
-          receiverName: invite.receiverName,
-          channelId: invite.channelId,
-          name: invite.channelName
+        id: invite.id,
+        name: invite.name,
+        type: invite.type,
+        creator_id: invite.creator_id
       });
 
       return response.status(201).json(invite);

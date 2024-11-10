@@ -1,4 +1,4 @@
-import type {InvitesRepositoryContract, SerializedInvite,} from "@ioc:Repositories/InvitesRepository"
+import type { InvitesRepositoryContract } from "@ioc:Repositories/InvitesRepository"
 import {SerializedChannel} from "@ioc:Repositories/ChannelRepository";
 import Invite from "App/Models/Invite";
 import User from "App/Models/User";
@@ -26,23 +26,23 @@ export default class InvitesRepository implements InvitesRepositoryContract {
     senderId: number;
     receiverName: string;
     channelId: number
-  }): Promise<SerializedInvite> {
+  }): Promise<SerializedChannel> {
     try {
-      const receiver = await User.findByOrFail('email', receiverName);
+      const receiver = await User.findByOrFail('email', receiverName);// TODO zmenit na nickname
       const channel = await Channel.findOrFail(channelId);
 
-      const invite = await Invite.create({
+      await Invite.create({
         senderId: senderId,
         receiverId: receiver.id,
         channelId: channelId,
       });
 
       return {
-        senderId: invite.senderId,
-        receiverName: receiver.email,// TODO zmenit na nickname
-        channelName: channel.name,
-        channelId: invite.channelId,
-      } as SerializedInvite;
+        id: channel.id,
+        name: channel.name,
+        type: channel.type,
+        creator_id: channel.creator_id
+      } as SerializedChannel;
     } catch (error) {
       console.error('Error creating invite:', error);
       throw error;
