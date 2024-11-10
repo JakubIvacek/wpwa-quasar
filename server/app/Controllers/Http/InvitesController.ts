@@ -26,12 +26,10 @@ export default class InvitesController {
       // Posleme invite do namespace receivera
       const namespace = Ws.io.of(`/invites/${receiverName}`);
       namespace.emit('invite', {
-        invite: {
           senderId: invite.senderId,
           receiverName: invite.receiverName,
           channelId: invite.channelId,
-          channelName: invite.channelName
-        },
+          name: invite.channelName
       });
 
       return response.status(201).json(invite);

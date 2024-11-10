@@ -35,4 +35,8 @@ Route.group(() => {
   Route.delete('/:id', 'ChannelController.delete')
   Route.post('/leave', 'ChannelController.leave')
   Route.post('/quit', 'ChannelController.quit')
-}).prefix('channels')// TODO add auth middleware here after implementing all endpoints
+}).prefix('channels').middleware('auth')
+
+Route.group(() => {
+  Route.post('/', 'InvitesController.addInvite')
+}).prefix('invite')

@@ -45,7 +45,7 @@
                        style="height: calc(40% - 100px)">
           <q-list  bordered dark class="q-mt-sm">
             <q-item
-              v-for="(channel, index) in invites"
+              v-for="(invite, index) in invites"
               :key="index"
               clickable
               v-ripple
@@ -54,7 +54,7 @@
             >
               <q-item-section>
                 <q-item-label lines="1" class="channel-label">
-                  {{ channel.name }}
+                  {{ invite.name }}
                 </q-item-label>
               </q-item-section>
 

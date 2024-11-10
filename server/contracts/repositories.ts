@@ -64,9 +64,21 @@ declare module "@ioc:Repositories/ChannelRepository" {
 declare module "@ioc:Repositories/InvitesRepository" {
   import {SerializedChannel} from "@ioc:Repositories/ChannelRepository";
 
+  export interface SerializedInvite {
+    senderId: number;
+    receiverName: string;
+    channelName: string;
+    channelId: number;
+  }
+
   export interface InvitesRepositoryContract {
    loadInvites(userName: string): Promise<SerializedChannel[]>
 
+    addInvite({senderId, receiverName, channelId}: {
+      senderId: number;
+      receiverName: string;
+      channelId: number
+    }): Promise<SerializedInvite>
   }
 
   const InvitesRepository: InvitesRepositoryContract;
