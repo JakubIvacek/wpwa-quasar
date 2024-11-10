@@ -64,8 +64,9 @@ export default class ChannelController {
 
   // The join method is used to add a user to a channel
   async join({ request, response }: HttpContextContract) {
-    const { name, user_id, type} = request.only(['name', 'user_id', 'type']);
-    console.log(name, user_id, type)
+    const { name, user_id} = request.only(['name', 'user_id']);
+    const typeInput = request.input('type');
+    const type: ChannelType = typeInput === 'private' ? ChannelType.PRIVATE : ChannelType.PUBLIC;
 
     if (!name || name.trim() === '') {
       return response.status(400).json({ error: 'Channel name is required' });
@@ -82,13 +83,7 @@ export default class ChannelController {
       }
     }else {
       try {
-        var channel_type: ChannelType
-        if (type === "private") {
-          channel_type = ChannelType.PRIVATE
-        }else{
-          channel_type = ChannelType.PUBLIC
-        }
-        channel = await this.channelRepository.create(name, channel_type, user_id);
+        channel = await this.channelRepository.create(name, type, user_id);
       }catch (error) {
         return response.status(500).json({ error: 'Unable to create channel' });
       }
@@ -104,6 +99,8 @@ export default class ChannelController {
       return response.status(500).json({ error: 'Unable to join channel' })
     }
   }
+
+
   async leave ({ request, response }: HttpContextContract) {
     const { name, user_id} = request.only(['name', 'user_id']);
     //console.log("2: " + name, user_id)
@@ -142,6 +139,8 @@ export default class ChannelController {
       return response.status(400).json({ error: 'Channel with this name not found or not creator' });
     }
   }
+
+
   async getUserChannels({ params, response }: HttpContextContract) {
     const { id } = params;
     if (!id) {

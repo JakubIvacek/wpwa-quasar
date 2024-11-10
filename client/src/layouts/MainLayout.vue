@@ -38,10 +38,53 @@
         :breakpoint="690"
       >
         <q-toolbar class="bg-dark text-white text-weight-bold q-pt-sm q-pl-lg" style="font-size: 25px">
+          Invites
+          <q-space />
+        </q-toolbar>
+        <q-scroll-area class="bg-dark"style="height: calc(40% - 100px)">
+          <q-list  bordered dark class="q-mt-sm">
+            <q-item
+              v-for="(channel, index) in userChannels"
+              :key="index"
+              clickable
+              v-ripple
+              class="text-white"
+              @click="setActive(channel.name)"
+            >
+              <q-item-section>
+                <q-item-label lines="1" class="channel-label">
+                  {{ channel.name }}
+                </q-item-label>
+              </q-item-section>
+
+              <q-item-section side class="d-flex q-gap-sm">
+               <div class="row">
+                 <q-btn
+                   dense
+                   round
+                   color="primary"
+                   icon="check"
+                   @click="acceptInvite(channel.name)"
+                 />
+
+                 <q-btn
+                   dense
+                   round
+                   color="negative"
+                   icon="close"
+                   class="q-ml-sm"
+                   @click="rejectInvite(channel.name)"
+                 />
+               </div>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-scroll-area>
+        <q-toolbar class="bg-dark text-white text-weight-bold q-pt-sm q-pl-lg" style="font-size: 25px">
           Channels
           <q-space />
         </q-toolbar>
-        <q-scroll-area class="bg-dark" style="height: calc(100% - 50px)">
+        <q-scroll-area class="bg-dark" style="height: calc(60% - 50px)">
           <q-list  bordered dark class="q-mt-sm">
             <q-item
               v-for="(channel, index) in userChannels"
@@ -123,8 +166,8 @@ export default defineComponent({
     activeUser (): string | undefined {
       return this.$store.state.auth.user?.email
     },
-    activeUserId () {
-      return this.$store.state.auth.user?.id
+    activeUserId (): number {
+      return this.$store.state.auth.user?.id ?? 0
     }
   },
   methods: {
@@ -138,7 +181,6 @@ export default defineComponent({
               name: parts[1],
               type: parts[2],
               creator_id: this.activeUserId
-
             }
             await this.addChannel(newChannel)
             await this.fetchUserChannels()
@@ -147,8 +189,7 @@ export default defineComponent({
             var joinChannel: CreateChannel = {
               name: parts[1],
               type: parts[2] ? parts[2] : '',
-              user_id: this.activeUserId
-
+              creator_id: this.activeUserId
             }
             console.log(joinChannel)
             await this.joinChannel(joinChannel)
