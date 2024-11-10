@@ -64,8 +64,8 @@ export default class ChannelController {
 
   // The join method is used to add a user to a channel
   async join({ request, response }: HttpContextContract) {
-    const { name, user_id} = request.only(['name', 'user_id']);
-    //console.log(name, user_id)
+    const { name, user_id, type} = request.only(['name', 'user_id', 'type']);
+    console.log(name, user_id, type)
 
     if (!name || name.trim() === '') {
       return response.status(400).json({ error: 'Channel name is required' });
@@ -82,7 +82,13 @@ export default class ChannelController {
       }
     }else {
       try {
-        channel = await this.channelRepository.create(name, ChannelType.PUBLIC, user_id);
+        var channel_type: ChannelType
+        if (type === "private") {
+          channel_type = ChannelType.PRIVATE
+        }else{
+          channel_type = ChannelType.PUBLIC
+        }
+        channel = await this.channelRepository.create(name, channel_type, user_id);
       }catch (error) {
         return response.status(500).json({ error: 'Unable to create channel' });
       }

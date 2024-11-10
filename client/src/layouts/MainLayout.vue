@@ -144,8 +144,9 @@ export default defineComponent({
             await this.fetchUserChannels()
             break
           case '/join':
-            var joinChannel: JoinChannel = {
+            var joinChannel: CreateChannel = {
               name: parts[1],
+              type: parts[2] ? parts[2] : '',
               user_id: this.activeUserId
 
             }

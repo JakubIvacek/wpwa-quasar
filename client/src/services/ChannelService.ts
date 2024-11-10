@@ -68,7 +68,7 @@ class ChannelService {
     }
   }
 
-  async joinChannel (data: JoinChannel) {
+  async joinChannel (data: CreateChannel) {
     try {
       await api.post('channels/', data, {
         headers: {

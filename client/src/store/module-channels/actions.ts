@@ -49,7 +49,7 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       throw error
     }
   },
-  async joinChannel ({ commit }, data: JoinChannel) {
+  async joinChannel ({ commit }, data: CreateChannel) {
     try {
       return await channelService.joinChannel(data)
     } catch (error) {
