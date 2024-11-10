@@ -44,6 +44,7 @@ declare module "@ioc:Repositories/ChannelRepository" {
 
     getUserChannels(userId: number): Promise<SerializedChannel[]>;
     leave (user_id: number, channel_id: number): void
+    quit (user_id: number, channel_id: number): void
     create(
       name: string,
       channelType: ChannelType,

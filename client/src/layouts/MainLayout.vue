@@ -44,7 +44,7 @@
         <q-scroll-area class="bg-dark" style="height: calc(100% - 50px)">
           <q-list  bordered dark class="q-mt-sm">
             <q-item
-              v-for="(channel, index) in this.userChannels"
+              v-for="(channel, index) in userChannels"
               :key="index"
               clickable
               v-ripple
@@ -165,6 +165,13 @@ export default defineComponent({
               this.leaveChann(leaveChannel.name)
             }
             break
+          case '/quit':
+            var quitChannel: JoinChannel = {
+              name: parts[1],
+              user_id: this.activeUserId
+            }
+            await this.quitChannel(quitChannel)
+            break
           case '/list':
             // showUserList()
             break
@@ -199,17 +206,12 @@ export default defineComponent({
       setActiveChannel: 'SET_ACTIVE'
     }),
     ...mapActions('auth', ['logout']),
-    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel', 'leaveChannel']),
+    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel', 'leaveChannel', 'quitChannel']),
     setActive (channel: string) {
       this.leave(this.lastJoinedName)
       this.setActiveChannel(channel)
       this.join(channel)
       this.lastJoinedName = channel
-    },
-    leaveChann (channel: string) {
-      this.leave(channel)
-      this.setActiveChannel('')
-      await this.fetchUserChannels()
     }
   },
   async created () {

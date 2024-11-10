@@ -92,6 +92,18 @@ class ChannelService {
     }
   }
 
+  async quitChannel (data: JoinChannel) {
+    try {
+      await api.post('channels/quit', data, {
+        headers: {
+          'Content-Type': 'application/json'// Ensure the correct content type
+        }
+      })
+    } catch (error) {
+      console.error('Error joining channel:', error.response?.data || error.message);
+    }
+  }
+
   async getUserChannels (id: number): SerializedChannel[] {
     try {
       const response = await api.get<SerializedChannel[]>(

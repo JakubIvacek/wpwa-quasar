@@ -34,4 +34,5 @@ Route.group(() => {
   Route.post('/create', 'ChannelController.create') // TODO we do not need this endpoint only for testing
   Route.delete('/:id', 'ChannelController.delete')
   Route.post('/leave', 'ChannelController.leave')
+  Route.post('/quit', 'ChannelController.quit')
 }).prefix('channels')// TODO add auth middleware here after implementing all endpoints

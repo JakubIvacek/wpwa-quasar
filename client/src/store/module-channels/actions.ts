@@ -59,8 +59,17 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   },
   async leaveChannel ({ commit }, data: JoinChannel) {
     try {
-      console.log(data)
+      // console.log(data)
       return await channelService.leaveChannel(data)
+    } catch (error) {
+      console.error("Failed leave channel:", error)
+      throw error
+    }
+  },
+  async quitChannel ({ commit }, data: JoinChannel) {
+    try {
+      // console.log(data)
+      return await channelService.quitChannel(data)
     } catch (error) {
       console.error("Failed leave channel:", error)
       throw error

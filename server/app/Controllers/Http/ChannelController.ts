@@ -123,6 +123,25 @@ export default class ChannelController {
       return response.status(400).json({ error: 'Channel with this name not found' });
     }
   }
+  async quit ({ request, response }: HttpContextContract) {
+    const { name, user_id} = request.only(['name', 'user_id']);
+    //console.log("2: " + name, user_id)
+    if (!name || name.trim() === '') {
+      return response.status(400).json({ error: 'Channel name is required' });
+    }
+
+    if (!user_id) {
+      return response.status(400).json({ error: 'User ID is required' });
+    }
+
+    let channel :  Channel | SerializedChannel | null = await Channel.findBy('name', name);
+    if (channel && channel.creator_id == user_id) {
+      this.channelRepository.quit(user_id, channel.id)
+      return response.status(200).json({ error: "Channel left successfully " });
+    } else {
+      return response.status(400).json({ error: 'Channel with this name not found or not creator' });
+    }
+  }
   async getUserChannels({ params, response }: HttpContextContract) {
     const { id } = params;
     if (!id) {
