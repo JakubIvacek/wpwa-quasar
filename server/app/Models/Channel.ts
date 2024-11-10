@@ -3,6 +3,7 @@ import {BaseModel, column, HasMany, hasMany, ManyToMany, manyToMany} from "@ioc:
 import Message from "App/Models/Message";
 import { ChannelType } from 'App/Enums/ChannelType'
 import User from "App/Models/User";
+import Invite from "App/Models/Invite";
 
 export default class Channel extends BaseModel {
   @column({ isPrimary: true })
@@ -35,4 +36,9 @@ export default class Channel extends BaseModel {
     pivotTimestamps: true,
   })
   public users: ManyToMany<typeof User>;
+
+  @hasMany(() => Invite, {
+    foreignKey: 'channelId',
+  })
+  public invites: HasMany<typeof Invite>;
 }

@@ -11,16 +11,25 @@ class InvitesSocketManager extends SocketManager {
   }
 
   public loadInvites (): Promise<SerializedChannel[]> {
-    return this.emitAsync('loadMessages')
+    return this.emitAsync('loadInvites')
   }
 }
 
 class InvitesService {
-  private socket: InvitesSocketManager = new InvitesSocketManager('/invites')
+  private socket!: InvitesSocketManager
 
-  public join(): InvitesSocketManager {
+  public join(name:string): InvitesSocketManager {
+    this.socket = new InvitesSocketManager(`/invites/${name}`)
     return this.socket
   }
+
+  public leave (): void {
+
+    // disconnect namespace and remove references to socket
+    this.socket.destroy()
+  }
 }
+
+
 
 export default new InvitesService()

@@ -4,6 +4,7 @@ import { ChannelsStateInterface } from "./state"
 import { channelService } from "src/services"
 import { RawMessage } from "src/contracts"
 import { CreateChannel, JoinChannel, SerializedChannel } from "src/contracts/Channel"
+import InvitesService from "src/services/InvitesService";
 
 const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   async join ({ commit }, channel: string) {
@@ -24,6 +25,7 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       channelService.leave(c)
       commit("CLEAR_CHANNEL", c)
     })
+    InvitesService.leave()
   },
   async addMessage (
     { commit },

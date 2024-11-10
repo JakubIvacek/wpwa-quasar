@@ -41,10 +41,11 @@
           Invites
           <q-space />
         </q-toolbar>
-        <q-scroll-area class="bg-dark"style="height: calc(40% - 100px)">
+        <q-scroll-area class="bg-dark"
+                       style="height: calc(40% - 100px)">
           <q-list  bordered dark class="q-mt-sm">
             <q-item
-              v-for="(channel, index) in userChannels"
+              v-for="(channel, index) in invites"
               :key="index"
               clickable
               v-ripple
@@ -159,6 +160,9 @@ export default defineComponent({
       channels: 'joinedChannels',
       lastMessageOf: 'lastMessageOf'
     }),
+    ...mapGetters('invites', {
+      invites: 'getInvites'
+    }),
     activeChannel (): string | null {
       // console.log(this.$store.state.channels.active)
       return this.$store.state.channels.active
@@ -188,8 +192,8 @@ export default defineComponent({
           case '/join':
             var joinChannel: CreateChannel = {
               name: parts[1],
-              type: parts[2] ? parts[2] : '',
-              creator_id: this.activeUserId
+              type: parts[2],
+              user_id: this.activeUserId
             }
             console.log(joinChannel)
             await this.joinChannel(joinChannel)

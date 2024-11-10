@@ -4,9 +4,9 @@ import { InvitesStateInterface } from './state';
 import InvitesService from "src/services/InvitesService";
 
 const actions: ActionTree<InvitesStateInterface, StateInterface> = {
-  async fetchInvites ({ commit }, channel: string) {
+  async fetchInvites ({ commit }, userName: string) {
     try {
-      const invites = await InvitesService.join().loadInvites()
+      const invites = await InvitesService.join(userName).loadInvites()
       commit("FETCH_SUCCESS", invites)
     } catch (err) {
       commit("LOADING_ERROR", err)
