@@ -217,6 +217,9 @@ export default defineComponent({
             }
             await this.quitChannel(quitChannel)
             break
+          case '/invite':
+            await this.sendInvite({ senderId: this.activeUserId ,receiverName: parts[1], channelName: this.activeChannel})
+            break
           case '/list':
             // showUserList()
             break
@@ -252,6 +255,7 @@ export default defineComponent({
     }),
     ...mapActions('auth', ['logout']),
     ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel', 'leaveChannel', 'quitChannel']),
+    ...mapActions('invites', ['sendInvite']),
     setActive (channel: string) {
       this.leave(this.lastJoinedName)
       this.setActiveChannel(channel)

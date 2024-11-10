@@ -9,14 +9,14 @@ export default class HTTPInvitesController {
   constructor(private invitesRepository: InvitesRepositoryContract) {}
 
   public async addInvite({ request, response }: HttpContextContract) {
-    const { senderId, receiverName, channelId } = request.only(['senderId', 'receiverName', 'channelId']);
+    const { senderId, receiverName, channelName } = request.only(['senderId', 'receiverName', 'channelName']);
 
-    if (!senderId || !receiverName || !channelId) {
+    if (!senderId || !receiverName || !channelName) {
       return response.status(400).json({ error: 'All fields are required' });
     }
 
     try {
-      const invite = await this.invitesRepository.addInvite({senderId, receiverName, channelId});
+      const invite = await this.invitesRepository.addInvite({senderId, receiverName, channelName});
 
       // Posleme invite do namespace receivera
       const namespace = Ws.io.of(`/invites/${receiverName}`);

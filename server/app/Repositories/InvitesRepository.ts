@@ -22,19 +22,19 @@ export default class InvitesRepository implements InvitesRepositoryContract {
     }
   }
 
-  public async addInvite({senderId, receiverName, channelId}: {
+  public async addInvite({senderId, receiverName, channelName}: {
     senderId: number;
     receiverName: string;
-    channelId: number
+    channelName: string
   }): Promise<SerializedChannel> {
     try {
       const receiver = await User.findByOrFail('email', receiverName);// TODO zmenit na nickname
-      const channel = await Channel.findOrFail(channelId);
+      const channel = await Channel.findByOrFail('name', channelName);
 
       await Invite.create({
         senderId: senderId,
         receiverId: receiver.id,
-        channelId: channelId,
+        channelId: channel.id,
       });
 
       return {

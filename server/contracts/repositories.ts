@@ -74,10 +74,10 @@ declare module "@ioc:Repositories/InvitesRepository" {
   export interface InvitesRepositoryContract {
    loadInvites(userName: string): Promise<SerializedChannel[]>
 
-    addInvite({senderId, receiverName, channelId}: {
+    addInvite({senderId, receiverName, channelName}: {
       senderId: number;
       receiverName: string;
-      channelId: number
+      channelName: string
     }): Promise<SerializedChannel>
   }
 

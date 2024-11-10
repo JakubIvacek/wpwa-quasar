@@ -12,6 +12,17 @@ const actions: ActionTree<InvitesStateInterface, StateInterface> = {
       commit("LOADING_ERROR", err)
       throw err
     }
+  },
+  async sendInvite(
+    { commit },
+    { senderId, receiverName, channelName }: { senderId: number; receiverName: string; channelName: string }
+  ) {
+    try {
+      await InvitesService.sendInvite(senderId, receiverName, channelName)
+    } catch (error) {
+      console.error("Failed to send invite:", error)
+      throw error
+    }
   }
 };
 
