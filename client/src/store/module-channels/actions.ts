@@ -3,7 +3,7 @@ import { StateInterface } from "../index"
 import { ChannelsStateInterface } from "./state"
 import { channelService } from "src/services"
 import { RawMessage } from "src/contracts"
-import { CreateChannel, JoinChannel, SerializedChannel } from "src/contracts/Channel"
+import {CreateChannel, JoinChannel, RevokeUser, SerializedChannel} from "src/contracts/Channel"
 import InvitesService from "src/services/InvitesService";
 
 const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
@@ -65,6 +65,15 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       return await channelService.leaveChannel(data)
     } catch (error) {
       console.error("Failed leave channel:", error)
+      throw error
+    }
+  },
+  async revokeUser ({ commit }, data: RevokeUser) {
+    try {
+      // console.log(data)
+      return await channelService.revokeUser(data)
+    } catch (error) {
+      console.error("Failed to revoke user :", error)
       throw error
     }
   },

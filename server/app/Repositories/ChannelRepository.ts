@@ -65,6 +65,14 @@ export default class ChannelRepository implements ChannelRepositoryContract {
     await channel.delete();
     return;
   }
+  public async revoke(user_name: string, channel_name: string) {
+    let channel :  Channel | SerializedChannel | null = await Channel.findBy('name', channel_name);
+    let revoked_user : User | null = await User.findBy('nickname', user_name);
+    if(revoked_user && channel){
+      revoked_user.related('channels').detach([channel.id])
+    }
+    return;
+  }
   public async join(user_id: number, channel_id: number): Promise<SerializedChannel> {
       const user = await User.findOrFail(user_id);
       const channel = await Channel.findOrFail(channel_id);

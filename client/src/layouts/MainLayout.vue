@@ -140,7 +140,7 @@
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import SettingsModal from 'components/SettingsModal.vue'
-import { CreateChannel, JoinChannel, SerializedChannel } from "src/contracts/Channel"
+import { CreateChannel, JoinChannel, RevokeUser, SerializedChannel } from "src/contracts/Channel"
 
 export default defineComponent({
   name: 'MainLayout',
@@ -181,44 +181,44 @@ export default defineComponent({
         console.log(parts)
         switch (parts[0]) {
           case '/create':
-            var newChannel: CreateChannel = {
+            await this.addChannel({
               name: parts[1],
               type: parts[2],
               creator_id: this.activeUserId
-            }
-            await this.addChannel(newChannel)
+            })
             await this.fetchUserChannels()
             break
           case '/join':
-            var joinChannel: CreateChannel = {
+            await this.joinChannel({
               name: parts[1],
               type: parts[2],
               user_id: this.activeUserId
-            }
-            console.log(joinChannel)
-            await this.joinChannel(joinChannel)
+            })
             await this.fetchUserChannels()
             break
           case '/cancel':
-            var leaveChannel: JoinChannel = {
+            await this.leaveChannel({
               name: parts[1],
               user_id: this.activeUserId
-            }
-            console.log(leaveChannel)
-            await this.leaveChannel(leaveChannel)
-            if (leaveChannel.name === this.activeChannel) {
-              this.leaveChann(leaveChannel.name)
-            }
+            })
+            await this.fetchUserChannels()
             break
           case '/quit':
-            var quitChannel: JoinChannel = {
+            await this.quitChannel({
               name: parts[1],
               user_id: this.activeUserId
-            }
-            await this.quitChannel(quitChannel)
+            })
+            await this.fetchUserChannels()
+            break
+          case '/revoke':
+            await this.revokeUser({
+              user_name: parts[1],
+              channel_name: this.activeChannel,
+              active_user_id: this.activeUserId
+            })
             break
           case '/invite':
-            await this.sendInvite({ senderId: this.activeUserId ,receiverName: parts[1], channelName: this.activeChannel})
+            await this.sendInvite({ senderId: this.activeUserId, receiverName: parts[1], channelName: this.activeChannel })
             break
           case '/list':
             // showUserList()
@@ -254,7 +254,7 @@ export default defineComponent({
       setActiveChannel: 'SET_ACTIVE'
     }),
     ...mapActions('auth', ['logout']),
-    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel', 'leaveChannel', 'quitChannel']),
+    ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel', 'leaveChannel', 'quitChannel', 'revokeUser']),
     ...mapActions('invites', ['sendInvite']),
     setActive (channel: string) {
       this.leave(this.lastJoinedName)
