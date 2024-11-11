@@ -16,7 +16,7 @@ export interface RegisterData {
 }
 
 export interface LoginCredentials {
-  email: string
+  nickname: string
   password: string
   remember: boolean
 }

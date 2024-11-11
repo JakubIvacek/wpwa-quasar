@@ -14,7 +14,7 @@
     </q-card-section>
     <q-card-section>
       <q-form class="q-gutter-md" @submit.prevent="onSubmit">
-        <q-input filled label="Email"  v-model="credentials.email" color="cyan-10">
+        <q-input filled label="Nickname"  v-model="credentials.nickname" color="cyan-10">
         </q-input>
         <q-input
           id="password"
@@ -53,7 +53,7 @@ export default defineComponent({
   name: 'LoginForm',
   data () {
     return {
-      credentials: { email: '', password: '', remember: false },
+      credentials: { nickname: '', password: '', remember: false },
       showPassword: false
     }
   },

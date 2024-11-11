@@ -26,10 +26,15 @@ export default class AuthController {
   }
 
   async login({ auth, request }: HttpContextContract) {
-    const email = request.input('email')
-    const password = request.input('password')
+    // Retrieve nickname and password from request
+    const nickname = request.input('nickname');
+    const password = request.input('password');
 
-    return auth.use('api').attempt(email, password)
+    // Find the user by nickname
+    const user = await User.findByOrFail('nickname', nickname);
+
+    // Attempt authentication using the user's ID and password
+    return auth.use('api').attempt(user.email, password);
   }
 
   async logout({ auth }: HttpContextContract) {
