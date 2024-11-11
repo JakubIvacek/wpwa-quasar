@@ -70,7 +70,7 @@ export default class ChannelRepository implements ChannelRepositoryContract {
   public async revoke(user_name: string, channel_name: string) {
     let channel :  Channel | SerializedChannel | null = await Channel.findBy('name', channel_name);
     let revoked_user : User | null = await User.findBy('nickname', user_name);
-    if(revoked_user && channel){
+    if(revoked_user && channel && channel.type == ChannelType.PRIVATE){
       revoked_user.related('channels').detach([channel.id])
     }
     return;
@@ -83,6 +83,11 @@ export default class ChannelRepository implements ChannelRepositoryContract {
       channel.creator_id != kicked_user.id //so we cant kick creator from channel
     ){
       if (channel.creator_id == active_user_id){ // if kicked by creator kick immediately
+        await Kick.create({
+          kickedId: kicked_user.id,
+          userId: active_user_id,
+          channelId: channel.id
+        })
         kicked_user.related('channels').detach([channel.id])
       }else{                                     // if not +1 to kick count if 3 kick
         const userChannel = await kicked_user
@@ -108,7 +113,7 @@ export default class ChannelRepository implements ChannelRepositoryContract {
             let kicked: Kick[] | null = await Kick.query().
             where('kickedId', kicked_user.id).
             where('channelId', channel.id)
-            console.log(kicked)
+            //console.log(kicked)
             if (kicked && kicked.length >= 3){
               kicked_user.related('channels').detach([channel.id])
             }
@@ -124,9 +129,21 @@ export default class ChannelRepository implements ChannelRepositoryContract {
   public async join(user_id: number, channel_id: number): Promise<SerializedChannel> {
       const user = await User.findOrFail(user_id);
       const channel = await Channel.findOrFail(channel_id);
-
-      // When user is already in the channel error is thrown
-      await user.related('channels').attach([channel_id])
+      let kicked_by_creator: Kick| null = await Kick.query().
+      where('kickedId', user_id).
+      where('channelId', channel.id).where('userId', channel.creator_id).first()
+      let kicks: Kick[] | Kick | null = await Kick.query().
+      where('kickedId', user_id).
+      where('channelId', channel.id)
+      //console.log(kicks.length)
+      if(kicked_by_creator) {
+        throw new Error('Banned by creator');
+      }else if (kicks && kicks.length >= 3) {
+        throw new Error('Kicked by users');
+      }else{
+        // When user is already in the channel error is thrown
+        await user.related('channels').attach([channel_id])
+      }
 
     return {
       id: channel.id,

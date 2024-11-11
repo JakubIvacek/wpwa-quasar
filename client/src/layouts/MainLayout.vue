@@ -20,7 +20,7 @@
             ChatterBox
           </q-toolbar-title>
           <span class="q-subtitle-1 q-pl-md text-weight-bold custom-show">
-            {{ activeUser }}
+            {{ activeUserNickname }}
           </span>
           <div class="q-mx-sm">
             <q-btn round color="primary" icon="settings"  @click="settings = true"/>
@@ -176,6 +176,9 @@ export default defineComponent({
     },
     activeUser (): string | undefined {
       return this.$store.state.auth.user?.email
+    },
+    activeUserNickname (): string | undefined {
+      return this.$store.state.auth.user?.nickname
     },
     activeUserId (): number {
       return this.$store.state.auth.user?.id ?? 0

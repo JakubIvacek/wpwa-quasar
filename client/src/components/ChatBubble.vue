@@ -6,7 +6,7 @@
       </div>
       <div class="col q-py-sm ">
         <div class="row  q-pt-xs name">
-          <p>{{ message.author.email }}</p>
+          <p>{{ message.author.nickname }}</p>
         </div>
         <div class="row q-pr-sm text-left q-pl-sm">
           {{ message.content }}
