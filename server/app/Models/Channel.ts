@@ -4,6 +4,7 @@ import Message from "App/Models/Message";
 import { ChannelType } from 'App/Enums/ChannelType'
 import User from "App/Models/User";
 import Invite from "App/Models/Invite";
+import Kick from "App/Models/Kick";
 
 export default class Channel extends BaseModel {
   @column({ isPrimary: true })
@@ -41,4 +42,8 @@ export default class Channel extends BaseModel {
     foreignKey: 'channelId',
   })
   public invites: HasMany<typeof Invite>;
+  @hasMany(() => Kick, {
+    foreignKey: 'channelId',
+  })
+  public kicks: HasMany<typeof Kick>;
 }

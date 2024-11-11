@@ -13,6 +13,7 @@ import Channel from "App/Models/Channel";
 import Message from "App/Models/Message";
 import {UserStatus} from "App/Enums/UserStatus";
 import Invite from "App/Models/Invite";
+import Kick from "App/Models/Kick";
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -78,4 +79,11 @@ export default class User extends BaseModel {
     foreignKey: 'receiverId',
   })
   public receivedInvites: HasMany<typeof Invite>
+  @hasMany(() => Kick, {
+    foreignKey: 'userId',
+  })
+  @hasMany(() => Kick, {
+    foreignKey: 'kickedId',
+  })
+  public kicked: HasMany<typeof Kick>
 }

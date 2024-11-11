@@ -3,6 +3,7 @@ import {ChannelRepositoryContract, SerializedChannel} from "@ioc:Repositories/Ch
 import {ChannelType} from "App/Enums/ChannelType";
 import User from "App/Models/User";
 import {Error} from "memfs/lib/internal/errors";
+import Kick from "App/Models/Kick";
 
 
 export default class ChannelRepository implements ChannelRepositoryContract {
@@ -90,24 +91,28 @@ export default class ChannelRepository implements ChannelRepositoryContract {
           .where('channel_id', channel.id)
           .first();
         if (userChannel) {
-          // Increment `kick_count`
-          await kicked_user
-            .related('channels')
-            .pivotQuery()
-            .where('channel_id', channel.id)
-            .increment('kick_count', 1)
-          const updatedUserChannel = await kicked_user
-            .related('channels')
-            .query()
-            .wherePivot('channel_id', channel.id)
-            .first()
-
-          if (updatedUserChannel && updatedUserChannel.$extras.kick_count >= 3) {
-            // Detach the user from the channel if `kick_count` is 3 or more
-            await kicked_user.related('channels').detach([channel.id])
-            return
+          //check if already not kicked by this user
+          let kick: Kick| null = await Kick.query().
+            where('kickedId', kicked_user.id).
+            where('channelId', channel.id).where('userId', active_user_id).first()
+          if( kick ) {
+            //throw new Error("User already kicked by this user.")
+          }else {
+            // add kick
+            await Kick.create({
+              kickedId: kicked_user.id,
+              userId: active_user_id,
+              channelId: channel.id
+            })
+            // check if 3 kicks then delete
+            let kicked: Kick[] | null = await Kick.query().
+            where('kickedId', kicked_user.id).
+            where('channelId', channel.id)
+            console.log(kicked)
+            if (kicked && kicked.length >= 3){
+              kicked_user.related('channels').detach([channel.id])
+            }
           }
-          return
         } else {
           throw new Error("User is not in this channel.")
         }
