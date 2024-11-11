@@ -31,7 +31,9 @@ const actions: ActionTree<InvitesStateInterface, StateInterface> = {
   ) {
     try {
       await InvitesService.acceptInvite(userName, invite.name)
-      commit("DELETE_INVITE", { invite })
+
+      commit("DELETE_INVITE", invite)
+      commit("channels/ADD_CHANNEL", invite, { root: true });
     } catch (error) {
       console.error("Failed to accept invite:", error)
       throw error

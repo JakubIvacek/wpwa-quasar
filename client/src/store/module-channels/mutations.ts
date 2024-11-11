@@ -1,6 +1,7 @@
 import { SerializedMessage } from "src/contracts"
 import { MutationTree } from "vuex"
 import { ChannelsStateInterface } from "./state"
+import {SerializedChannel} from "src/contracts/Channel";
 
 const mutation: MutationTree<ChannelsStateInterface> = {
   LOADING_START (state) {
@@ -34,14 +35,9 @@ const mutation: MutationTree<ChannelsStateInterface> = {
     // Now you can safely push the new message
     state.messages[channel].push(message)
   },
-  NEW_INVITE (state, { channel, message }: { channel: string; message: SerializedMessage }) {
-    // Check if the channel exists in messages; if not, initialize it as an empty array
-    if (!state.messages[channel]) {
-      state.messages[channel] = []
-    }
-
-    // Now you can safely push the new message
-    state.messages[channel].push(message)
+  ADD_CHANNEL (state, channel: SerializedChannel) {
+    console.log('ADD_CHANNEL', channel)
+    state.userChannels.push(channel)
   }
 }
 
