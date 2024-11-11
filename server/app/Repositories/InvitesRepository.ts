@@ -48,4 +48,27 @@ export default class InvitesRepository implements InvitesRepositoryContract {
       throw error;
     }
   }
+
+  public async acceptInvite({receiverName, channelName}: {
+    receiverName: string;
+    channelName: string
+  }): Promise<void> {
+    try {
+      const receiver = await User.findByOrFail('nickname', receiverName);
+      const channel = await Channel.findByOrFail('name', channelName);
+
+      // Delete invite from Invite table
+      await Invite.query()
+        .where('receiver_id', receiver.id)
+        .where('channel_id', channel.id)
+        .delete();
+
+      // Add user to channel
+      await channel.related('users').attach([receiver.id]);
+
+    } catch (error) {
+      console.error('Error accepting invite:', error);
+      throw error;
+    }
+  }
 }

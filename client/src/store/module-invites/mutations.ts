@@ -8,6 +8,9 @@ const mutation: MutationTree<InvitesStateInterface> = {
   },
   NEW_INVITE (state, channel: SerializedChannel) {
     state.invites.push(channel)
+  },
+  DELETE_INVITE (state, invite: SerializedChannel) {
+    state.invites = state.invites.filter((i) => i.name !== invite.name)
   }
 };
 

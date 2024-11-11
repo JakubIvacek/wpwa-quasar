@@ -83,6 +83,11 @@ declare module "@ioc:Repositories/InvitesRepository" {
       receiverName: string;
       channelName: string
     }): Promise<SerializedChannel>
+
+    acceptInvite({receiverName, channelName}: {
+      receiverName: string;
+      channelName: string
+    }): Promise<void>
   }
 
   const InvitesRepository: InvitesRepositoryContract;

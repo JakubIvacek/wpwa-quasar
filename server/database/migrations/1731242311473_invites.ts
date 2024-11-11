@@ -11,6 +11,7 @@ export default class extends BaseSchema {
       table.integer('channel_id').unsigned().notNullable().references('id').inTable('channels').onDelete('CASCADE')
       table.timestamp('created_at', { useTz: true }).notNullable().defaultTo(this.now())
       table.timestamp('updated_at', { useTz: true }).notNullable().defaultTo(this.now())
+      table.unique(['receiver_id', 'channel_id'])
     })
   }
 

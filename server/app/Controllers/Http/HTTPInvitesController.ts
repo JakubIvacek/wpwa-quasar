@@ -8,7 +8,7 @@ import Ws from "@ioc:Ruby184/Socket.IO/Ws";
 export default class HTTPInvitesController {
   constructor(private invitesRepository: InvitesRepositoryContract) {}
 
-  public async addInvite({ request, response }: HttpContextContract) {
+  public async addInvite({ request, response }: HttpContextContract):Promise<void> {
     const { senderId, receiverName, channelName } = request.only(['senderId', 'receiverName', 'channelName']);
 
     if (!senderId || !receiverName || !channelName) {
@@ -30,6 +30,22 @@ export default class HTTPInvitesController {
       return response.status(201).json(invite);
     } catch (error) {
       return response.status(500).json({ error: 'Unable to send invite' });
+    }
+  }
+
+  public async acceptInvite({ request, response }: HttpContextContract) {
+    const { receiverName, channelName } = request.only(['receiverName', 'channelName']);
+
+    if (!receiverName || !channelName) {
+      return response.status(400).json({ error: 'All fields are required' });
+    }
+
+    try {
+      await this.invitesRepository.acceptInvite({receiverName, channelName});
+
+      return response.status(200).json({ message: 'Invite accepted' });
+    }catch (error) {
+      return response.status(500).json({ error: 'Unable to accept invite' });
     }
   }
 }

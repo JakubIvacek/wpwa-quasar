@@ -64,7 +64,7 @@
                    v-ripple
                    color="primary"
                    icon="check"
-                   @click="acceptInvite(channel.name)"
+                   @click="acceptInviteBtn(invite)"
                  />
 
                  <q-btn
@@ -147,7 +147,7 @@
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import SettingsModal from 'components/SettingsModal.vue'
-import { SerializedChannel } from "src/contracts/Channel"
+import {SerializedChannel} from "src/contracts/Channel";
 
 export default defineComponent({
   name: 'MainLayout',
@@ -158,14 +158,14 @@ export default defineComponent({
       message: '',
       loading: false,
       settings: false,
-      userChannels: [] as SerializedChannel[],
       lastJoinedName: ''
     }
   },
   computed: {
     ...mapGetters('channels', {
       channels: 'joinedChannels',
-      lastMessageOf: 'lastMessageOf'
+      lastMessageOf: 'lastMessageOf',
+      userChannels: 'getUserChannels'
     }),
     ...mapGetters('invites', {
       invites: 'getInvites'
@@ -173,9 +173,6 @@ export default defineComponent({
     activeChannel (): string | null {
       // console.log(this.$store.state.channels.active)
       return this.$store.state.channels.active
-    },
-    activeUser (): string | undefined {
-      return this.$store.state.auth.user?.email
     },
     activeUserNickname (): string | undefined {
       return this.$store.state.auth.user?.nickname
@@ -191,6 +188,9 @@ export default defineComponent({
     }
   },
   methods: {
+    acceptInviteBtn(invite: SerializedChannel) {
+      this.acceptInvite({ invite:invite, userName: this.activeUserNickname })
+    },
     handleSend () {
       if (!this.isSendDisabled) {
         this.send()
@@ -267,7 +267,7 @@ export default defineComponent({
       try {
         if (this.activeUserId) {
           const response = await this.getChannels(this.activeUserId)
-          this.userChannels = response.channels // Assign only the `channels` array
+          this.$store.state.channels.userChannels = response.channels
         }
       } catch (error) {
         console.error("Failed to fetch user channels:", error)
@@ -279,19 +279,13 @@ export default defineComponent({
     startsWithAt (): boolean {
       return this.message[0] === '@'
     },
-    getShortMessage (content:string):string {
-      if (content) {
-        return content.slice(0, 25) + "..." // Zobrazí len prvých 25 znakov
-      }
-      return ''
-    },
     ...mapMutations('channels', {
       setActiveChannel: 'SET_ACTIVE'
     }),
     ...mapActions('auth', ['logout']),
     ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel',
       'leaveChannel', 'quitChannel', 'revokeUser', 'kickUser']),
-    ...mapActions('invites', ['sendInvite']),
+    ...mapActions('invites', ['sendInvite', 'acceptInvite']),
     setActive (channel: string) {
       this.leave(this.lastJoinedName)
       this.setActiveChannel(channel)
