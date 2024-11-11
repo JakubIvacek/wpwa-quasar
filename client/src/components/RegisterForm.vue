@@ -16,11 +16,11 @@
     <q-card-section>
       <q-form class="q-gutter-md" @submit.prevent="onSubmit">
         <q-input
-          name="email"
-          id="email"
-          v-model.trim="form.email"
-          type="email"
-          label="Email"
+          name="nickname"
+          id="nickname"
+          v-model.trim="form.nickname"
+          type="text"
+          label="Nickname"
           autofocus
           color="cyan-10"
           filled
@@ -46,11 +46,11 @@
           filled
         />
         <q-input
-          name="nickname"
-          id="nickname"
-          v-model.trim="form.nickname"
-          type="text"
-          label="Nickname"
+          name="email"
+          id="email"
+          v-model.trim="form.email"
+          type="email"
+          label="Email"
           autofocus
           color="cyan-10"
           filled

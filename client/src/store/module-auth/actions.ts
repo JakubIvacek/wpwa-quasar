@@ -12,7 +12,7 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
       // join user to general channel - hardcoded for now
       if (user?.id !== state.user?.id) {
         await dispatch('channels/join', 'general', { root: true })
-        await dispatch('invites/fetchInvites', user?.email, { root: true })
+        await dispatch('invites/fetchInvites', user?.nickname, { root: true })
       }
 
       commit('AUTH_SUCCESS', user)

@@ -9,7 +9,7 @@ export default class InvitesRepository implements InvitesRepositoryContract {
 
   public async loadInvites(userName: string): Promise<SerializedChannel[]> {
     try {
-      const user = await User.findByOrFail('email', userName);
+      const user = await User.findByOrFail('nickname', userName);
 
       const invites = await Invite.query()
         .where('receiver_id', user.id)
@@ -28,7 +28,7 @@ export default class InvitesRepository implements InvitesRepositoryContract {
     channelName: string
   }): Promise<SerializedChannel> {
     try {
-      const receiver = await User.findByOrFail('email', receiverName);// TODO zmenit na nickname
+      const receiver = await User.findByOrFail('nickname', receiverName);
       const channel = await Channel.findByOrFail('name', channelName);
 
       await Invite.create({
