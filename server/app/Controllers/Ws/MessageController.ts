@@ -18,12 +18,14 @@ export default class MessageController {
 
   public async addMessage(
     { params, socket, auth }: WsContextContract,
-    content: string
+    content: string, addressedTo: string
   ) {
+    //console.log(addressedTo)
     const message = await this.messageRepository.create(
       params.name,
       auth.user!.id,
-      content
+      content,
+      addressedTo
     );
     // broadcast message to other users in channel
     socket.broadcast.emit("message", message);

@@ -40,6 +40,9 @@ export default class User extends BaseModel {
   @column()
   public status: UserStatus
 
+  @column()
+  public addressedTo: number;
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
@@ -59,6 +62,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => Message, {
     foreignKey: 'createdBy',
+  })
+  @hasMany(() => Message, {
+    foreignKey: 'addressedTo',
   })
   public sentMessages: HasMany<typeof Message>
   @manyToMany(() => Channel, {

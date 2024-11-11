@@ -13,6 +13,13 @@ export default class extends BaseSchema {
         .inTable("users")
         .onDelete("CASCADE");
       table
+        .integer("addressed_to")
+        .unsigned()
+        .references("id")
+        .inTable("users")
+        .onDelete("CASCADE")
+        .nullable();
+      table
         .integer("channel_id")
         .unsigned()
         .references("id")

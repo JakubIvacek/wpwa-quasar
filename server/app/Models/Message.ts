@@ -11,6 +11,9 @@ export default class Message extends BaseModel {
   public createdBy: number;
 
   @column()
+  public addressedTo: number;
+
+  @column()
   public channelId: number;
 
   @column()
@@ -26,6 +29,10 @@ export default class Message extends BaseModel {
     foreignKey: "createdBy",
   })
   public author: BelongsTo<typeof User>;
+  @belongsTo(() => User, {
+    foreignKey: "addressedTo",
+  })
+  public addressedUser: BelongsTo<typeof User>;
 
   @belongsTo(() => Channel, {
     foreignKey: "channelId",

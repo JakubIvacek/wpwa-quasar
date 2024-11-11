@@ -29,9 +29,9 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   },
   async addMessage (
     { commit },
-    { channel, message }: { channel: string; message: RawMessage }
+    { channel, message, addressedTo }: { channel: string; message: RawMessage; addressedTo: string }
   ) {
-    const newMessage = await channelService.in(channel)?.addMessage(message)
+    const newMessage = await channelService.in(channel)?.addMessage(message, addressedTo)
     commit("NEW_MESSAGE", { channel, message: newMessage })
   },
   async addChannel ({ commit }, newChannel: CreateChannel) {

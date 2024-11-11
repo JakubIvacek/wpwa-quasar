@@ -1,11 +1,11 @@
 <template>
-  <div :class="['chat', { 'mine': isMine, 'others': !isMine }]">
+  <div :class="['chat', { 'mine': isMine, 'others': !isMine, 'highlighted': addressedToYou(message.addressed_to) }]">
     <div class="row items-center q-pl-sm">
       <div class="col-auto justify-center">
         <img src="../assets/user-img.png" alt="User Image" class="user-image" />
       </div>
       <div class="col q-py-sm ">
-        <div class="row  q-pt-xs name">
+        <div class="row q-pt-xs name">
           <p>{{ message.author.nickname }}</p>
         </div>
         <div class="row q-pr-sm text-left q-pl-sm">
@@ -36,10 +36,16 @@ export default defineComponent({
     }
   },
   methods: {
+    activeUserId (): number {
+      return this.$store.state.auth.user?.id ?? 0
+    },
     formatDate (dateString) {
       // Ensure message.created_at is a valid Date
       const date = new Date(dateString)
       return date.toLocaleString()
+    },
+    addressedToYou (addressedId: number): boolean {
+      return this.activeUserId() === addressedId
     }
   }
 })
@@ -71,6 +77,10 @@ export default defineComponent({
   margin-top: 17px;
   background-color: #1D1D1D;
   text-align: left;
+}
+.highlighted {
+  background-color: #36454F; /* New background color when addressed to the current user */
+  color: white;
 }
 .timestamp {
   color: darkgray;

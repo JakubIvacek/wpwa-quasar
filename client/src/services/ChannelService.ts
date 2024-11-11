@@ -15,8 +15,9 @@ class ChannelSocketManager extends SocketManager {
     })
   }
 
-  public addMessage (message: RawMessage): Promise<SerializedMessage> {
-    return this.emitAsync('addMessage', message)
+  public addMessage (message: RawMessage, addressedTo: string): Promise<SerializedMessage> {
+    console.log(addressedTo)
+    return this.emitAsync('addMessage', message, addressedTo)
   }
 
   public loadMessages (): Promise<SerializedMessage[]> {

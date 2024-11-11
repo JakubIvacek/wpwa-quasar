@@ -5,6 +5,7 @@ declare module "@ioc:Repositories/MessageRepository" {
     createdBy: number;
     content: string;
     channelId: number;
+    addressedTo: number;
     createdAt: string;
     updatedAt: string;
     id: number;
@@ -21,7 +22,8 @@ declare module "@ioc:Repositories/MessageRepository" {
     create(
       channelName: string,
       userId: number,
-      content: string
+      content: string,
+      addressed_to: string
     ): Promise<SerializedMessage>;
   }
 

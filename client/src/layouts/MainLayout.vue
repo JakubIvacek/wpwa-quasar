@@ -191,15 +191,15 @@ export default defineComponent({
     }
   },
   methods: {
-    handleSend() {
+    handleSend () {
       if (!this.isSendDisabled) {
-        this.send();
+        this.send()
       }
     },
     async send () {
       if (this.startsWithSlash()) {
-        const parts = this.message.split(' ');
-        //console.log(parts)
+        const parts = this.message.split(' ')
+        // console.log(parts)
         switch (parts[0]) {
           case '/create':
             await this.addChannel({
@@ -219,14 +219,14 @@ export default defineComponent({
             break
           case '/cancel':
             await this.leaveChannel({
-              name: parts[1],
+              name: this.activeChannel,
               user_id: this.activeUserId
             })
             await this.fetchUserChannels()
             break
           case '/quit':
             await this.quitChannel({
-              name: parts[1],
+              name: this.activeChannel,
               user_id: this.activeUserId
             })
             await this.fetchUserChannels()
@@ -252,9 +252,13 @@ export default defineComponent({
             // showUserList()
             break
         }
+      } else if (this.startsWithAt()) {
+        const username = this.message.split(' ')[0].substring(1)
+        // console.log(username)
+        await this.addMessage({ channel: this.activeChannel, message: this.message, addressedTo: username })
       } else {
         this.loading = true
-        await this.addMessage({ channel: this.activeChannel, message: this.message })
+        await this.addMessage({ channel: this.activeChannel, message: this.message, addressedTo: '' })
         this.loading = false
       }
       this.message = ''
@@ -271,6 +275,9 @@ export default defineComponent({
     },
     startsWithSlash (): boolean {
       return this.message[0] === '/'
+    },
+    startsWithAt (): boolean {
+      return this.message[0] === '@'
     },
     getShortMessage (content:string):string {
       if (content) {
