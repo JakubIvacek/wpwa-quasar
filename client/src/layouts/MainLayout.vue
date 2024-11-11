@@ -40,6 +40,7 @@
         <q-toolbar class="bg-dark text-white text-weight-bold q-pt-sm q-pl-lg" style="font-size: 25px">
           Invites
           <q-space />
+          <q-avatar color="red" text-color="white">{{ countInvites }}</q-avatar>
         </q-toolbar>
         <q-scroll-area class="bg-dark"
                        style="height: calc(40% - 100px)">
@@ -47,10 +48,7 @@
             <q-item
               v-for="(invite, index) in invites"
               :key="index"
-              clickable
-              v-ripple
               class="text-white"
-              @click="setActive(channel.name)"
             >
               <q-item-section>
                 <q-item-label lines="1" class="channel-label">
@@ -63,6 +61,7 @@
                  <q-btn
                    dense
                    round
+                   v-ripple
                    color="primary"
                    icon="check"
                    @click="acceptInvite(channel.name)"
@@ -71,6 +70,7 @@
                  <q-btn
                    dense
                    round
+                   v-ripple
                    color="negative"
                    icon="close"
                    class="q-ml-sm"
@@ -120,7 +120,7 @@
           <q-input
             v-model="message"
             :disable="loading"
-            @keydown.enter.prevent="send"
+            @keydown.enter.prevent="handleSend"
             rounded
             outlined
             dense
@@ -129,7 +129,14 @@
             bg-color="white"
             placeholder="Type a message"
             />
-          <q-btn :disable="loading" @click="send" round flat color="white" icon="send" />
+          <q-btn
+            :disable=isSendDisabled
+            @click="send"
+            type="submit"
+            round
+            flat
+            color="white"
+            icon="send" />
         </q-toolbar>
       </q-footer>
     </q-layout>
@@ -140,7 +147,7 @@
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import SettingsModal from 'components/SettingsModal.vue'
-import { CreateChannel, JoinChannel, RevokeUser, SerializedChannel } from "src/contracts/Channel"
+import { SerializedChannel } from "src/contracts/Channel"
 
 export default defineComponent({
   name: 'MainLayout',
@@ -152,7 +159,7 @@ export default defineComponent({
       loading: false,
       settings: false,
       userChannels: [] as SerializedChannel[],
-      lastJoinedName: String
+      lastJoinedName: ''
     }
   },
   computed: {
@@ -172,13 +179,24 @@ export default defineComponent({
     },
     activeUserId (): number {
       return this.$store.state.auth.user?.id ?? 0
+    },
+    countInvites (): number {
+      return this.invites.length
+    },
+    isSendDisabled (): boolean {
+      return this.message.length === 0 || this.loading
     }
   },
   methods: {
+    handleSend() {
+      if (!this.isSendDisabled) {
+        this.send();
+      }
+    },
     async send () {
       if (this.startsWithSlash()) {
-        var parts = this.message.split(' ')
-        console.log(parts)
+        const parts = this.message.split(' ');
+        //console.log(parts)
         switch (parts[0]) {
           case '/create':
             await this.addChannel({
@@ -278,9 +296,6 @@ export default defineComponent({
 })
 </script>
 <style>
-.item-channel{
-  border:white
-}
 @media(max-width: 650px){
   .custom-show{
     display: none;
