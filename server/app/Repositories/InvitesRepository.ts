@@ -3,6 +3,7 @@ import {SerializedChannel} from "@ioc:Repositories/ChannelRepository";
 import Invite from "App/Models/Invite";
 import User from "App/Models/User";
 import Channel from "App/Models/Channel";
+import Kick from "App/Models/Kick";
 
 
 export default class InvitesRepository implements InvitesRepositoryContract {
@@ -30,13 +31,25 @@ export default class InvitesRepository implements InvitesRepositoryContract {
     try {
       const receiver = await User.findByOrFail('nickname', receiverName);
       const channel = await Channel.findByOrFail('name', channelName);
-
-      await Invite.create({
-        senderId: senderId,
-        receiverId: receiver.id,
-        channelId: channel.id,
-      });
-
+      let kicked_by_creator: Kick| null = await Kick.query().
+      where('kickedId', receiver.id).
+      where('channelId', channel.id).where('userId', channel.creator_id).first()
+      let kicks: Kick[] | Kick | null = await Kick.query().
+      where('kickedId', receiver.id).
+      where('channelId', channel.id)
+      if(kicked_by_creator) {
+        console.log('Banned by creator');
+        throw new Error("banned by creator")
+      }else if (kicks && kicks.length >= 3) {
+        console.log('Kicked by users');
+        throw new Error("banned by users")
+      }else{
+        await Invite.create({
+          senderId: senderId,
+          receiverId: receiver.id,
+          channelId: channel.id,
+        });
+      }
       return {
         id: channel.id,
         name: channel.name,
