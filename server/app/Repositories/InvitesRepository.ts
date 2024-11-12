@@ -37,10 +37,10 @@ export default class InvitesRepository implements InvitesRepositoryContract {
       let kicks: Kick[] | Kick | null = await Kick.query().
       where('kickedId', receiver.id).
       where('channelId', channel.id)
-      if(kicked_by_creator) {
+      if(kicked_by_creator && senderId != channel.creator_id) {
         console.log('Banned by creator');
         throw new Error("banned by creator")
-      }else if (kicks && kicks.length >= 3) {
+      }else if (kicks && kicks.length >= 3 && senderId != channel.creator_id) {
         console.log('Kicked by users');
         throw new Error("banned by users")
       }else{
