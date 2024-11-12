@@ -2,8 +2,11 @@ import Channel from "App/Models/Channel";
 import {ChannelRepositoryContract, SerializedChannel} from "@ioc:Repositories/ChannelRepository";
 import {ChannelType} from "App/Enums/ChannelType";
 import User from "App/Models/User";
+import { DateTime } from 'luxon';
 import {Error} from "memfs/lib/internal/errors";
 import Kick from "App/Models/Kick";
+import Message from "App/Models/Message";
+// import Message from "App/Models/Message";
 
 
 export default class ChannelRepository implements ChannelRepositoryContract {
@@ -135,8 +138,29 @@ export default class ChannelRepository implements ChannelRepositoryContract {
       let kicks: Kick[] | Kick | null = await Kick.query().
       where('kickedId', user_id).
       where('channelId', channel.id)
-      //console.log(kicks.length)
-      if(kicked_by_creator) {
+    let messagesNewest = await Message.query()
+      .where("channelId", channel_id)
+      .orderBy("createdAt", "desc")  // Order by the most recent message
+      .first()
+    if(messagesNewest){
+      const createdAt = messagesNewest.createdAt
+      const thirtyDaysAgo = DateTime.now().minus({ days: 30 });
+
+      if (createdAt < thirtyDaysAgo) {
+        console.log("Last Message is older than 30 days");
+        await Channel.query()
+          .where('id', channel.id)
+          .delete();
+        throw new Error('Channel is not active');
+      } else {
+        console.log("Last Message is within the last 30 days");
+      }
+    }else{
+      console.log("no message in channel")
+    }
+
+
+    if(kicked_by_creator) {
         throw new Error('Banned by creator');
       }else if (kicks && kicks.length >= 3) {
         throw new Error('Kicked by users');
