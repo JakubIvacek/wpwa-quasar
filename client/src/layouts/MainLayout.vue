@@ -263,10 +263,9 @@ export default defineComponent({
 
         if (nickname) {
           username = nickname.slice(1)
-          console.log('Addressed to:', username)
         }
 
-        if (nickname || username !== this.activeUserNickname) {
+        if (nickname && username !== this.activeUserNickname) {
           await this.addMessage({ channel: this.activeChannel, message: this.message, addressedTo: username })
         } else {
           this.loading = true
@@ -274,6 +273,7 @@ export default defineComponent({
           this.loading = false
         }
       }
+      this.message = ''
     },
     async fetchUserChannels () {
       try {
