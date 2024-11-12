@@ -38,6 +38,19 @@ const actions: ActionTree<InvitesStateInterface, StateInterface> = {
       console.error("Failed to accept invite:", error)
       throw error
     }
+  },
+  async declineInvite(
+    { commit },
+    { invite, userName }: { invite: SerializedChannel, userName: string }
+  ) {
+    try {
+      await InvitesService.declineInvite(userName, invite.name)
+
+      commit("DELETE_INVITE", invite)
+    } catch (error) {
+      console.error("Failed to decline invite:", error)
+      throw error
+    }
   }
 };
 

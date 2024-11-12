@@ -42,4 +42,5 @@ Route.group(() => {
 Route.group(() => {
   Route.post('/', 'HTTPInvitesController.addInvite')
   Route.post('/accept', 'HTTPInvitesController.acceptInvite')
+  Route.post('/decline', 'HTTPInvitesController.declineInvite')
 }).prefix('invite').middleware('auth')

@@ -48,4 +48,20 @@ export default class HTTPInvitesController {
       return response.status(500).json({ error: 'Unable to accept invite' });
     }
   }
+
+  public async declineInvite({ request, response }: HttpContextContract) {
+    const { receiverName, channelName } = request.only(['receiverName', 'channelName']);
+
+    if (!receiverName || !channelName) {
+      return response.status(400).json({ error: 'All fields are required' });
+    }
+
+    try {
+      await this.invitesRepository.declineInvite({receiverName, channelName});
+
+      return response.status(200).json({ message: 'Invite declined' });
+    }catch (error) {
+      return response.status(500).json({ error: 'Unable to decline invite' });
+    }
+  }
 }

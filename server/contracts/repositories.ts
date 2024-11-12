@@ -88,6 +88,11 @@ declare module "@ioc:Repositories/InvitesRepository" {
       receiverName: string;
       channelName: string
     }): Promise<void>
+
+    declineInvite({receiverName, channelName}: {
+      receiverName: string;
+      channelName: string
+    }): Promise<void>
   }
 
   const InvitesRepository: InvitesRepositoryContract;

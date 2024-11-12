@@ -71,6 +71,26 @@ class InvitesService {
       }
     }
   }
+
+  public async declineInvite(receiverName: string, channelName: string): Promise<void> {
+    try {
+      await api.post('invite/decline', {
+        receiverName: receiverName,
+        channelName: channelName
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        console.error('Error joining channel:', axiosError.response.data);
+      } else {
+        console.error('Error joining channel:', axiosError.message);
+      }
+    }
+  }
 }
 
 

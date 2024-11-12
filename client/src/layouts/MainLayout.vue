@@ -74,7 +74,7 @@
                    color="negative"
                    icon="close"
                    class="q-ml-sm"
-                   @click="rejectInvite(channel.name)"
+                   @click="declineInviteBtn(invite)"
                  />
                </div>
               </q-item-section>
@@ -189,7 +189,11 @@ export default defineComponent({
   },
   methods: {
     acceptInviteBtn(invite: SerializedChannel) {
-      this.acceptInvite({ invite:invite, userName: this.activeUserNickname })
+      this.acceptInvite({ invite: invite, userName: this.activeUserNickname })
+    },
+    declineInviteBtn(invite: SerializedChannel) {
+      console.log("click")
+      this.declineInvite({ invite: invite, userName: this.activeUserNickname })
     },
     handleSend () {
       if (!this.isSendDisabled) {
@@ -285,7 +289,7 @@ export default defineComponent({
     ...mapActions('auth', ['logout']),
     ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel',
       'leaveChannel', 'quitChannel', 'revokeUser', 'kickUser']),
-    ...mapActions('invites', ['sendInvite', 'acceptInvite']),
+    ...mapActions('invites', ['sendInvite', 'acceptInvite','declineInvite']),
     setActive (channel: string) {
       this.leave(this.lastJoinedName)
       this.setActiveChannel(channel)
