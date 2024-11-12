@@ -233,6 +233,7 @@ export default defineComponent({
               name: this.activeChannel,
               user_id: this.activeUserId
             })
+            this.setActive(null)
             await this.fetchUserChannels()
             break
           case '/revoke':
@@ -256,16 +257,23 @@ export default defineComponent({
             // showUserList()
             break
         }
-      } else if (this.startsWithAt()) {
-        const username = this.message.split(' ')[0].substring(1)
-        // console.log(username)
-        await this.addMessage({ channel: this.activeChannel, message: this.message, addressedTo: username })
       } else {
-        this.loading = true
-        await this.addMessage({ channel: this.activeChannel, message: this.message, addressedTo: '' })
-        this.loading = false
+        let nickname: string | null =  this.addressedMessage()
+        let username = ''
+
+        if (nickname) {
+          username = nickname.slice(1)
+          console.log('Addressed to:', username)
+        }
+
+        if (nickname || username !== this.activeUserNickname) {
+          await this.addMessage({ channel: this.activeChannel, message: this.message, addressedTo: username })
+        } else {
+          this.loading = true
+          await this.addMessage({ channel: this.activeChannel, message: this.message, addressedTo: '' })
+          this.loading = false
+        }
       }
-      this.message = ''
     },
     async fetchUserChannels () {
       try {
@@ -280,8 +288,9 @@ export default defineComponent({
     startsWithSlash (): boolean {
       return this.message[0] === '/'
     },
-    startsWithAt (): boolean {
-      return this.message[0] === '@'
+    addressedMessage (): string | null {
+      const word = this.message.split(' ').find(word => word.startsWith('@'));
+      return word || null
     },
     ...mapMutations('channels', {
       setActiveChannel: 'SET_ACTIVE'
@@ -290,7 +299,7 @@ export default defineComponent({
     ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel',
       'leaveChannel', 'quitChannel', 'revokeUser', 'kickUser']),
     ...mapActions('invites', ['sendInvite', 'acceptInvite','declineInvite']),
-    setActive (channel: string) {
+    setActive (channel: string | null) {
       this.leave(this.lastJoinedName)
       this.setActiveChannel(channel)
       this.join(channel)

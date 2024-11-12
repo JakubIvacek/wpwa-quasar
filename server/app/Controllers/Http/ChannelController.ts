@@ -205,6 +205,7 @@ export default class ChannelController {
     this.channelRepository.kick(user_name, channel_name, active_user_id)
     return response.status(200).json({ message: "User revoked successfully" });
   }
+
   async getUserChannels({ params, response }: HttpContextContract) {
     const { id } = params;
     if (!id) {
