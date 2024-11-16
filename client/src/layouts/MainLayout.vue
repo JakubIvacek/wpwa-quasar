@@ -1,57 +1,58 @@
-<template class="bg-dark">
+<template>
   <div class="position-relative bg-dark" :style="{ height: $q.screen.height + 'px' }">
-    <q-layout view="hHh LpR lFf">
-      <q-header class="bg-img">
+    <q-layout view="hHh LpR lFf" class="bg-dark">
+      <q-header class="bg-cyan-10" >
         <q-toolbar class="text-white">
           <q-btn
             round
             flat
-            color="black"
+            color="white"
             :icon="leftDrawerOpen ? 'keyboard_arrow_left' : 'keyboard_arrow_right'"
             class="WAL__drawer-open q-mr-sm"
             @click="leftDrawerOpen = !leftDrawerOpen"
           />
 
-          <q-avatar class="img-own q-ma-sm">
-            <img src="../assets/logo-white.png" alt="logo" class="bg-primary" >
+          <q-avatar size="55Px">
+            <img src="../assets/logo-white.png" alt="logo">
           </q-avatar>
 
           <q-toolbar-title class="text-weight-bold text-h4 title ">
             ChatterBox
           </q-toolbar-title>
-          <span class="q-subtitle-1 q-pl-md text-weight-bold custom-show">
+          <span class="q-subtitle-1 q-pl-md q-pr-md text-weight-bold custom-show">
             {{ activeUserNickname }}
           </span>
           <div class="q-mx-sm">
-            <q-btn round color="primary" icon="settings"  @click="settings = true"/>
+            <q-btn round icon="settings"  @click="settings = true"/>
           </div>
           <div class="q-mx-sm">
-            <q-btn round color="negative" icon="logout" @click="logout"/>
+            <q-btn round color="negative" icon="logout" class="position-fix-logout" @click="logout"/>
           </div>
         </q-toolbar>
-        <settings-modal v-model="settings" />
+        <settings-modal v-model="settings"/>
       </q-header>
       <q-drawer
         v-model="leftDrawerOpen"
         show-if-above
         bordered
         :breakpoint="690"
+        class="bg-dark"
       >
-        <q-toolbar class="bg-dark text-white text-weight-bold q-pt-sm q-pl-lg" style="font-size: 25px">
+        <q-toolbar class="text-white text-weight-bold q-pt-sm q-pl-lg" style="font-size: 25px">
           Invites
           <q-space />
           <q-avatar color="red" text-color="white">{{ countInvites }}</q-avatar>
         </q-toolbar>
-        <q-scroll-area class="bg-dark"
+        <q-scroll-area
                        style="height: calc(40% - 100px)">
-          <q-list  bordered dark class="q-mt-sm">
+          <q-list dark class="q-mt-sm">
             <q-item
               v-for="(invite, index) in invites"
               :key="index"
-              class="text-white"
+              class="text-white text-center"
             >
               <q-item-section>
-                <q-item-label lines="1" class="channel-label">
+                <q-item-label lines="1" class="channel-label text-center">
                   {{ invite.name }}
                 </q-item-label>
               </q-item-section>
@@ -81,18 +82,18 @@
             </q-item>
           </q-list>
         </q-scroll-area>
-        <q-toolbar class="bg-dark text-white text-weight-bold q-pt-sm q-pl-lg" style="font-size: 25px">
+        <q-toolbar class=" text-white text-weight-bold q-pt-sm q-pl-lg " style="font-size: 25px">
           Channels
           <q-space />
         </q-toolbar>
-        <q-scroll-area class="bg-dark" style="height: calc(60% - 50px)">
-          <q-list  bordered dark class="q-mt-sm">
+        <q-scroll-area style="height: calc(60% - 50px)">
+          <q-list dark class="q-mt-sm">
             <q-item
               v-for="(channel, index) in userChannels"
               :key="index"
               clickable
               v-ripple
-              class="text-white"
+              class=" text-white"
               @click="setActive(channel.name)"
             >
               <q-item-section>
@@ -111,12 +112,12 @@
         </q-scroll-area>
       </q-drawer>
 
-      <q-page-container class="bg-dark">
+      <q-page-container>
         <router-view />
       </q-page-container>
 
-      <q-footer class="q-ml-sm">
-        <q-toolbar class="bg-dark row">
+      <q-footer class="q-ml-sm bg-transparent q-pb-sm footer bg-dark">
+        <q-toolbar class="row custom-width absolute-center">
           <q-input
             v-model="message"
             :disable="loading"
@@ -124,10 +125,11 @@
             rounded
             outlined
             dense
-            class="WAL__field col-grow q-mr-sm"
-            input-class="text-black"
-            bg-color="white"
+            class="WAL__field col-grow q-mr-sm input-main text-white q-mt-md"
+            input-class="text-white"
+            bg-color="cyan-10"
             placeholder="Type a message"
+            color="white"
             />
           <q-btn
             :disable=isSendDisabled
@@ -136,6 +138,7 @@
             round
             flat
             color="white"
+            class="mt-custom"
             icon="send" />
         </q-toolbar>
       </q-footer>
@@ -258,7 +261,7 @@ export default defineComponent({
             break
         }
       } else {
-        let nickname: string | null =  this.addressedMessage()
+        let nickname: string | null = this.addressedMessage()
         let username = ''
 
         if (nickname) {
@@ -313,9 +316,36 @@ export default defineComponent({
 })
 </script>
 <style>
+.position-fix-logout{
+  position: relative;
+  left: -5px
+}
+.custom-width{
+  width:70%;
+  position: relative;
+  bottom: -20Px;
+}
+.footer{
+  justify-content: center;
+  text-align: center;
+}
+.custom-container{
+  width: 60%;
+}
+.mt-custom{
+  margin-top: 14px;
+}
 @media(max-width: 650px){
   .custom-show{
     display: none;
+  }
+  .title{
+    font-size: 30px;
+  }
+}
+@media(max-width: 425px){
+  .title{
+    font-size: 20px;
   }
 }
 </style>
@@ -323,7 +353,6 @@ export default defineComponent({
 .channel-label
   font-size: 1.1rem
   font-weight: bold
-
 .bg-img
   background-image: url('../assets/bg-img.jpg')
   background-size: cover

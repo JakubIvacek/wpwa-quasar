@@ -104,6 +104,14 @@ export default defineComponent({
     font-size:50Px
   }
 }
+@media (max-width: 567px) {
+  .custom-width{
+    width: 90%
+  }
+  .custom-font{
+    font-size: 45Px
+  }
+}
 </style>
 
 <style lang="scss">

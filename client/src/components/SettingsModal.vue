@@ -1,26 +1,26 @@
 <template>
   <q-dialog v-model="settings">
     <q-card style="width: 400px">
-      <q-card-section>
+      <q-card-section class="text-center">
         <div class="text-h4">Settings</div>
       </q-card-section>
       <div class="q-pa-md">
         <div class="row q-gutter-sm justify-center">
-          <q-radio v-model="userState" val="online" label="Online" />
-          <q-radio v-model="userState" val="offline" label="Offline" />
-          <q-radio v-model="userState" val="DND" label="DND" />
+          <q-radio v-model="userState" val="online" label="Online" color="cyan-10"/>
+          <q-radio v-model="userState" val="offline" label="Offline" color="cyan-10"/>
+          <q-radio v-model="userState" val="DND" label="DND" color="cyan-10"/>
         </div>
         <div class="q-mt-md row justify-center">
           <q-toggle
             v-model="notification"
-            color="primary"
+            color="cyan-10"
             icon="mail"
             label="Notification"
           />
         </div>
       </div>
       <q-card-actions align="right">
-        <q-btn flat label="Exit" color="primary" v-close-popup />
+        <q-btn flat label="Exit" color="cyan-10" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
