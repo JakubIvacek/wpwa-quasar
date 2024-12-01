@@ -38,13 +38,13 @@
         :breakpoint="690"
         class="bg-dark"
       >
-        <q-toolbar class="text-white text-weight-bold q-pt-sm q-pl-lg" style="font-size: 25px">
+        <q-toolbar v-if="countInvites > 0" class="text-white text-weight-bold q-pt-sm q-pl-lg" style="font-size: 25px">
           Invites
           <q-space />
           <q-avatar color="red" text-color="white">{{ countInvites }}</q-avatar>
         </q-toolbar>
-        <q-scroll-area
-                       style="height: calc(40% - 100px)">
+        <q-scroll-area v-if="countInvites > 0"
+        style="height: calc(35% - 100px)">
           <q-list dark class="q-mt-sm">
             <q-item
               v-for="(invite, index) in invites"
@@ -63,7 +63,7 @@
                    dense
                    round
                    v-ripple
-                   color="primary"
+                   color="cyan-10"
                    icon="check"
                    @click="acceptInviteBtn(invite)"
                  />
@@ -82,8 +82,8 @@
             </q-item>
           </q-list>
         </q-scroll-area>
-        <q-toolbar class=" text-white text-weight-bold q-pt-sm q-pl-lg " style="font-size: 25px">
-          Channels
+        <q-toolbar class=" text-white text-weight-bold q-pt-sm q-pl-lg" style="font-size: 25px">
+            Channels
           <q-space />
         </q-toolbar>
         <q-scroll-area style="height: calc(60% - 50px)">
@@ -125,9 +125,8 @@
             rounded
             outlined
             dense
-            class="WAL__field col-grow q-mr-sm input-main text-white q-mt-md"
+            class="WAL__field col-grow q-mr-sm input-main text-white q-mt-md bg-mine"
             input-class="text-white"
-            bg-color="cyan-10"
             placeholder="Type a message"
             color="white"
             />
@@ -333,7 +332,11 @@ export default defineComponent({
   width: 60%;
 }
 .mt-custom{
-  margin-top: 14px;
+  margin-top: 15px;
+}
+.bg-mine{
+  background-color: #353839;
+  border-radius: 17px;
 }
 @media(max-width: 650px){
   .custom-show{

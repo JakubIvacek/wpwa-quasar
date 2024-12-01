@@ -75,7 +75,7 @@ export default defineComponent({
 }
 .others {
   margin-top: 17px;
-  background-color: #1D1D1D;
+  background-color: #27292B;
   text-align: left;
 }
 .highlighted {

@@ -1,6 +1,6 @@
 <template>
-  <div class="q-ml-xl text-weight-bold q-mt-sm q-mb-sm" style="width: 80%; font-size: 2rem;">
-    <pre>Channel : {{ activeChannel}} </pre>
+  <div class="q-ml-xl text-weight-bold q-mt-sm " style="width: 80%; font-size: 2rem;">
+    <pre v-if="activeChannel"> {{ activeChannel}} </pre>
   </div>
 
   <q-scroll-area ref="area" style="width: 80%; height: calc(100vh - 250px)">
