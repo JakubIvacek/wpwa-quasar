@@ -224,6 +224,24 @@ export default class ChannelController {
     }
   }
 
+  async getChannelUsers({ params, response }: HttpContextContract) {
+    const { name } = params;
+    if (!name) {
+      return response.status(400).json({ error: 'Channel name is required' });
+    }
+
+    try {
+      const users = await this.channelRepository.getChannelUsers(name);
+      return response.status(200).json(users);
+    } catch (error) {
+      if (error.code === 'E_ROW_NOT_FOUND') {
+        return response.status(404).json({ error: 'Channel not found' });
+      }
+      console.error('Error fetching users for channel:', error);
+      return response.status(500).json({ error: 'Unable to fetch users for the channel' });
+    }
+  }
+
   async getAll({ response }: HttpContextContract) {
     const channels = await this.channelRepository.getAll();
     return response.status(200).json({channels: channels});

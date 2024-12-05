@@ -5,6 +5,7 @@ import { channelService } from "src/services"
 import { RawMessage } from "src/contracts"
 import {CreateChannel, JoinChannel, RevokeUser, SerializedChannel} from "src/contracts/Channel"
 import InvitesService from "src/services/InvitesService";
+import {ChannelUser} from "src/contracts/ChannelUser";
 
 const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
   async join ({ commit }, channel: string) {
@@ -92,6 +93,14 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
       return await channelService.quitChannel(data)
     } catch (error) {
       console.error("Failed leave channel:", error)
+      throw error
+    }
+  },
+  async getChannelUsers ({ commit }, name: string): Promise<ChannelUser[]> {
+    try {
+      return await channelService.getChannelUsers(name)
+    } catch (error) {
+      console.error("Failed get channel users:", error)
       throw error
     }
   }

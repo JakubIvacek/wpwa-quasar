@@ -33,12 +33,19 @@ declare module "@ioc:Repositories/MessageRepository" {
 
 declare module "@ioc:Repositories/ChannelRepository" {
   import {ChannelType} from "App/Enums/ChannelType";
+  import {UserStatus} from "App/Enums/UserStatus";
 
   export interface SerializedChannel {
     id: number;
     name: string;
     type: string;
     creator_id: number;
+  }
+
+  export interface ChannelUser {
+    id: number;
+    name: string;
+    status: UserStatus;
   }
 
   export interface ChannelRepositoryContract {
@@ -59,6 +66,8 @@ declare module "@ioc:Repositories/ChannelRepository" {
       user_id: number,
       channel_id: number
     ): Promise<SerializedChannel>;
+
+    getChannelUsers(channel_name: string): Promise<ChannelUser[]>;
   }
 
   const ChannelRepository: ChannelRepositoryContract;

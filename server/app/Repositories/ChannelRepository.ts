@@ -1,5 +1,5 @@
 import Channel from "App/Models/Channel";
-import {ChannelRepositoryContract, SerializedChannel} from "@ioc:Repositories/ChannelRepository";
+import {ChannelRepositoryContract, ChannelUser, SerializedChannel} from "@ioc:Repositories/ChannelRepository";
 import {ChannelType} from "App/Enums/ChannelType";
 import User from "App/Models/User";
 import { DateTime } from 'luxon';
@@ -199,5 +199,19 @@ export default class ChannelRepository implements ChannelRepositoryContract {
       throw new Error('Unable to get user channels');
     }
 
+  }
+
+  public async getChannelUsers(channel_name: string): Promise<ChannelUser[]> {
+    const channel = await Channel.findBy('name', channel_name);
+    if (!channel) {
+      throw new Error('Channel not found');
+    }
+
+    const users = await channel.related('users').query();
+    return users.map((user) => ({
+      id: user.id,
+      name: user.nickname,
+      status: user.status
+    } as ChannelUser));
   }
 }

@@ -30,7 +30,10 @@
           </div>
         </q-toolbar>
         <settings-modal v-model="settings"/>
-        <users-list-component v-model="userList"/>
+        <users-list-component
+          v-model="userList"
+          :channelUsers="channelUsersArr"
+        />
       </q-header>
       <q-drawer
         v-model="leftDrawerOpen"
@@ -163,6 +166,7 @@ export default defineComponent({
       loading: false,
       settings: false,
       userList: false,
+      channelUsersArr: [],
       lastJoinedName: ''
     }
   },
@@ -259,7 +263,7 @@ export default defineComponent({
             await this.sendInvite({ senderId: this.activeUserId, receiverName: parts[1], channelName: this.activeChannel })
             break
           case '/list':
-            this.userList = !this.userList
+            await this.channelUsers(this.activeChannel)
             break
         }
       } else {
@@ -302,13 +306,17 @@ export default defineComponent({
     }),
     ...mapActions('auth', ['logout']),
     ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel',
-      'leaveChannel', 'quitChannel', 'revokeUser', 'kickUser']),
-    ...mapActions('invites', ['sendInvite', 'acceptInvite','declineInvite']),
+      'leaveChannel', 'quitChannel', 'revokeUser', 'kickUser', "getChannelUsers"]),
+    ...mapActions('invites', ['sendInvite', 'acceptInvite', 'declineInvite']),
     setActive (channel: string | null) {
       this.leave(this.lastJoinedName)
       this.setActiveChannel(channel)
       this.join(channel)
       this.lastJoinedName = channel
+    },
+    async channelUsers(channelName: string | null) {
+      this.channelUsersArr = await this.getChannelUsers(channelName)
+      this.userList = !this.userList
     }
   },
   async created () {
@@ -330,9 +338,6 @@ export default defineComponent({
 .footer{
   justify-content: center;
   text-align: center;
-}
-.custom-container{
-  width: 60%;
 }
 .mt-custom{
   margin-top: 15px;

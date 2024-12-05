@@ -37,6 +37,7 @@ Route.group(() => {
   Route.post('/quit', 'ChannelController.quit')
   Route.post('/revoke', 'ChannelController.revoke')
   Route.post('/kick', 'ChannelController.kick')
+  Route.get('/:name/users', 'ChannelController.getChannelUsers')
 }).prefix('channels').middleware('auth')
 
 Route.group(() => {

@@ -2,6 +2,7 @@ import { RawMessage, SerializedMessage } from 'src/contracts'
 import { BootParams, SocketManager } from './SocketManager'
 import { api } from "boot/axios"
 import {CreateChannel, JoinChannel, RevokeUser, SerializedChannel} from "src/contracts/Channel"
+import {ChannelUser} from "src/contracts/ChannelUser";
 
 // creating instance of this class automatically connects to given socket.io namespace
 // subscribe is called with boot params, so you can use it to dispatch actions for socket events
@@ -133,6 +134,24 @@ class ChannelService {
     try {
       const response = await api.get<SerializedChannel[]>(
         `channels/${id}`,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      console.log(response.data)
+      return response.data
+    } catch (error) {
+      console.error('Error fetching channels:', error.response?.data || error.message)
+      throw error
+    }
+  }
+
+  async getChannelUsers (name: string): Promise<ChannelUser[]> {
+    try {
+      const response = await api.get<ChannelUser[]>(
+        `channels/${name}/users`,
         {
           headers: {
             'Content-Type': 'application/json'
