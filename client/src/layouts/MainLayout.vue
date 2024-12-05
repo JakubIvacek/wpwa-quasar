@@ -23,13 +23,14 @@
             {{ activeUserNickname }}
           </span>
           <div class="q-mx-sm">
-            <q-btn round icon="settings"  @click="settings = true"/>
+            <q-btn round color="blue" icon="settings"  @click="settings = true"/>
           </div>
           <div class="q-mx-sm">
             <q-btn round color="negative" icon="logout" class="position-fix-logout" @click="logout"/>
           </div>
         </q-toolbar>
         <settings-modal v-model="settings"/>
+        <users-list-component v-model="userList"/>
       </q-header>
       <q-drawer
         v-model="leftDrawerOpen"
@@ -63,7 +64,7 @@
                    dense
                    round
                    v-ripple
-                   color="cyan-10"
+                   color="positive"
                    icon="check"
                    @click="acceptInviteBtn(invite)"
                  />
@@ -150,16 +151,18 @@ import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import SettingsModal from 'components/SettingsModal.vue'
 import {SerializedChannel} from "src/contracts/Channel";
+import UsersListComponent from "components/UsersListComponent.vue";
 
 export default defineComponent({
   name: 'MainLayout',
-  components: { SettingsModal },
+  components: { SettingsModal, UsersListComponent },
   data () {
     return {
       leftDrawerOpen: false,
       message: '',
       loading: false,
       settings: false,
+      userList: false,
       lastJoinedName: ''
     }
   },
@@ -256,7 +259,7 @@ export default defineComponent({
             await this.sendInvite({ senderId: this.activeUserId, receiverName: parts[1], channelName: this.activeChannel })
             break
           case '/list':
-            // showUserList()
+            this.userList = !this.userList
             break
         }
       } else {
