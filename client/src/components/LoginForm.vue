@@ -48,6 +48,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { RouteLocationRaw } from 'vue-router'
+import { useQuasar } from 'quasar'
 
 export default defineComponent({
   name: 'LoginForm',
@@ -65,9 +66,22 @@ export default defineComponent({
       return this.$store.state.auth.status === 'pending'
     }
   },
+  setup() {
+    const $q = useQuasar();
+    return { $q };
+  },
   methods: {
     onSubmit () {
-      this.$store.dispatch('auth/login', this.credentials).then(() => this.$router.push(this.redirectTo))
+      this.$store.dispatch('auth/login', this.credentials)
+        .then(() => {
+          this.$router.push(this.redirectTo)
+        })
+        .catch(() => {
+          this.$q.notify({
+            type: 'negative',
+            message: 'Invalid credentials, please try again.'
+          })
+        })
     }
   }
 })

@@ -115,7 +115,9 @@ module.exports = configure(function (ctx) {
         'material-icons'
       ],
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Notify'
+      ]
     },
 
     // animations: 'all', // --- includes all animations

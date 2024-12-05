@@ -11,7 +11,6 @@
             class="WAL__drawer-open q-mr-sm"
             @click="leftDrawerOpen = !leftDrawerOpen"
           />
-
           <q-avatar size="55Px">
             <img src="../assets/logo-white.png" alt="logo">
           </q-avatar>
@@ -72,7 +71,6 @@
                    icon="check"
                    @click="acceptInviteBtn(invite)"
                  />
-
                  <q-btn
                    dense
                    round
@@ -106,12 +104,6 @@
                   {{ channel.name }}
                 </q-item-label>
               </q-item-section>
-
-              <!--              <q-item-section side>-->
-              <!--                &lt;!&ndash;q-item-label caption>-->
-              <!--                  {{ channel }}-->
-              <!--                </q-item-label&ndash;&gt;-->
-              <!--              </q-item-section>-->
             </q-item>
           </q-list>
         </q-scroll-area>
@@ -213,7 +205,6 @@ export default defineComponent({
     async send () {
       if (this.startsWithSlash()) {
         const parts = this.message.split(' ')
-        // console.log(parts)
         switch (parts[0]) {
           case '/create':
             await this.addChannel({
@@ -331,6 +322,7 @@ export default defineComponent({
   }
 })
 </script>
+
 <style>
 .position-fix-logout{
   position: relative;
