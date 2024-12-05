@@ -33,6 +33,7 @@
         <users-list-component
           v-model="userList"
           :channelUsers="channelUsersArr"
+          :channelName="activeChannel"
         />
       </q-header>
       <q-drawer
@@ -263,7 +264,12 @@ export default defineComponent({
             await this.sendInvite({ senderId: this.activeUserId, receiverName: parts[1], channelName: this.activeChannel })
             break
           case '/list':
-            await this.channelUsers(this.activeChannel)
+            if (this.activeChannel !== null){
+              await this.channelUsers(this.activeChannel)
+            }else {
+              console.log("No active channel")
+            }
+
             break
         }
       } else {

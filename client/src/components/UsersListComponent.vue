@@ -1,8 +1,8 @@
 <template>
-  <q-dialog v-model="dialogVisible" @show="logChannelUsers">
+  <q-dialog v-model="dialogVisible">
     <q-card style="width: 600px; max-height: 500px; overflow-y: auto">
       <q-card-section class="text-center">
-        <div class="text-h4">Channel Users</div>
+        <div class="text-h4">Channel Users - {{ channelName }}</div>
       </q-card-section>
 
       <q-card-section>
@@ -27,33 +27,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-
-export default defineComponent({
-  name: 'SettingsModal',
+export default {
+  name: 'UsersListComponent',
   props: {
     modelValue: Boolean,
-    channelUsers: Array
+    channelUsers: Array,
+    channelName: String
   },
   emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    const dialogVisible = computed({
-      get: () => props.modelValue,
-      set: (value) => emit('update:modelValue', value)
-    });
-
-    const logChannelUsers = () => {
-      console.log('Channel Users:');
-      console.log(props.channelUsers);
-    };
-
+  data() {
     return {
-      dialogVisible,
-      channelUsers: props.channelUsers,
-      logChannelUsers
+      dialogVisible: this.modelValue
     };
+  },
+  watch: {
+    modelValue(val) {
+      this.dialogVisible = val;
+    },
+    dialogVisible(val) {
+      this.$emit('update:modelValue', val);
+    }
   }
-});
+};
 </script>
 
 <style scoped>

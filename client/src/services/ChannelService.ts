@@ -140,7 +140,6 @@ class ChannelService {
           }
         }
       )
-      console.log(response.data)
       return response.data
     } catch (error) {
       console.error('Error fetching channels:', error.response?.data || error.message)
@@ -158,7 +157,6 @@ class ChannelService {
           }
         }
       )
-      console.log(response.data)
       return response.data
     } catch (error) {
       console.error('Error fetching channels:', error.response?.data || error.message)
