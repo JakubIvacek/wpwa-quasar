@@ -1,8 +1,9 @@
 import { RawMessage, SerializedMessage } from 'src/contracts'
 import { BootParams, SocketManager } from './SocketManager'
 import { api } from "boot/axios"
-import {CreateChannel, JoinChannel, RevokeUser, SerializedChannel} from "src/contracts/Channel"
-import {ChannelUser} from "src/contracts/ChannelUser";
+import { CreateChannel, JoinChannel, RevokeUser, SerializedChannel } from "src/contracts/Channel"
+import { ChannelUser } from "src/contracts/ChannelUser";
+import { AppVisibility } from 'quasar';
 
 // creating instance of this class automatically connects to given socket.io namespace
 // subscribe is called with boot params, so you can use it to dispatch actions for socket events
@@ -13,11 +14,38 @@ class ChannelSocketManager extends SocketManager {
 
     this.socket.on('message', (message: SerializedMessage) => {
       store.commit('channels/NEW_MESSAGE', { channel, message })
+
+      if (!AppVisibility.appVisible){
+        this.showNotification(message, channel)
+      }
     })
   }
 
+  private showNotification(message: SerializedMessage, channel: string): void {
+    console.log('showing notification')
+
+    if ('Notification' in window) {
+
+      if (Notification.permission === 'granted') {
+        new Notification(`Nová správa v kanáli ${channel}`, {
+          body: message.content,
+          icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
+        });
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            new Notification(`Nová správa v kanáli ${channel}`, {
+              body: message.content,
+              icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
+            });
+          }
+        });
+      }
+    }
+  }
+
+
   public addMessage (message: RawMessage, addressedTo: string): Promise<SerializedMessage> {
-    console.log(addressedTo)
     return this.emitAsync('addMessage', message, addressedTo)
   }
 
