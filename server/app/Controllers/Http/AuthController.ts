@@ -1,11 +1,11 @@
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import type {HttpContextContract} from '@ioc:Adonis/Core/HttpContext'
 // import Channel from 'App/Models/Channel'
 import User from 'App/Models/User'
 import RegisterUserValidator from 'App/Validators/RegisterUserValidator'
 import {UserStatus} from "App/Enums/UserStatus";
 
 export default class AuthController {
-  async register({ request }: HttpContextContract) {
+  async register({ request, response }: HttpContextContract) {
     // Validate incoming request data
     const data = await request.validate(RegisterUserValidator);
 
@@ -16,13 +16,13 @@ export default class AuthController {
     };
 
     // Create user in the database
-    const user = await User.create(userData);
-
-    // Join user to general channel
-    // const general = await Channel.findByOrFail('name', 'General');
-    // await user.related('channels').attach([general.id]);
-
-    return user; // Return created user
+    try {
+      return await User.create(userData); // Return created user
+    }catch (error){
+      if (error.code === '23505') {
+          return response.status(400).json({ error: 'User with this name already exists' });
+      }
+    }
   }
 
   async login({ auth, request }: HttpContextContract) {

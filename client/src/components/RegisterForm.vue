@@ -110,6 +110,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { RouteLocationRaw } from 'vue-router'
+import { useQuasar } from "quasar";
 
 export default defineComponent({
   name: 'RegisterForm',
@@ -127,13 +128,48 @@ export default defineComponent({
       return this.$store.state.auth.status === 'pending'
     }
   },
+  setup() {
+    const $q = useQuasar();
+    return { $q };
+  },
   methods: {
     onSubmit () {
       this.$store.dispatch('auth/register', this.form)
-        .then(() => this.$router.push(this.redirectTo))
+        .then(() => {
+          this.$q.notify({
+            type: 'positive',
+            message: 'Registration was successful!'
+          });
+          this.$router.push(this.redirectTo);
+        })
         .catch(error => {
-          console.error(error) // Log the error
-          // Optionally, show an alert or a message to the user
+          console.error(error); // Log the error
+          if (error.response && error.response.status) {
+            switch (error.response.status) {
+              case 422:
+                this.$q.notify({
+                  type: 'negative',
+                  message: 'Invalid data provided. Please check your input.'
+                });
+                break;
+              case 400:
+                this.$q.notify({
+                  type: 'negative',
+                  message: 'User with this name already exists'
+                });
+                break;
+              default:
+                this.$q.notify({
+                  type: 'negative',
+                  message: 'Unknown error occurred. Please try again.'
+                });
+            }
+          } else {
+            this.$q.notify({
+              type: 'negative',
+              message: 'Unknown error occurred. Please try again.'
+            });
+          }
         })
     }
   }
