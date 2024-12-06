@@ -7,15 +7,17 @@ import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 export default class UserController {
   constructor(private userRepository: UserRepositoryContract) {}
 
-  public async updateStatus({ request, response }: HttpContextContract): Promise<void> {
-    const { userId, status } = request.only(['userId', 'status']);
+  public async updateStatus({ auth ,request, response }: HttpContextContract): Promise<void> {
+    const { status } = request.only(['status']);
 
-    if (!userId || !status) {
+    const user = auth.user!
+
+    if (!status) {
       return response.status(400).json({ error: 'All fields are required' });
     }
 
     try {
-      await this.userRepository.updateStatus(userId, status);
+      await this.userRepository.updateStatus(user.id, status);
 
       return response.status(200).json({ message: 'Status updated' });
     } catch (error) {

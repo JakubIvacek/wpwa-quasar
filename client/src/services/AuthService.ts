@@ -31,6 +31,10 @@ class AuthService {
   async logout (): Promise<void> {
     await api.post('auth/logout')
   }
+
+  async changeUserStatus (status: string): Promise<void> {
+    await api.post('auth/change-status', { status })
+  }
 }
 
 export default new AuthService()

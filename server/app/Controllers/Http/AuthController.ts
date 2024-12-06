@@ -33,12 +33,22 @@ export default class AuthController {
     // Find the user by nickname
     const user = await User.findByOrFail('nickname', nickname);
 
+    const token = await auth.use('api').attempt(user.email, password);
+
+    // Update user's status to online
+    user.status = UserStatus.ONLINE;
+    await user.save();
+
     // Attempt authentication using the user's ID and password
-    return auth.use('api').attempt(user.email, password);
+    return token
   }
 
   async logout({ auth }: HttpContextContract) {
-    return auth.use('api').logout()
+    const user = auth.user!
+    user.status = UserStatus.OFFLINE
+    await user.save()
+
+    await auth.use('api').logout()
   }
 
   async me({ auth }: HttpContextContract) {

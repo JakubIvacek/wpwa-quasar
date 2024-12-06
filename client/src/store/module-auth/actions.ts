@@ -3,6 +3,7 @@ import { StateInterface } from '../index'
 import { AuthStateInterface } from './state'
 import { authService, authManager } from 'src/services'
 import { LoginCredentials, RegisterData } from 'src/contracts'
+import UserStatusService from "src/services/UserStatusService";
 
 const actions: ActionTree<AuthStateInterface, StateInterface> = {
   async check ({ state, commit, dispatch }) {
@@ -57,6 +58,13 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
     } catch (err) {
       commit('AUTH_ERROR', err)
       throw err
+    }
+  },
+  async updateUserStatus({ commit }, newState) {
+    try {
+      await UserStatusService.updateUserStatus(newState);
+      commit('CHANGE_STATE', newState);
+    } catch (error) {
     }
   }
 }

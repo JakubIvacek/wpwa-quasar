@@ -20,6 +20,11 @@ export default class AppProvider {
       // just make instance of app/Repositories/InvitesRepository class
       return container.make('App/Repositories/InvitesRepository')
     })
+    // bind our implementation of UserRepository to container
+    this.app.container.singleton('Repositories/UserRepository', (container) => {
+      // just make instance of app/Repositories/UserRepository class
+      return container.make('App/Repositories/UserRepository')
+    })
   }
 
   public async boot () {

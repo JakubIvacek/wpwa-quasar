@@ -109,7 +109,7 @@ declare module "@ioc:Repositories/InvitesRepository" {
 }
 
 declare module "@ioc:Repositories/UserRepository" {
-  import {UserStatus} from "App/Enums/UserStatus";
+  import { UserStatus } from "App/Enums/UserStatus";
 
   export interface UserRepositoryContract {
     updateStatus(userId: number, status: UserStatus): Promise<void>;

@@ -172,6 +172,9 @@ export default defineComponent({
     ...mapGetters('invites', {
       invites: 'getInvites'
     }),
+    ...mapGetters('auth', {
+      status: 'userStatus'
+    }),
     activeChannel (): string | null {
       // console.log(this.$store.state.channels.active)
       return this.$store.state.channels.active

@@ -21,13 +21,19 @@ export interface LoginCredentials {
   remember: boolean
 }
 
+export enum UserStatus {
+  ONLINE = 'online',
+  OFFLINE = 'offline',
+  DND = 'dnd'
+}
+
 export interface User {
   id: number
   email: string
   first_name: string
   last_name: string
   nickname: string
-  status: string
-  createdAt: string,
+  status: UserStatus
+  createdAt: string
   updatedAt: string
 }
