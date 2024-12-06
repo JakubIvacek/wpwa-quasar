@@ -31,12 +31,21 @@ export default class InvitesRepository implements InvitesRepositoryContract {
     try {
       const receiver = await User.findByOrFail('nickname', receiverName);
       const channel = await Channel.findByOrFail('name', channelName);
-      let kicked_by_creator: Kick| null = await Kick.query().
-      where('kickedId', receiver.id).
-      where('channelId', channel.id).where('userId', channel.creator_id).first()
-      let kicks: Kick[] | Kick | null = await Kick.query().
-      where('kickedId', receiver.id).
-      where('channelId', channel.id)
+
+      if (channel.type === 'private' && senderId != channel.creator_id) {
+        console.log('Private channel');
+        throw new Error("You are not allowed to invite to private channel")
+      }
+
+      let kicked_by_creator: Kick| null = await Kick.query()
+        .where('kickedId', receiver.id)
+        .where('channelId', channel.id)
+        .where('userId', channel.creator_id).first()
+
+      let kicks: Kick[] | Kick | null = await Kick.query()
+        .where('kickedId', receiver.id)
+        .where('channelId', channel.id)
+
       if(kicked_by_creator && senderId != channel.creator_id) {
         console.log('Banned by creator');
         throw new Error("banned by creator")

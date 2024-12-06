@@ -31,6 +31,8 @@ export default class HTTPInvitesController {
     } catch (error) {
       if (error.code === '23505') {
         return response.status(400).json({ error: 'User is already invited' });
+      } else if (error.message === 'You are not allowed to invite to private channel') {
+        return response.status(403).json({ error: error.message });
       }
       return response.status(500).json({ error: 'Unable to send invite' });
     }

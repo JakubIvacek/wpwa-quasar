@@ -4,6 +4,7 @@ import { api } from "boot/axios"
 import { CreateChannel, JoinChannel, RevokeUser, SerializedChannel } from "src/contracts/Channel"
 import { ChannelUser } from "src/contracts/ChannelUser";
 import { AppVisibility } from 'quasar';
+import {AxiosError} from "axios";
 
 // creating instance of this class automatically connects to given socket.io namespace
 // subscribe is called with boot params, so you can use it to dispatch actions for socket events
@@ -22,21 +23,20 @@ class ChannelSocketManager extends SocketManager {
   }
 
   private showNotification(message: SerializedMessage, channel: string): void {
-    console.log('showing notification')
 
     if ('Notification' in window) {
 
       if (Notification.permission === 'granted') {
-        new Notification(`Nová správa v kanáli ${channel}`, {
+        new Notification(`📢 New message from "${message.author.nickname}" in channel "${channel}"`, {
           body: message.content,
-          icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
+          // icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
         });
       } else if (Notification.permission !== 'denied') {
         Notification.requestPermission().then((permission) => {
           if (permission === 'granted') {
-            new Notification(`Nová správa v kanáli ${channel}`, {
+            new Notification(`📢 New message from "${message.author.nickname}" in channel "${channel}"`, {
               body: message.content,
-              icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
+              // icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
             });
           }
         });
@@ -94,7 +94,8 @@ class ChannelService {
       })
       console.log('Channel created:', response.data)
     } catch (error) {
-      console.error('Error creating channel:', error.response?.data || error.message)
+      const axiosError = error as AxiosError;
+      console.error('Error creating channel:', axiosError.response?.data || axiosError.message)
     }
   }
 
@@ -106,7 +107,8 @@ class ChannelService {
         }
       })
     } catch (error) {
-      console.error('Error joining channel:', error.response?.data || error.message)
+      const axiosError = error as AxiosError;
+      console.error('Error joining channel:', axiosError.response?.data || axiosError.message)
     }
   }
 
@@ -118,7 +120,8 @@ class ChannelService {
         }
       })
     } catch (error) {
-      console.error('Error joining channel:', error.response?.data || error.message)
+      const axiosError = error as AxiosError;
+      console.error('Error joining channel:', axiosError.response?.data || axiosError.message)
     }
   }
 
@@ -130,7 +133,8 @@ class ChannelService {
         }
       })
     } catch (error) {
-      console.error('Error revoking user :', error.response?.data || error.message)
+      const axiosError = error as AxiosError;
+      console.error('Error revoking user :', axiosError.response?.data || axiosError.message)
     }
   }
 
@@ -142,7 +146,8 @@ class ChannelService {
         }
       })
     } catch (error) {
-      console.error('Error kicking user :', error.response?.data || error.message)
+      const axiosError = error as AxiosError;
+      console.error('Error kicking user :', axiosError.response?.data || axiosError.message)
     }
   }
 
@@ -154,7 +159,8 @@ class ChannelService {
         }
       })
     } catch (error) {
-      console.error('Error joining channel:', error.response?.data || error.message);
+      const axiosError = error as AxiosError;
+      console.error('Error joining channel:', axiosError.response?.data || axiosError.message)
     }
   }
 
@@ -170,7 +176,8 @@ class ChannelService {
       )
       return response.data
     } catch (error) {
-      console.error('Error fetching channels:', error.response?.data || error.message)
+      const axiosError = error as AxiosError;
+      console.error('Error fetching channels:', axiosError.response?.data || axiosError.message)
       throw error
     }
   }
@@ -187,7 +194,8 @@ class ChannelService {
       )
       return response.data
     } catch (error) {
-      console.error('Error fetching channels:', error.response?.data || error.message)
+      const axiosError = error as AxiosError;
+      console.error('Error fetching channels:', axiosError.response?.data || axiosError.message)
       throw error
     }
   }
