@@ -2,7 +2,7 @@ import {BootParams, SocketManager} from "src/services/SocketManager";
 import {SerializedChannel} from "src/contracts/Channel";
 import {api} from "boot/axios";
 import {AxiosError} from "axios";
-
+import { Notify } from 'quasar';
 
 class InvitesSocketManager extends SocketManager {
   public subscribe ({ store }: BootParams): void {
@@ -42,13 +42,18 @@ class InvitesService {
           'Content-Type': 'application/json'
         }
       })
+
+      Notify.create({
+        type: 'positive',
+        message: 'Invite sent successfully!'
+      });
+
     } catch (error) {
         const axiosError = error as AxiosError;
-        if (axiosError.response) {
-          console.error('Error joining channel:', axiosError.response.data);
-        } else {
-          console.error('Error joining channel:', axiosError.message);
-        }
+        Notify.create({
+          type: 'negative',
+          message: axiosError.response?.data.error || 'Unknown error'
+        });
     }
   }
 

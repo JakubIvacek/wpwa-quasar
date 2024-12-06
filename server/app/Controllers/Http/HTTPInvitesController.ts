@@ -29,6 +29,9 @@ export default class HTTPInvitesController {
 
       return response.status(201).json(invite);
     } catch (error) {
+      if (error.code === '23505') {
+        return response.status(400).json({ error: 'User is already invited' });
+      }
       return response.status(500).json({ error: 'Unable to send invite' });
     }
   }
