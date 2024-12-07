@@ -44,6 +44,9 @@ class ChannelSocketManager extends SocketManager {
     }
   }
 
+  public fetchMessages (channelName: string, page: number): Promise<SerializedMessage[]> {
+    return this.emitAsync('fetchMessages', channelName, page)
+  }
 
   public addMessage (message: RawMessage, addressedTo: string): Promise<SerializedMessage> {
     return this.emitAsync('addMessage', message, addressedTo)

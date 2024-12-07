@@ -1,6 +1,6 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <channel-messages-component :messages="messages" />
+    <channel-messages-component />
   </q-page>
 </template>
 
@@ -10,12 +10,33 @@ import { SerializedMessage } from 'src/contracts'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  components: { ChannelMessagesComponent },
+  components: {ChannelMessagesComponent},
   name: 'ChatPage',
+  data() {
+    return {
+      messages: [] as SerializedMessage[], // Store messages here
+    };
+  },
   computed: {
-    messages (): SerializedMessage[] {
-      return this.$store.getters['channels/currentMessages']
+    activeChannel() {
+      return this.$store.state.channels.active; // Access the active channel from the store
     }
+  },
+  watch: {
+    activeChannel(newChannel) {
+      // When the active channel changes, fetch new messages
+      this.fetchMessages(newChannel);
+    }
+  },
+  methods: {
+    async fetchMessages(channel: string) {
+      // Dispatch the fetchMessages action when the active channel changes
+      this.messages = await this.$store.dispatch('channels/fetchMessages', { channel, page: 1 });
+    }
+  },
+  async mounted() {
+    // Initial fetch when the component is mounted
+    this.fetchMessages(this.activeChannel);
   }
 })
 </script>

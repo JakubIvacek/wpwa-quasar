@@ -35,6 +35,14 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     const newMessage = await channelService.in(channel)?.addMessage(message, addressedTo)
     commit("NEW_MESSAGE", { channel, message: newMessage })
   },
+  async fetchMessages ({ commit }, { channel, page }: { channel: string, page: number }) {
+    const newMessage = await channelService.in(channel)?.fetchMessages(channel, page)
+    console.log(newMessage) // Check the response
+    console.log("wtf")
+    // Optionally commit the result to the store if needed
+    // commit('setMessages', newMessage);
+    return newMessage;
+  },
   async addChannel ({ commit }, newChannel: CreateChannel) {
     try {
       // Send the data as a flatter structure

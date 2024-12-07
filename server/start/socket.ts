@@ -13,7 +13,8 @@ import Ws from "@ioc:Ruby184/Socket.IO/Ws";
 Ws.namespace("channels/:name")
   // .middleware('channel') // check if user can join given channel
   .on("loadMessages", "MessageController.loadMessages")
-  .on("addMessage", "MessageController.addMessage");
+  .on("addMessage", "MessageController.addMessage")
+  .on("fetchMessages", "MessageController.fetchMessages")
 
 Ws.namespace("invites/:name")
   .on("loadInvites", "InvitesController.loadInvites");

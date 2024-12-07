@@ -19,6 +19,7 @@ declare module "@ioc:Repositories/MessageRepository" {
 
   export interface MessageRepositoryContract {
     getAll(channelName: string): Promise<SerializedMessage[]>;
+    fetchMessages(channelName: string, page: number): Promise<SerializedMessage[]>;
     create(
       channelName: string,
       userId: number,

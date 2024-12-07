@@ -4,6 +4,7 @@ import type {
 } from "@ioc:Repositories/MessageRepository"
 import Channel from "App/Models/Channel";
 import User from "App/Models/User";
+import Message from "App/Models/Message";
 
 export default class MessageRepository implements MessageRepositoryContract {
   public async getAll(channelName: string): Promise<SerializedMessage[]> {
@@ -13,6 +14,21 @@ export default class MessageRepository implements MessageRepositoryContract {
       .firstOrFail();
     return channel.messages.map(
       (message) => message.serialize() as SerializedMessage
+    );
+  }
+  public async fetchMessages(channelName: string, page: number): Promise<SerializedMessage[]> {
+    // First, fetch the channel without preloading messages
+    const channel = await Channel.query().where('name', channelName).firstOrFail();
+
+    // Then, paginate the messages for the channel separately
+    const messages = await Message.query()
+      .where('channel_id', channel.id) // Filter messages by channel ID
+      .preload('author') // Preload the author of each message
+      .paginate(page, 10); // Paginate the messages
+
+    // Return the serialized messages
+    return messages.toJSON().data.map(
+      (message) => message as SerializedMessage
     );
   }
 

@@ -15,6 +15,9 @@ export default class MessageController {
   public async loadMessages({ params }: WsContextContract) {
     return this.messageRepository.getAll(params.name);
   }
+  public async fetchMessages({ params }: WsContextContract, name: string, page: number) {
+    return this.messageRepository.fetchMessages(name, page)
+  }
 
   public async addMessage(
     { params, socket, auth }: WsContextContract,
