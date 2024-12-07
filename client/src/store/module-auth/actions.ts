@@ -66,6 +66,9 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
       commit('CHANGE_STATE', newState);
     } catch (error) {
     }
+  },
+  updateNotifications({ commit }, allNotifications) {
+    commit('CHANGE_NOTIFICATIONS', allNotifications);
   }
 }
 

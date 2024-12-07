@@ -19,6 +19,9 @@ const mutation: MutationTree<AuthStateInterface> = {
     if (state.user){
       state.user.status = newState
     }
+  },
+  CHANGE_NOTIFICATIONS (state, allNotifications: boolean) {
+    state.allNotifications = allNotifications
   }
 }
 

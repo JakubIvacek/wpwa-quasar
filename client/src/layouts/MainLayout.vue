@@ -25,7 +25,7 @@
             <q-btn round color="blue" icon="settings"  @click="settings = true"/>
           </div>
           <div class="q-mx-sm">
-            <q-btn round color="negative" icon="logout" class="position-fix-logout" @click="logout"/>
+            <q-btn round color="negative" icon="logout" class="position-fix-logout" @click="logoutClick"/>
           </div>
         </q-toolbar>
         <settings-modal v-model="settings"/>
@@ -146,7 +146,7 @@
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import SettingsModal from 'components/SettingsModal.vue'
-import {SerializedChannel} from "src/contracts/Channel";
+import { SerializedChannel } from "src/contracts/Channel";
 import UsersListComponent from "components/UsersListComponent.vue";
 
 export default defineComponent({
@@ -317,12 +317,23 @@ export default defineComponent({
     async channelUsers(channelName: string | null) {
       this.channelUsersArr = await this.getChannelUsers(channelName)
       this.userList = !this.userList
+    },
+    logoutClick(){
+      for (const channel of this.userChannels) {
+        this.leave(channel.name)
+      }
+      this.logout()
     }
   },
   async created () {
     await this.fetchUserChannels() // Fetch channels when component is created
     console.log('UserChannels:', this.userChannels[0])
-  }
+  },
+  // mounted() {
+  //   for (const channel of this.userChannels) {
+  //     this.join(channel.name)
+  //   }
+  // }
 })
 </script>
 

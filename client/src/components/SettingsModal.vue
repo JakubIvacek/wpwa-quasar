@@ -2,29 +2,34 @@
   <q-dialog v-model="settings" @show="updateUserStatusRef">
     <q-card style="width: 400px">
       <q-card-section class="text-center">
-        <div class="text-h4">Settings</div>
+        <div class="text-h5">Settings</div>
       </q-card-section>
       <div class="q-pa-md">
         <div class="row q-gutter-sm justify-center">
-          <q-radio v-model="userStatusRef" val="online" label="Online" color="cyan-10"/>
-          <q-radio v-model="userStatusRef" val="offline" label="Offline" color="cyan-10"/>
-          <q-radio v-model="userStatusRef" val="dnd" label="DND" color="cyan-10"/>
+          <q-radio v-model="userStatusRef" val="online" label="Online" color="green"/>
+          <q-radio v-model="userStatusRef" val="offline" label="Offline" color="red"/>
+          <q-radio v-model="userStatusRef" val="dnd" label="DND" color="orange"/>
         </div>
-        <div class="q-mt-md row justify-center">
-          <q-toggle
-            v-model="notification"
-            color="cyan-10"
-            icon="mail"
-            label="Notification"
-          />
+        <div class="q-mt-md">
+          <h5 class="text-center q-mb-sm">Notifications</h5>
+          <div class="row justify-center items-center">
+            <span class="q-mr-sm">Only Addressed</span>
+            <q-toggle
+              v-model="notificationRef"
+              color="cyan-10"
+              icon="mail"
+            />
+            <span class="q-ml-sm">All Notifications</span>
+          </div>
         </div>
       </div>
       <q-card-actions align="right">
-        <q-btn flat label="Exit" color="cyan-10" @click="updateStatus" v-close-popup />
+        <q-btn flat label="Save" color="cyan-10" @click="updateStatus" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
+
 
 <script lang="ts">
 import {mapActions, mapGetters} from 'vuex';
@@ -36,9 +41,9 @@ export default {
   },
   data() {
     return {
-      notification: true,
+      notificationRef: true,
       settings: this.modelValue,
-      userStatusRef: ref('')
+      userStatusRef: ref(''),
     };
   },
   watch: {
@@ -51,18 +56,25 @@ export default {
   },
   computed: {
     ...mapGetters({
-      userStatus: 'auth/userStatus'
+      userStatus: 'auth/userStatus',
+      allNotifications: 'auth/allNotifications'
     })
   },
   methods: {
-    ...mapActions('auth', ['updateUserStatus']),
+    ...mapActions('auth', ['updateUserStatus', 'updateNotifications']),
     updateUserStatusRef() {
       this.userStatusRef = this.userStatus;
+      this.notificationRef = this.allNotifications;
     },
     async updateStatus() {
       if (this.userStatusRef !== this.userStatus){
         await this.updateUserStatus(this.userStatusRef);
       }
+
+      if (this.notificationRef !== this.allNotifications){
+        await this.updateNotifications(this.notificationRef);
+      }
+
       this.settings = false;
     }
   },

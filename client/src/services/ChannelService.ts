@@ -4,7 +4,7 @@ import { api } from "boot/axios"
 import { CreateChannel, JoinChannel, RevokeUser, SerializedChannel } from "src/contracts/Channel"
 import { ChannelUser } from "src/contracts/ChannelUser"
 import { AppVisibility } from 'quasar'
-import {AxiosError} from "axios"
+import { AxiosError } from "axios"
 
 // creating instance of this class automatically connects to given socket.io namespace
 // subscribe is called with boot params, so you can use it to dispatch actions for socket events
@@ -22,26 +22,52 @@ class ChannelSocketManager extends SocketManager {
     })
   }
 
-  private showNotification(store:any, message: SerializedMessage, channel: string): void {
+  private showNotification(store:any, message: any, channel: string): void {
 
     const userStatus = store.getters['auth/userStatus']
+    const allNotifications = store.getters['auth/allNotifications']
 
     if (userStatus === 'online') {
-      if ('Notification' in window) {
-        if (Notification.permission === 'granted') {
-          new Notification(`📢 New message from "${message.author.nickname}" in channel "${channel}"`, {
-            body: message.content,
-            // icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
-          });
-        } else if (Notification.permission !== 'denied') {
-          Notification.requestPermission().then((permission) => {
-            if (permission === 'granted') {
+      if (allNotifications) {
+        if ('Notification' in window) {
+          if (Notification.permission === 'granted') {
+            new Notification(`📢 New message from "${message.author.nickname}" in channel "${channel}"`, {
+              body: message.content,
+              // icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
+            });
+          } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then((permission) => {
+              if (permission === 'granted') {
+                new Notification(`📢 New message from "${message.author.nickname}" in channel "${channel}"`, {
+                  body: message.content,
+                  // icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
+                });
+              }
+            });
+          }
+        }
+      }else {
+        console.log(store.getters['auth/userId'])
+        console.log(message.addressed_to)
+        if (message.addressed_to === store.getters['auth/userId']) {
+          console.log('message addressed to me')
+          if ('Notification' in window) {
+            if (Notification.permission === 'granted') {
               new Notification(`📢 New message from "${message.author.nickname}" in channel "${channel}"`, {
                 body: message.content,
                 // icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
               });
+            } else if (Notification.permission !== 'denied') {
+              Notification.requestPermission().then((permission) => {
+                if (permission === 'granted') {
+                  new Notification(`📢 New message from "${message.author.nickname}" in channel "${channel}"`, {
+                    body: message.content,
+                    // icon: 'https://cdn.quasar.dev/logo-v2/svg/logo.svg'
+                  });
+                }
+              });
             }
-          });
+          }
         }
       }
     }
