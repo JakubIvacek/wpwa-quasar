@@ -32,7 +32,8 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-vue": "^8.5.0",
     "sass": "^1.80.6",
-    "vue-loader": "^17.4.2"
+    "vue-loader": "^17.4.2",
+    "workbox-webpack-plugin": "^7.0.0"
   },
   "browserslist": [
     "last 10 Chrome versions",
