@@ -10,7 +10,8 @@
         </div>
 
         <!-- Conditional rendering based on 'send' status -->
-        <div v-if="message.send === 'unsend'" class="q-pl-lg text-left">
+        <!-- For example message.content == '' add so u can showcase on one device how it works -->
+        <div v-if="message.send === 'unsend' && message.content == ''" class="q-pl-lg text-left">
           <q-spinner-dots size="2rem" />
         </div>
 
