@@ -35,6 +35,16 @@ const mutation: MutationTree<ChannelsStateInterface> = {
     // Now you can safely push the new message
     state.messages[channel].push(message)
   },
+  DELETE_MESSAGE (state, { channel }) {
+    // Check if the channel exists in the state
+    // print("deleting store")
+    if (state.messages[channel]) {
+      // Filter out messages that have send="unsend"
+      state.messages[channel] = state.messages[channel].filter(
+        (message) => message.send !== 'unsend'
+      )
+    }
+  },
   ADD_CHANNEL (state, channel: SerializedChannel) {
     console.log('ADD_CHANNEL', channel)
     state.userChannels.push(channel)

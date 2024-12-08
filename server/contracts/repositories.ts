@@ -4,6 +4,7 @@ declare module "@ioc:Repositories/MessageRepository" {
   export interface SerializedMessage {
     createdBy: number;
     content: string;
+    send: string;
     channelId: number;
     addressedTo: number;
     createdAt: string;
@@ -26,6 +27,12 @@ declare module "@ioc:Repositories/MessageRepository" {
       content: string,
       addressed_to: string
     ): Promise<SerializedMessage>;
+    createUnSend(
+      channelName: string,
+      userId: number,
+      content: string,
+    ): Promise<SerializedMessage>;
+    deleteUnSend(channelName: string, userId: number): Promise<{ success: boolean; message?: string}>;
   }
 
   const MessageRepository: MessageRepositoryContract;

@@ -35,10 +35,24 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     const newMessage = await channelService.in(channel)?.addMessage(message, addressedTo)
     commit("NEW_MESSAGE", { channel, message: newMessage })
   },
+  async startTyping (
+    { commit },
+    { channel, message }: { channel: string; message: RawMessage }
+  ) {
+    console.log('Start typing')
+    const newMessage = await channelService.in(channel)?.startTyping(message)
+    commit("NEW_MESSAGE", { channel, message: newMessage })
+  },
+  async stopTyping (
+    { commit },
+    { channel }: { channel: string }
+  ) {
+    await channelService.in(channel)?.stopTyping()
+    // commit("NEW_MESSAGE", { channel, message: newMessage })
+  },
   async fetchMessages ({ commit }, { channel, page }: { channel: string, page: number }) {
     const newMessage = await channelService.in(channel)?.fetchMessages(channel, page)
     console.log(newMessage) // Check the response
-    console.log("wtf")
     // Optionally commit the result to the store if needed
     // commit('setMessages', newMessage);
     return newMessage;

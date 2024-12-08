@@ -119,6 +119,8 @@
             v-model="message"
             :disable="loading"
             @keydown.enter.prevent="handleSend"
+            @focus="onStartTyping"
+            @blur="onStopTyping"
             rounded
             outlined
             dense
@@ -126,16 +128,17 @@
             input-class="text-white"
             placeholder="Type a message"
             color="white"
-            />
+          />
           <q-btn
-            :disable=isSendDisabled
+            :disable="isSendDisabled"
             @click="send"
             type="submit"
             round
             flat
             color="white"
             class="mt-custom"
-            icon="send" />
+            icon="send"
+          />
         </q-toolbar>
       </q-footer>
     </q-layout>
@@ -161,6 +164,14 @@ export default defineComponent({
       userList: false,
       channelUsersArr: [],
       lastJoinedName: ''
+    }
+  },
+  watch: {
+    // Watch the 'message' data property
+    message(newMessage, oldMessage) {
+      // Logic to execute when the 'message' property changes
+      console.log('Message changed from:', oldMessage, 'to:', newMessage);
+      this.onTyping()
     }
   },
   computed: {
@@ -204,6 +215,26 @@ export default defineComponent({
       if (!this.isSendDisabled) {
         this.send()
       }
+    },
+    onStartTyping () {
+      this.startTyping({ channel: this.activeChannel, message: this.message })
+    },
+    onStopTyping () {
+      this.stopTyping({ channel: this.activeChannel })
+    },
+    onTyping () {
+      // You can trigger an action here to notify when the user is typing
+      console.log('User is typing:', this.message);
+
+      // For example, you could use Vuex to update a 'typing' state or trigger a socket event.
+      if (this.activeChannel) {
+        this.notifyTyping(this.activeChannel, this.activeUserId);
+      }
+    },
+    notifyTyping (channelId: string, userId: number) {
+      console.log(`${this.activeUserNickname} is typing in channel: ${channelId}`);
+      // Send 'typing' event to server or handle other logic for typing status
+      // this.socket.emit('userTyping', { channelId, userId });
     },
     async send () {
       if (this.startsWithSlash()) {
@@ -306,7 +337,7 @@ export default defineComponent({
     }),
     ...mapActions('auth', ['logout']),
     ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel',
-      'leaveChannel', 'quitChannel', 'revokeUser', 'kickUser', "getChannelUsers"]),
+      'leaveChannel', 'startTyping', 'quitChannel', 'revokeUser', 'kickUser', "getChannelUsers", 'stopTyping']),
     ...mapActions('invites', ['sendInvite', 'acceptInvite', 'declineInvite']),
     setActive (channel: string | null) {
       this.leave(this.lastJoinedName)

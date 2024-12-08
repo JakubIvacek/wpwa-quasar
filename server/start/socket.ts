@@ -14,6 +14,9 @@ Ws.namespace("channels/:name")
   // .middleware('channel') // check if user can join given channel
   .on("loadMessages", "MessageController.loadMessages")
   .on("addMessage", "MessageController.addMessage")
+  .on("startTyping", "MessageController.startTyping")
+  .on("stopTyping", "MessageController.stopTyping")
+  .on("messageTyping", "MessageController.messageTyping")
   .on("fetchMessages", "MessageController.fetchMessages")
 
 Ws.namespace("invites/:name")

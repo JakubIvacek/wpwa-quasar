@@ -20,6 +20,13 @@ class ChannelSocketManager extends SocketManager {
         this.showNotification(store,message, channel)
       }
     })
+    this.socket.on('message_deleted', (data: { channel: string; userId: string }) => {
+      console.log('Message deleted:', data)
+      store.commit('channels/DELETE_MESSAGE', {
+        channel: data.channel,
+        userId: data.userId
+      })
+    })
   }
 
   private showNotification(store:any, message: any, channel: string): void {
@@ -78,7 +85,18 @@ class ChannelSocketManager extends SocketManager {
   }
 
   public addMessage (message: RawMessage, addressedTo: string): Promise<SerializedMessage> {
+    console.log('service adding')
     return this.emitAsync('addMessage', message, addressedTo)
+  }
+
+  public startTyping (message: RawMessage): Promise<SerializedMessage> {
+    console.log('service typing')
+    return this.emitAsync('startTyping', message)
+  }
+
+  public stopTyping (): Promise<SerializedMessage> {
+    console.log('service stop typing')
+    return this.emitAsync('stopTyping')
   }
 
   public loadMessages (): Promise<SerializedMessage[]> {

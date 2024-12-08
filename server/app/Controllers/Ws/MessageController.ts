@@ -35,4 +35,39 @@ export default class MessageController {
     // return message to sender
     return message;
   }
+
+  public async startTyping(
+    { params, socket, auth }: WsContextContract,
+    content: string
+  ){
+    //console.log("started")
+    const message = await this.messageRepository.createUnSend(
+      params.name,
+      auth.user!.id,
+      content,
+    );
+    // broadcast message to other users in channel
+    socket.broadcast.emit("message", message);
+    // return message to sender
+    return message;
+  }
+
+  public async stopTyping(
+    { params, socket, auth }: WsContextContract,
+  ) {
+    console.log("stop typing")
+    await this.messageRepository.deleteUnSend(
+      params.name,
+      auth.user!.id,
+    );
+    // broadcast message to other users in channel
+    socket.emit("message_deleted", {
+      channel: params.name,
+      userId: auth.user!.id,
+    });
+    socket.broadcast.emit("message_deleted", {
+      channel: params.name,
+      userId: auth.user!.id,
+    });
+  }
 }

@@ -55,4 +55,39 @@ export default class MessageRepository implements MessageRepositoryContract {
       return message.serialize() as SerializedMessage;
     }
   }
+  public async createUnSend(
+    channelName: string,
+    userId: number,
+    content: string,
+  ): Promise<SerializedMessage> {
+    const channel = await Channel.findByOrFail("name", channelName);
+    const message = await channel
+      .related("messages")
+      .create({ createdBy: userId, content, send: "unsend" });
+    await message.load("author");
+    return message.serialize() as SerializedMessage;
+  }
+  public async deleteUnSend(
+    channelName: string,
+    userId: number
+  ): Promise<{ success: boolean; message?: string}> {
+    const channel = await Channel.findByOrFail("name", channelName);
+
+    const message = await channel
+      .related("messages")
+      .query()
+      .where("created_by", userId)
+      .where("send", "unsend")
+      .first();
+
+    if (!message) {
+      throw new Error("No unsent message found for the user in this channel");
+    }
+
+    // Delete the message
+    await message.delete();
+
+    // Return success response
+    return { success: true, message: "Message deleted successfully" };
+  }
 }

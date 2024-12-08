@@ -8,7 +8,10 @@
         <div class="row q-pt-xs name">
           <p>{{ message.author.nickname }}</p>
         </div>
-        <div class="row q-pr-sm text-left q-pl-sm">
+        <div v-if="message.send == 'unsend'" class="q-pl-lg text-left">
+          <q-spinner-dots size="2rem" />
+        </div>
+        <div v-else class="row q-pr-sm text-left q-pl-sm">
           {{ message.content }}
         </div>
         <div class="row-auto timestamp float-right q-pt-sm">

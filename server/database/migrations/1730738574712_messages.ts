@@ -26,6 +26,7 @@ export default class extends BaseSchema {
         .inTable("channels")
         .onDelete("CASCADE");
       table.text("content");
+      table.text("send");
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
