@@ -225,8 +225,6 @@ export default defineComponent({
     onTyping () {
       // You can trigger an action here to notify when the user is typing
       console.log('User is typing:', this.message);
-
-      // For example, you could use Vuex to update a 'typing' state or trigger a socket event.
       if (this.activeChannel) {
         this.notifyTyping(this.activeChannel, this.activeUserId);
       }
