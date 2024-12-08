@@ -60,7 +60,7 @@ export default class MessageController {
       auth.user!.id,
       content,
     )
-    console.log("message typing")
+    // console.log("message typing")
     socket.emit("message_updated", {
       channel: params.name,
       userId: auth.user!.id,

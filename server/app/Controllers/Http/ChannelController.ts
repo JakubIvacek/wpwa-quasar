@@ -5,6 +5,7 @@ import {inject} from "@adonisjs/core/build/standalone";
 import {ChannelType} from "App/Enums/ChannelType";
 import User from "App/Models/User";
 
+
 @inject(["Repositories/ChannelRepository"])
 export default class ChannelController {
   constructor(private channelRepository: ChannelRepositoryContract) {}

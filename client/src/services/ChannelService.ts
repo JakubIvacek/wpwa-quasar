@@ -35,6 +35,21 @@ class ChannelSocketManager extends SocketManager {
         content: data.content  // Pass 'content' instead of 'message'
       })
     })
+    this.socket.on('user-kicked', (data: { userName: string; channelName: string; kickedBy: number }) => {
+      // console.log('User Kicked:', data)
+      console.log(store.state.auth.user?.nickname)
+      console.log(data.userName)
+      if (store.state.auth.user?.nickname === data.userName) {
+        console.log("KICKED USER ONLY")
+        store.commit('channels/DELETE_CHANNEL', data.channelName)
+        store.commit('channels/CLEAR_CHANNEL')
+      }
+    })
+    this.socket.on('channel-removed', (data: { channelName: string; }) => {
+      console.log(data.channelName)
+      store.commit('channels/DELETE_CHANNEL', data.channelName)
+      store.commit('channels/CLEAR_CHANNEL')
+    })
   }
 
   private showNotification(store:any, message: any, channel: string): void {

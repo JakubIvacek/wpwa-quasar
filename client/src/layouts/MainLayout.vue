@@ -100,7 +100,11 @@
               @click="setActive(channel.name)"
             >
               <q-item-section>
-                <q-item-label lines="1" class="channel-label">
+                <q-item-label v-if="channel.type === 'private'" lines="1" class="channel-label">
+                  {{ channel.name }}
+                  <q-icon name="lock" color="cyan-10" class="lock-icon" />
+                </q-item-label>
+                <q-item-label v-else lines="1" class="channel-label">
                   {{ channel.name }}
                 </q-item-label>
               </q-item-section>
@@ -223,7 +227,6 @@ export default defineComponent({
       this.stopTyping({ channel: this.activeChannel })
     },
     onTyping () {
-      // You can trigger an action here to notify when the user is typing
       // console.log('User is typing:', this.message);
       if (this.activeChannel) {
         this.notifyTyping(this.activeChannel, this.activeUserId)
@@ -286,9 +289,9 @@ export default defineComponent({
             await this.sendInvite({ senderId: this.activeUserId, receiverName: parts[1], channelName: this.activeChannel })
             break
           case '/list':
-            if (this.activeChannel !== null){
+            if (this.activeChannel !== null) {
               await this.channelUsers(this.activeChannel)
-            }else {
+            } else {
               console.log("No active channel")
             }
 

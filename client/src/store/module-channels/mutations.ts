@@ -63,6 +63,12 @@ const mutation: MutationTree<ChannelsStateInterface> = {
   ADD_CHANNEL (state, channel: SerializedChannel) {
     console.log('ADD_CHANNEL', channel)
     state.userChannels.push(channel)
+  },
+  DELETE_CHANNEL (state, channelName: string) {
+    console.log('DELETE_CHANNEL', channelName)
+    state.userChannels = state.userChannels.filter(
+      (existingChannel) => existingChannel.name !== channelName
+    )
   }
 }
 

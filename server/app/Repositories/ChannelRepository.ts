@@ -6,8 +6,8 @@ import { DateTime } from 'luxon';
 import {Error} from "memfs/lib/internal/errors";
 import Kick from "App/Models/Kick";
 import Message from "App/Models/Message";
+import Ws from "@ioc:Ruby184/Socket.IO/Ws";
 // import Message from "App/Models/Message";
-
 
 export default class ChannelRepository implements ChannelRepositoryContract {
   public async getAll(): Promise<SerializedChannel[]> {
@@ -42,11 +42,14 @@ export default class ChannelRepository implements ChannelRepositoryContract {
     if (!isInChannel) {
       throw new Error('User is not in the specified channel');
     }
-
     // Check if the user is the channel creator
     if (isInChannel.creator_id === user_id) {
       user.related('channels').detach([channel_id]);
       const channel = await Channel.findOrFail(channel_id);
+      const namespace = Ws.io.of(`/channels/${channel.name}`);
+      namespace.emit('channel-removed', {
+        channelName: channel.name,
+      });
       await channel.delete();
       return;
     }
@@ -66,6 +69,10 @@ export default class ChannelRepository implements ChannelRepositoryContract {
     // delete channel
     user.related('channels').detach([channel_id]);
     const channel = await Channel.findOrFail(channel_id);
+    const namespace = Ws.io.of(`/channels/${channel.name}`);
+    namespace.emit('channel-removed', {
+      channelName: channel.name,
+    });
     await channel.delete();
     return;
   }
@@ -74,6 +81,12 @@ export default class ChannelRepository implements ChannelRepositoryContract {
     let channel :  Channel | SerializedChannel | null = await Channel.findBy('name', channel_name);
     let revoked_user : User | null = await User.findBy('nickname', user_name);
     if(revoked_user && channel && channel.type == ChannelType.PRIVATE){
+      const namespace = Ws.io.of(`/channels/${channel_name}`);
+      namespace.emit('user-kicked', {
+        userName: user_name,
+        channelName: channel_name,
+        kickedBy: 0,
+      });
       revoked_user.related('channels').detach([channel.id])
     }
     return;
@@ -91,6 +104,12 @@ export default class ChannelRepository implements ChannelRepositoryContract {
           userId: active_user_id,
           channelId: channel.id
         })
+        const namespace = Ws.io.of(`/channels/${channel_name}`);
+        namespace.emit('user-kicked', {
+          userName: user_name,
+          channelName: channel_name,
+          kickedBy: active_user_id,
+        });
         kicked_user.related('channels').detach([channel.id])
       }else{                                     // if not +1 to kick count if 3 kick
         const userChannel = await kicked_user
@@ -118,6 +137,12 @@ export default class ChannelRepository implements ChannelRepositoryContract {
             where('channelId', channel.id)
             //console.log(kicked)
             if (kicked && kicked.length >= 3){
+              const namespace = Ws.io.of(`/channels/${channel_name}`);
+              namespace.emit('user-kicked', {
+                userName: user_name,
+                channelName: channel_name,
+                kickedBy: active_user_id,
+              });
               kicked_user.related('channels').detach([channel.id])
             }
           }
