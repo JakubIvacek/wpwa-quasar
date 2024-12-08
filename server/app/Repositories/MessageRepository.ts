@@ -67,10 +67,11 @@ export default class MessageRepository implements MessageRepositoryContract {
     await message.load("author");
     return message.serialize() as SerializedMessage;
   }
-  public async deleteUnSend(
+  public async updateUnSend(
     channelName: string,
-    userId: number
-  ): Promise<{ success: boolean; message?: string}> {
+    userId: number,
+    content: string,
+  ): Promise<SerializedMessage> {
     const channel = await Channel.findByOrFail("name", channelName);
 
     const message = await channel
@@ -83,11 +84,37 @@ export default class MessageRepository implements MessageRepositoryContract {
     if (!message) {
       throw new Error("No unsent message found for the user in this channel");
     }
+    message.content = content
+    return message.serialize() as SerializedMessage;
+  }
+  public async deleteUnSend(
+    channelName: string,
+    userId: number
+  ): Promise<{ success: boolean; message?: string }> {
+    // Find the channel by its name
+    const channel = await Channel.findByOrFail("name", channelName);
 
-    // Delete the message
-    await message.delete();
+    // Retrieve all unsent messages for the specified user in this channel
+    const unsentMessages = await channel
+      .related("messages")
+      .query()
+      .where("created_by", userId)
+      .where("send", "unsend");
+
+    // If no unsent messages found, return a message
+    if (unsentMessages.length === 0) {
+      throw new Error("No unsent messages found for the user in this channel");
+    }
+
+    // Delete all unsent messages
+    await channel
+      .related("messages")
+      .query()
+      .where("created_by", userId)
+      .where("send", "unsend")
+      .delete();
 
     // Return success response
-    return { success: true, message: "Message deleted successfully" };
+    return { success: true, message: "All unsent messages deleted successfully" };
   }
 }

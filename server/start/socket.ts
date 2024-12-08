@@ -16,7 +16,7 @@ Ws.namespace("channels/:name")
   .on("addMessage", "MessageController.addMessage")
   .on("startTyping", "MessageController.startTyping")
   .on("stopTyping", "MessageController.stopTyping")
-  .on("messageTyping", "MessageController.messageTyping")
+  .on("typing", "MessageController.messageTyping")
   .on("fetchMessages", "MessageController.fetchMessages")
 
 Ws.namespace("invites/:name")

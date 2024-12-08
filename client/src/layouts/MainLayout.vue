@@ -224,15 +224,14 @@ export default defineComponent({
     },
     onTyping () {
       // You can trigger an action here to notify when the user is typing
-      console.log('User is typing:', this.message);
+      // console.log('User is typing:', this.message);
       if (this.activeChannel) {
-        this.notifyTyping(this.activeChannel, this.activeUserId);
+        this.notifyTyping(this.activeChannel, this.activeUserId)
       }
     },
     notifyTyping (channelId: string, userId: number) {
-      console.log(`${this.activeUserNickname} is typing in channel: ${channelId}`);
-      // Send 'typing' event to server or handle other logic for typing status
-      // this.socket.emit('userTyping', { channelId, userId });
+      console.log(`${this.activeUserNickname} is typing in channel: ${channelId}`)
+      this.Typing({ channel: this.activeChannel, message: this.message })
     },
     async send () {
       if (this.startsWithSlash()) {
@@ -335,7 +334,7 @@ export default defineComponent({
     }),
     ...mapActions('auth', ['logout']),
     ...mapActions('channels', ['addMessage', 'addChannel', 'getChannels', 'join', 'leave', 'joinChannel',
-      'leaveChannel', 'startTyping', 'quitChannel', 'revokeUser', 'kickUser', "getChannelUsers", 'stopTyping']),
+      'leaveChannel', 'startTyping', 'quitChannel', 'revokeUser', 'kickUser', "getChannelUsers", 'stopTyping', 'Typing']),
     ...mapActions('invites', ['sendInvite', 'acceptInvite', 'declineInvite']),
     setActive (channel: string | null) {
       this.leave(this.lastJoinedName)

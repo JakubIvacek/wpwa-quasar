@@ -45,6 +45,21 @@ const mutation: MutationTree<ChannelsStateInterface> = {
       )
     }
   },
+  UPDATE_MESSAGE (state, { channel, userId, content }: {channel:string, userId: number, content: string}) {
+    // Check if the channel exists in the state
+    if (state.messages[channel]) {
+      // Find the message by the user ID (this assumes 'message.created_by' is the userId)
+      const message = state.messages[channel].find(
+        (msg) => msg.created_by === userId && msg.send === 'unsend'
+      );
+      console.log(content)
+      // If message is found, update its content
+      if (message) {
+        message.content = content;  // Update message content
+      }
+    }
+  },
+
   ADD_CHANNEL (state, channel: SerializedChannel) {
     console.log('ADD_CHANNEL', channel)
     state.userChannels.push(channel)

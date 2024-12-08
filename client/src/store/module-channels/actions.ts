@@ -43,6 +43,13 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     const newMessage = await channelService.in(channel)?.startTyping(message)
     commit("NEW_MESSAGE", { channel, message: newMessage })
   },
+  async Typing (
+    { commit },
+    { channel, message }: { channel: string; message: RawMessage }
+  ) {
+    console.log('typing')
+    await channelService.in(channel)?.typing(message)
+  },
   async stopTyping (
     { commit },
     { channel }: { channel: string }

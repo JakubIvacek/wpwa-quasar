@@ -51,11 +51,31 @@ export default class MessageController {
     // return message to sender
     return message;
   }
+  public async messageTyping(
+    { params, socket, auth }: WsContextContract,
+    content: string
+  ){
+    await this.messageRepository.updateUnSend(
+      params.name,
+      auth.user!.id,
+      content,
+    )
+    console.log("message typing")
+    socket.emit("message_updated", {
+      channel: params.name,
+      userId: auth.user!.id,
+      content: content
+    });
+    socket.broadcast.emit("message_updated", {
+      channel: params.name,
+      userId: auth.user!.id,
+      content: content
+    });
+  }
 
   public async stopTyping(
     { params, socket, auth }: WsContextContract,
   ) {
-    console.log("stop typing")
     await this.messageRepository.deleteUnSend(
       params.name,
       auth.user!.id,

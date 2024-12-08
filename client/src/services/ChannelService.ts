@@ -27,6 +27,14 @@ class ChannelSocketManager extends SocketManager {
         userId: data.userId
       })
     })
+    this.socket.on('message_updated', (data: { channel: string; userId: string; content: string }) => {
+      console.log('Message updated:', data)
+      store.commit('channels/UPDATE_MESSAGE', {
+        channel: data.channel,
+        userId: data.userId,
+        content: data.content  // Pass 'content' instead of 'message'
+      })
+    })
   }
 
   private showNotification(store:any, message: any, channel: string): void {
@@ -97,6 +105,11 @@ class ChannelSocketManager extends SocketManager {
   public stopTyping (): Promise<SerializedMessage> {
     console.log('service stop typing')
     return this.emitAsync('stopTyping')
+  }
+
+  public typing (message: RawMessage): Promise<SerializedMessage> {
+    console.log('service typing')
+    return this.emitAsync('typing', message)
   }
 
   public loadMessages (): Promise<SerializedMessage[]> {

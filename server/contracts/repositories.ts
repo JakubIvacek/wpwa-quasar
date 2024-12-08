@@ -32,6 +32,11 @@ declare module "@ioc:Repositories/MessageRepository" {
       userId: number,
       content: string,
     ): Promise<SerializedMessage>;
+    updateUnSend(
+      channelName: string,
+      userId: number,
+      content: string,
+    ): Promise<SerializedMessage>;
     deleteUnSend(channelName: string, userId: number): Promise<{ success: boolean; message?: string}>;
   }
 
