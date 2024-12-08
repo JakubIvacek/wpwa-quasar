@@ -173,6 +173,10 @@ export default class ChannelRepository implements ChannelRepositoryContract {
 
       if (createdAt < thirtyDaysAgo) {
         console.log("Last Message is older than 30 days");
+        const namespace = Ws.io.of(`/channels/${channel.name}`);
+        namespace.emit('channel-removed', {
+          channelName: channel.name,
+        });
         await Channel.query()
           .where('id', channel.id)
           .delete();

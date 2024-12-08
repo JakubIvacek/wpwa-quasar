@@ -3,7 +3,7 @@
     <pre v-if="activeChannel">{{ activeChannel }}</pre>
   </div>
 
-  <q-scroll-area ref="area" style="width: 80%; height: calc(100vh - 250px)">
+  <q-scroll-area ref="chatArea" style="width: 80%; height: calc(100vh - 250px)">
     <div style="width: 100%; max-width: 95%; margin: 0 auto;">
       <!-- Display messages only if there is an active channel -->
       <template v-if="activeChannel">
@@ -30,10 +30,10 @@
 </template>
 
 <script lang="ts">
-import { QScrollArea } from "quasar"
-import { SerializedMessage } from "src/contracts"
-import { defineComponent, PropType, nextTick } from "vue"
-import ChatBubble from "components/ChatBubble.vue"
+import { QScrollArea } from "quasar";
+import { SerializedMessage } from "src/contracts";
+import { defineComponent, PropType, nextTick, ref } from "vue";
+import ChatBubble from "components/ChatBubble.vue";
 
 export default defineComponent({
   name: "ChannelMessage",
@@ -41,36 +41,46 @@ export default defineComponent({
   props: {
     messages: {
       type: Array as PropType<SerializedMessage[]>,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   watch: {
     messages: {
       handler () {
-        this.$nextTick(() => this.scrollMessages()) // Ensure scrolling happens after DOM updates
+        console.log("new message")
+        this.scrollToBottom() // Ensure scrolling happens after DOM updates
       },
       deep: true
-    }
+    },
   },
   computed: {
-    activeChannel () {
-      return this.$store.state.channels.active
+    activeChannel() {
+      return this.$store.state.channels.active;
     },
-    currentUser () {
-      return this.$store.state.auth.user?.id
-    }
+    currentUser() {
+      return this.$store.state.auth.user?.id;
+    },
   },
   methods: {
-    scrollMessages () {
-      const area = this.$refs.area as QScrollArea
-      if (area) {
-        // Use the scroll area method to scroll to the bottom
-        area.scrollToPosition(0, area.$el.scrollHeight)
+    async scrollToBottom() {
+      // Wait for the DOM to be updated
+      await nextTick();
+
+      // Make sure chatArea reference is valid and scrollable
+      const chatAreaElement = this.$refs.chatArea?.$el?.querySelector('.q-scrollarea__container');
+
+      if (chatAreaElement) {
+        chatAreaElement.scrollTo({
+          top: chatAreaElement.scrollHeight,
+          behavior: 'smooth',
+        });
+      } else {
+        console.error('chatAreaElement not found!');
       }
     },
-    isMine (message: SerializedMessage): boolean {
-      return message.author.id === this.currentUser
-    }
-  }
-})
+    isMine(message: SerializedMessage): boolean {
+      return message.author.id === this.currentUser;
+    },
+  },
+});
 </script>
