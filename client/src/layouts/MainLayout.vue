@@ -100,11 +100,12 @@
               @click="setActive(channel.name)"
             >
               <q-item-section>
-                <q-item-label v-if="channel.type === 'private'" lines="1" class="channel-label">
-                  {{ channel.name }}
-                  <q-icon name="lock" color="cyan-10" class="lock-icon" />
-                </q-item-label>
-                <q-item-label v-else lines="1" class="channel-label">
+                <q-item-label lines="1" class="channel-label">
+                  <q-icon
+                    :name="channel.type === 'private' ? 'lock' : 'tag'"
+                    :color="channel.type === 'private' ? 'cyan-10' : 'amber-10'"
+                    class="channel-icon q-mr-sm"
+                  />
                   {{ channel.name }}
                 </q-item-label>
               </q-item-section>
@@ -212,7 +213,6 @@ export default defineComponent({
       this.acceptInvite({ invite: invite, userName: this.activeUserNickname })
     },
     declineInviteBtn(invite: SerializedChannel) {
-      console.log("click")
       this.declineInvite({ invite: invite, userName: this.activeUserNickname })
     },
     handleSend () {
@@ -340,7 +340,7 @@ export default defineComponent({
       'leaveChannel', 'startTyping', 'quitChannel', 'revokeUser', 'kickUser', "getChannelUsers", 'stopTyping', 'Typing']),
     ...mapActions('invites', ['sendInvite', 'acceptInvite', 'declineInvite']),
     setActive (channel: string | null) {
-      this.leave(this.lastJoinedName)
+      // this.leave(this.lastJoinedName)
       this.setActiveChannel(channel)
       this.join(channel)
       this.lastJoinedName = channel
@@ -360,11 +360,11 @@ export default defineComponent({
     await this.fetchUserChannels() // Fetch channels when component is created
     console.log('UserChannels:', this.userChannels[0])
   },
-  // mounted() {
-  //   for (const channel of this.userChannels) {
-  //     this.join(channel.name)
-  //   }
-  // }
+  mounted() {
+    for (const channel of this.userChannels) {
+      this.join(channel.name)
+    }
+  }
 })
 </script>
 

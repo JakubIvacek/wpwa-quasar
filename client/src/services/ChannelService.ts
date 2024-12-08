@@ -16,10 +16,11 @@ class ChannelSocketManager extends SocketManager {
     this.socket.on('message', (message: SerializedMessage) => {
       store.commit('channels/NEW_MESSAGE', { channel, message })
 
-      if (!AppVisibility.appVisible){
+      if (!AppVisibility.appVisible && message.content.length > 0) {
         this.showNotification(store,message, channel)
       }
     })
+
     this.socket.on('message_deleted', (data: { channel: string; userId: string }) => {
       console.log('Message deleted:', data)
       store.commit('channels/DELETE_MESSAGE', {
@@ -27,6 +28,7 @@ class ChannelSocketManager extends SocketManager {
         userId: data.userId
       })
     })
+
     this.socket.on('message_updated', (data: { channel: string; userId: string; content: string }) => {
       console.log('Message updated:', data)
       store.commit('channels/UPDATE_MESSAGE', {

@@ -156,13 +156,13 @@ module.exports = configure(function (ctx) {
       chainWebpackCustomSW (/* chain */) {},
 
       manifest: {
-        name: 'Slek Lite',
-        short_name: 'Slek Lite',
+        name: 'ChatterBox',
+        short_name: 'ChatterBox',
         description: '',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
-        theme_color: '#027be3',
+        theme_color: '#006064',
         icons: [
           {
             src: 'icons/icon-128x128.png',
